@@ -1,0 +1,115 @@
+body{
+    background: rgb(94, 94, 94);
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+header{
+    background:  rgb(94, 94, 94);
+    padding: 20px;   
+}
+
+header a{
+    text-decoration: none;
+    text-transform: uppercase;
+    color: white;
+}
+
+section{
+    background: white;
+    color: gray;
+    padding: 20px;
+}
+
+.blogPhotos{
+    display: flex;
+    /* flex-direction: row; */
+
+}
+.blogPhotos figure img{
+    width: 70%;
+    height: 100%;
+    margin: 3px;
+
+}
+
+.memberName{
+    position: relative;
+    left: 24%;
+    margin-left: 30px; 
+    width: 760px;
+}
+
+.functionBtn{
+    position: relative;
+    right: -40%;
+    margin-left: 30px; 
+    width: 760px;
+}
+
+#blogContent {
+    position: relative;
+    left: 50%;
+    margin-left: -380px; /* 760 除以 -2 */
+    width: 760px;
+}
+
+
+.column:first-child {
+    margin-left:50px;
+    text-align: center;
+}
+
+/* Three image containers (use 25% for four, and 50% for two, etc) */
+.column {
+    float: left;
+    width: 15%;
+    padding: 5px;
+    text-align: center;
+  }
+  
+  /* Clear floats after image containers */
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+div:not(.row, .column){
+    background: rgb(173, 108, 235);
+    color: indigo;
+    display: inline-block;
+    width: 100px;
+    margin: auto;
+}
+
+
+
+ul{
+    margin: 0;
+    padding: 10px;
+}
+
+li{
+    /* color: rgb(156, 156, 156); */
+    color: rgb(102, 31, 31);
+    display: inline;
+    font-size: x-large;
+}
+
+.headerBtn{
+    margin-left:70px; 
+}
+
+li:hover{
+    /* background: rgb(187, 48, 192); */
+    color: rgb(187, 48, 192);
+}
+
+li:first-child{
+    margin-left:0px; 
+}
+
+footer{
+    padding: 20px;
+}
