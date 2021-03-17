@@ -1,0 +1,40 @@
+.head{
+  border: red solid 1px;
+  margin-top: 100px;
+  width: 90%;
+  margin-left: 5%;
+}
+
+.head img{
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-top: 3%;
+  margin-left: 5%;
+}
+.container{
+  height: 180px;
+  width: 300px;
+  display: inline-block;
+  border: red solid 1px;
+  margin-top: 100px;
+  margin-left: 80px;
+  position: absolute;;
+}
+#name{
+  font-size: 40px;
+  font: bold;
+  font-family:Georgia, 'Times New Roman', Times, serif;
+}
+#info{
+  font-size: 18px;
+  margin-top: 20px;
+  color: dimgrey;
+}
+.left{
+  border:orange solid 1px;
+  height: 10%;
+  width: 20%;
+  margin-left: 6%;
+}
