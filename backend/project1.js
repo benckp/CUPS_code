@@ -89,8 +89,10 @@ server.post('/process-login', urlencodedParser, (request, response) => {
 				request.session.username = name;
 				response.redirect('/login_success');
 			} else {
-				// response.send('Incorrect Username or Password!');
-                response.redirect('/');
+                var viewData = {
+                    wrong: true
+                };
+                response.render(__dirname + "/html_file/test_login", viewData);
 			}			
 			response.end();
         });
@@ -119,6 +121,7 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
         to: `${email}`,
         subject: 'Sending Email using Node.js',
         // The email should contain a hash-coded link to verify the account
+        // TODO
         text: 'You have successfully verified!'
     }
 
@@ -129,7 +132,6 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
         console.log('Email sent: ' + info.response);
         }
     });
-    // response.redirect('/verification');
     response.redirect('/verification');
 });
 

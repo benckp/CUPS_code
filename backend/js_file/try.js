@@ -1,1 +1,4 @@
-alert("asdfsadfadsf");
+if (<%= wrong > == true) {
+    alert("asdfsadfadsf");
+}
+  
