@@ -15,20 +15,41 @@
             <ul>
                 <li class="headerBtn"><a href="index">Home</a></li>
                 <li class="headerBtn"><a href="tech">Tech</a></li>
+                <% if(!loggedin) { %>
                 <li class="headerBtn"><a href="login">Login</a></li>
+                <% } else { %>
+                <li class="headerBtn"><a href="logout">Logout</a></li>
+                <% } %>
             </ul>
+
         </nav>
         <h1>Home</h1>
     </header>
     <p><%= greeting %></p>
     <section class="blogPhotos">
-        <!-- <script src="./comm.js"></script> -->
         <figure>
             <img src="https://cdn.keyakizaka46.com/files/14/diary/k46/member/moblog/202005/mobIBebd9.jpg" alt="image" >
         </figure>
-        
-        <!-- <div>b</div>
-        <div>c</div> -->
+        <% if(loggedin) { %>
+            <form>
+                <div class="leaderbord">
+                    <div class="lb_name">
+                        <b>Leaderboard</b>
+                        <table>
+                            <% for(var i in leaderboard_record) { %>
+                                
+                                    <tr>
+                                        <td><%=i%>.</td> 
+                                        <%var name =  JSON.stringify(leaderboard_record[i].name).replace(/"/g, ''); %>
+                                        <td><%=name%></td>  
+                                        <td><%= JSON.stringify(leaderboard_record[i].credit) %></td>
+                                    </tr>
+                            <% } %>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        <% } %>
     </section>
     <section>Lovely Dog</section>
 </body>

@@ -51,10 +51,22 @@ server.get(['/', '/index'], (request, response) => {
     } else {
         greet = "You havn't logged in";
     }
-    var viewData = {
-        greeting: greet
-    };
-    response.render(__dirname + "/html_file/test_index", viewData);
+    // Get Leaderboard information
+    var record;
+    db.query('SELECT LOGIN_NAME AS name, CREDIT_BAL AS credit FROM USERS ORDER BY CREDIT_BAL DESC LIMIT 10', function(error, results, fields) {
+        if (error) throw error;
+        if (results.length > 0) {   
+            record = results;
+        } 	
+        // Have to wait for the result in mySql, so it must be inside the query
+        var viewData = {
+            greeting: greet,
+            loggedin: request.session.loggedin,
+            leaderboard_record: record
+        };
+        response.render(__dirname + "/html_file/test_index", viewData);
+    });
+    
 });
 
 server.get('/tech', (request, response) => {
@@ -97,7 +109,10 @@ server.post('/process-login', urlencodedParser, (request, response) => {
 			response.end();
         });
     } else {
-        response.send('Please enter Username and Password!');
+        var viewData = {
+            wrong: true
+        };
+        response.render(__dirname + "/html_file/test_login", viewData);
 		response.end();
     }
 });
@@ -137,6 +152,11 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
 
 server.get('/verification', urlencodedParser, (request, response) => {
     response.render(__dirname + "/html_file/test_verify");
+});
+
+server.get('/logout', urlencodedParser, (request, response) => {
+    request.session.destroy();
+    response.redirect('/');
 });
 
 

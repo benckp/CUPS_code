@@ -1,0 +1,9 @@
+Problem shooting
+
+MySql
+
+Connect to mysql with win10 cmd
+.\mysql -u root -p -h localhost
+
+"Client does not support authentication protocol requested by server"
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'csci3100';
