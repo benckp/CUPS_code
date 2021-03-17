@@ -39,7 +39,7 @@
                             <% for(var i in leaderboard_record) { %>
                                 
                                     <tr>
-                                        <td><%=i%>.</td> 
+                                        <td><%=parseInt(i)+1%>.</td> 
                                         <%var name =  JSON.stringify(leaderboard_record[i].name).replace(/"/g, ''); %>
                                         <td><%=name%></td>  
                                         <td><%= JSON.stringify(leaderboard_record[i].credit) %></td>
