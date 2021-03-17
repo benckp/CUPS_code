@@ -1,5 +1,3 @@
-# Free Forum Template
-A free HTML-CSS-JavaScript template of a community discussion website.
 
 ### Code referenced to:
 https://youtu.be/knGk9aUr4Do
