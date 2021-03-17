@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>
+
+
+    <title>CUPS - New Task</title>
+
+
+</head>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script language="JavaScript">
+        function showInput() {
+        document.getElementById('display').innerHTML =
+        document.getElementById("qname").value + document.getElementById("credit").value + document.getElementById("textcontent").value;
+        }
+    </script>
+
+</head>
+<body>
+
+    <form>
+        <label><b>Enter a New Task</b></label>
+        <br />
+
+
+
+        <label for="qname">Question:</label>
+        <input type="text" id="qname" name="qname"><br><br>
+
+        <label for="type">Hashtag:</label>
+        <input type="text" id="type" name="type"><br><br>
+        <label for="textcontent">Content:</label>
+        <textarea id="textcontent" name="textcontent" cols="50" rows="10"></textarea><br><br>
+
+        <label for="graphics">Select image:</label>
+        <input type="file" id="graphics" name="graphics" accept="image/*">
+        <br /><br />
+
+        <label for="credit">Credit offer:</label>
+        <input type="number" min="0" max="10" id="credit" name="credit"><br><br>
+
+
+        <label for="suggestedanswer">Suggested Answer:</label>
+        <textarea name="suggestedanswer" cols="50" rows="10"></textarea><br><br>
+
+    </form>
+
+    <input type="submit" onclick="showInput();"><br />
+    <label>Your input: </label>
+    <p><span id='display'></span></p>
+  
+</body>
+</html>
