@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const mysql = require("mysql");
 const session = require("express-session");
 const nodemailer = require('nodemailer');
+const path = require("path");
 
 const server = express();
 
@@ -33,8 +34,9 @@ var transporter = nodemailer.createTransport({
   });
 
 // Set Static folder
-server.use(express.static(__dirname + "/css_file"));
-server.use(express.static(__dirname + "/js_file"));
+server.use(express.static(path.join(__dirname , "../css")));
+server.use(express.static(path.join(__dirname , "../js")));
+server.use(express.static(path.join(__dirname , "../img")));
 server.set('view engine', 'ejs');
 server.use(session({
     secret: 'secret-key',
@@ -44,7 +46,7 @@ server.use(session({
     saveUninitialized: true
 }));
 
-server.get(['/', '/index'], (request, response) => {
+server.get([ '/index'], (request, response) => {
     var greet;
     if (request.session.loggedin) {
         greet = "Hi " + request.session.username + ", Welcome back"; 
@@ -64,25 +66,27 @@ server.get(['/', '/index'], (request, response) => {
             loggedin: request.session.loggedin,
             leaderboard_record: record
         };
-        response.render(__dirname + "/html_file/test_index", viewData);
+        response.render(path.join(__dirname ,"../html/test_index"), viewData);
+        response.end();
     });
     
 });
 
 server.get('/tech', (request, response) => {
-    response.render(__dirname + "/html_file/test_tech");
+    response.render(path.join(__dirname , "../html/test_tech"));
 });
 
-server.get('/login', (request, response) => {
-    response.render(__dirname + "/html_file/test_login");
+server.get(['/', '/login'], (request, response) => {
+    response.render(path.join(__dirname , "../html/LandP_login"));
 });
 
 server.get('/reg', (request, response) => {
-    response.render(__dirname + "/html_file/test_registration");
+    response.render(path.join(__dirname , "../html/test_registration"));
 });
 
 server.get('/login_success', (request, response) => {
-    response.render(__dirname + "/html_file/test_login_success");
+    // response.render(path.join(__dirname ,"../html/test_login_success"));
+    response.redirect("/homepage");
 });
 
 // create application/json parser
@@ -104,7 +108,7 @@ server.post('/process-login', urlencodedParser, (request, response) => {
                 var viewData = {
                     wrong: true
                 };
-                response.render(__dirname + "/html_file/test_login", viewData);
+                response.render(path.join(__dirname ,"../html/LandP_login"), viewData);
 			}			
 			response.end();
         });
@@ -112,7 +116,7 @@ server.post('/process-login', urlencodedParser, (request, response) => {
         var viewData = {
             wrong: true
         };
-        response.render(__dirname + "/html_file/test_login", viewData);
+        response.render(path.join(__dirname ,"../html/LandP_login"), viewData);
 		response.end();
     }
 });
@@ -120,7 +124,7 @@ server.post('/process-login', urlencodedParser, (request, response) => {
 server.post('/process-registration', urlencodedParser, (request, response) => {
     var username = request.body.username;
     var pw = request.body.password;
-    var name = request.body.name;
+    var name = username;
     var email = request.body.email;
     var uid = request.body.uid;
 
@@ -137,7 +141,7 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
         subject: 'Sending Email using Node.js',
         // The email should contain a hash-coded link to verify the account
         // TODO
-        text: 'You have successfully verified!'
+        text: 'You have successfully verified! Please don\'t reply this email'
     }
 
     transporter.sendMail(mailOptions, function(error, info){
@@ -151,7 +155,15 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
 });
 
 server.get('/verification', urlencodedParser, (request, response) => {
-    response.render(__dirname + "/html_file/test_verify");
+    var viewData = {
+        wrong: false,
+        verify: true
+    };
+    response.render(path.join(__dirname , "../html/LandP_login"), viewData);
+});
+
+server.get('/homepage', urlencodedParser, (request, response) => {
+    response.render(path.join(__dirname , "../html/CreatePost_homepage"));
 });
 
 server.get('/logout', urlencodedParser, (request, response) => {
@@ -227,7 +239,7 @@ INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gm
 `'SELECT EMAIL FROM USERS WHERE UID = ${uid}'`
 
 // Login verification
-`'SELECT * FROM USERS WHERE LOGIN_NAME = '${name}' AND PASSWORD = '$pw''`
+`'SELECT * FROM USERS WHERE LOGIN_NAME = '${name}' AND PASSWORD = '${pw}''`
 
 // Ask Question / Set up task  (Changing the type)
 INSERT INTO QUESTION VALUES( 0, uid, type, keywords, class, heading, text_content, credit, DEFAULT, NULL);
