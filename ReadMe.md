@@ -2,11 +2,14 @@
 
 ## System Structure
 ### Front end
-It is developed using html5, css and js (Bootstrap, Vue).
+It is developed using html5, css and js (Bootstrap, Vue). The executable completed part are mainly about our main functions but not styling or ui. We will proceed to incorperate the CUHK feature into our design.
 
 ### Backend
 It is developed in Nodejs and Express.
-The database has used MySQL.
+The database has used MySQL. We will proceed to deploy our service to AWS s.t. our service will be more reliable and flexible.
+
+### Android App
+It is developed using android studio. Note that it is a new feature which we didn't put in our initial design doc. Thanks to our tutor, Mr SHEN, for the suggestion to us. Since we are all new to app development, there is only a partially implemented forum search and display page in the apps. We will try to make it cool in the next phase.  
 
 ## Initial Code Partial Function Demo Video
 https://drive.google.com/file/d/1A96YKZ45z5tmP83C53OHlO5IiLVajCZs/view?usp=sharing
