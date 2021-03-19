@@ -9,7 +9,7 @@ It is developed in Nodejs and Express.
 The database has used MySQL.
 
 ## Initial Code Partial Function Demo Video
-https://drive.google.com/file/d/1y4TmMujQKRjvX83oYjTDalM12kQzqmBK/view?usp=sharing
+https://drive.google.com/file/d/1A96YKZ45z5tmP83C53OHlO5IiLVajCZs/view?usp=sharing
 
 ## Ref
 - https://youtu.be/knGk9aUr4Do

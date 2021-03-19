@@ -46,47 +46,38 @@ server.use(session({
     saveUninitialized: true
 }));
 
-server.get([ '/index'], (request, response) => {
-    var greet;
-    if (request.session.loggedin) {
-        greet = "Hi " + request.session.username + ", Welcome back"; 
-    } else {
-        greet = "You havn't logged in";
-    }
-    // Get Leaderboard information
-    var record;
-    db.query('SELECT LOGIN_NAME AS name, CREDIT_BAL AS credit FROM USERS ORDER BY CREDIT_BAL DESC LIMIT 10', function(error, results, fields) {
-        if (error) throw error;
-        if (results.length > 0) {   
-            record = results;
-        } 	
-        // Have to wait for the result in mySql, so it must be inside the query
-        var viewData = {
-            greeting: greet,
-            loggedin: request.session.loggedin,
-            leaderboard_record: record
-        };
-        response.render(path.join(__dirname ,"../html/test_index"), viewData);
-        response.end();
-    });
+// server.get( '/index', (request, response) => {
+//     var greet;
+//     if (request.session.loggedin) {
+//         greet = "Hi " + request.session.username + ", Welcome back"; 
+//     } else {
+//         greet = "You havn't logged in";
+//     }
+//     // Get Leaderboard information
+//     var record;
+//     db.query('SELECT LOGIN_NAME AS name, CREDIT_BAL AS credit FROM USERS ORDER BY CREDIT_BAL DESC LIMIT 10', function(error, results, fields) {
+//         if (error) throw error;
+//         if (results.length > 0) {   
+//             record = results;
+//         } 	
+//         // Have to wait for the result in mySql, so it must be inside the query
+//         var viewData = {
+//             greeting: greet,
+//             loggedin: request.session.loggedin,
+//             leaderboard_record: record
+//         };
+//         response.render(path.join(__dirname ,"../html/test_index"), viewData);
+//         response.end();
+//     });
     
-});
-
-server.get('/tech', (request, response) => {
-    response.render(path.join(__dirname , "../html/test_tech"));
-});
+// });
 
 server.get(['/', '/login'], (request, response) => {
     response.render(path.join(__dirname , "../html/LandP_login"));
 });
 
-server.get('/reg', (request, response) => {
-    response.render(path.join(__dirname , "../html/test_registration"));
-});
-
 server.get('/login_success', (request, response) => {
-    // response.render(path.join(__dirname ,"../html/test_login_success"));
-    response.redirect("/homepage");
+    response.redirect("/forum");
 });
 
 // create application/json parser
@@ -119,6 +110,14 @@ server.post('/process-login', urlencodedParser, (request, response) => {
         response.render(path.join(__dirname ,"../html/LandP_login"), viewData);
 		response.end();
     }
+});
+
+server.get('/verification', urlencodedParser, (request, response) => {
+    var viewData = {
+        wrong: false,
+        verify: true
+    };
+    response.render(path.join(__dirname , "../html/LandP_login"), viewData);
 });
 
 server.post('/process-registration', urlencodedParser, (request, response) => {
@@ -154,22 +153,40 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
     response.redirect('/verification');
 });
 
-server.get('/verification', urlencodedParser, (request, response) => {
-    var viewData = {
-        wrong: false,
-        verify: true
-    };
-    response.render(path.join(__dirname , "../html/LandP_login"), viewData);
+server.get('/question', urlencodedParser, (request, response) => {
+    response.render(path.join(__dirname , "../html/CreatePost_homepage1"));
 });
 
-server.get('/homepage', urlencodedParser, (request, response) => {
-    response.render(path.join(__dirname , "../html/CreatePost_homepage"));
+server.get('/profile', urlencodedParser, (request, response) => {
+    response.render(path.join(__dirname , "../html/profile"));
 });
 
+server.get('/task', urlencodedParser, (request, response) => {
+    response.render(path.join(__dirname , "../html/CreatePost_homepage2"));
+});
+
+server.get('/newtask', urlencodedParser, (request, response) => {
+    response.render(path.join(__dirname , "../html/CreatePost_newtask"));
+});
+
+server.get('/newthread', urlencodedParser, (request, response) => {
+    response.render(path.join(__dirname , "../html/CreatePost_newthread"));
+});
+
+server.get('/forum', urlencodedParser, (request, response) => {
+    response.render(path.join(__dirname , "../html/forum"));
+});
+
+server.get('/answer', urlencodedParser, (request, response) => {
+    response.render(path.join(__dirname , "../html/AnswerPost"));
+});
+
+// After Login into the forum
 server.get('/logout', urlencodedParser, (request, response) => {
     request.session.destroy();
     response.redirect('/');
 });
+
 
 
 // ( port, ip)  127.0.0.1 == localhost
