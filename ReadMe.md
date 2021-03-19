@@ -15,5 +15,8 @@ https://drive.google.com/file/d/1y4TmMujQKRjvX83oYjTDalM12kQzqmBK/view?usp=shari
 - https://youtu.be/knGk9aUr4Do
 - https://www.youtube.com/watch?v=Hixx31BX5kY&t=304s 
 - https://www.w3schools.com/tags/default.asp
+- https://www.w3schools.com/howto/howto_js_filter_table.asp
+- https://www.w3schools.com/howto/howto_css_subnav.asp
+- https://www.w3schools.com/howto/howto_css_fixed_menu.asp
 - https://cnodejs.org/topic/50a333d7637ffa4155c62ddb
 - https://www.youtube.com/watch?v=-RCnNyD0L-s
