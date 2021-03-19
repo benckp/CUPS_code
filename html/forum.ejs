@@ -2,8 +2,8 @@
 <!-- SID:    1155110879 -->
 <!-- Group:  F6 -->
 <!-- Topic:  CSCI3100 Initial Code - html for forum page -->
-<!-- Reference: https://www.w3schools.com/howto/howto_js_filter_table.asp -->
-<!-- Reference: https://www.w3schools.com/howto/howto_css_fixed_menu.asp -->
+<!-- Remark: The persudo code are indicated by TODO
+             while others are the partial implementation-->
 
 
 <!doctype html>
@@ -12,7 +12,6 @@
     <meta charset="utf-8">
     <title>CUPS Forum</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Economica" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="forum.css">
     <script src="forum.js"></script>
@@ -20,16 +19,16 @@
 <body>
 
 
-<!-- Top navigation with search bar -->
+<!-- Partial: Top navigation with search bar -->
+<!-- TODO: link the top buttons to relevent pages -->
 <div class="topnav">
-    <!-- TODO: Use CUPS icon here -->
-    <a href="/forum">CUPS logo</a>
+    <!-- TODO: use our designed CUPS icon to as Home button -->
+    <a href="/forum">Home</a>
     <div class="search-container">
-        <form action="/action_page.php">
+        <form>
             <input type="text" id="searchInput" placeholder="Search title or content...">
-            <button type="submit" onclick="search()" ><i class="fa fa-search"></i></button>
+            <button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
         </form>
-        
     </div>
     <div class="topnav-right">
         <a href="/question">Question</a>
@@ -40,55 +39,57 @@
 </div>
 
 <!-- filter navigation -->
+<!-- TODO: show an additional bar on selected filter selecting
+           e.g show "type: Q&A" while Q&A post is filtered-->
 <div class="filter">
     <div class="subfilter">
         <button class="subfilterbtn">Type <i class="fa fa-caret-down"></i></button>
         <div class="subfilter-content">
-            <a href="#team">Team</a>
-            <a href="#careers">Careers</a>
+            <button class="button" onclick="">Q&A </button>
+            <button class="button" onclick="">Task </button>
         </div>
     </div>
     <div class="subfilter">
         <button class="subfilterbtn">Course <i class="fa fa-caret-down"></i></button>
         <div class="subfilter-content">
-            <a href="#bring">Bring</a>
-            <a href="#deliver">Deliver</a>
-            <a href="#package">Package</a>
-            <a href="#express">Express</a>
+            <input type="text" id="courseInput" placeholder="Search course code...">
         </div>
     </div>
     <div class="subfilter">
         <button class="subfilterbtn">Department <i class="fa fa-caret-down"></i></button>
         <div class="subfilter-content">
-            <a href="#link1">Link 1</a>
-            <a href="#link2">Link 2</a>
-            <a href="#link3">Link 3</a>
-            <a href="#link4">Link 4</a>
+            <input type="text" id="deptInput" placeholder="Search department...">
         </div>
     </div>
     <div class="subfilter">
         <button class="subfilterbtn">Sort by <i class="fa fa-caret-down"></i></button>
         <div class="subfilter-content">
-            <a href="#link1">Link 1</a>
-            <a href="#link2">Link 2</a>
-            <a href="#link3">Link 3</a>
-            <a href="#link4">Link 4</a>
+            <button class="button" onclick="">Post ID </button>
+            <button class="button" onclick="">Course </button>
+            <button class="button" onclick="">Type </button>
+            <button class="button" onclick="">Time </button>
         </div>
     </div>
     <div class="reset">
-        <button class="submit" onclick="search()">Reset filter </button>
+        <button class="button" onclick="">Reset filter </button>
     </div>
 </div>
 
-<!-- TODO: List of related post -->
+<!-- Partial: List of related post -->
+<!-- TODO: We will proceed to use individual blocks for each post,
+           e.g. like google search result display -->
+<!-- TODO: The post will be automatically updated using db -->
+<!-- TODO: The user can get access to the corresponding post answering page by clicking the post -->
+<!-- TODO: We will have some indicating icon / color to indicate whether a post is answered or not -->
+<!-- TODO: Credit payment amount will also be displayed -->
 <table class = "table" id="forumList" >
     <tr class="header">
-        <th style="text-align:center" style="width:5%;">Post ID</th>
-        <th style="text-align:center" style="width:30%;">Title</th>
+        <th style="text-align:center">Post ID</th>
+        <th style="text-align:center">Title</th>
         <th style="text-align:center">Preview of content</th>
         <th style="text-align:center">Course</th>
         <th style="text-align:center">Type</th>
-        <th style="text-align:center">Author</th>
+        <th style="text-align:center">Author </th>
         <th style="text-align:center">Time</th>
     </tr>
     <tr>
@@ -111,62 +112,62 @@
     </tr>
     <tr>
         <th style="text-align:center">3</th>
-        <td style="text-align:center">...</td>
-        <td>... </td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
+        <td style="text-align:center">X-Men</td>
+        <td>Mutation, it is the key to our evolution... </td>
+        <td style="text-align:center">PSYC0000</td>
+        <td style="text-align:center">Task</td>
+        <td style="text-align:center">Prof X</td>
+        <td style="text-align:center">21 years ago</td>
     </tr>
     <tr>
         <th style="text-align:center">4</th>
-        <td style="text-align:center">...</td>
-        <td>... </td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
+        <td style="text-align:center">About initial code</td>
+        <td>completeness...  </td>
+        <td style="text-align:center">CSCI3100</td>
+        <td style="text-align:center">Q&A</td>
+        <td style="text-align:center">Danny</td>
+        <td style="text-align:center">1 day ago</td>
     </tr>
     <tr>
         <th style="text-align:center">5</th>
-        <td style="text-align:center">...</td>
-        <td>... </td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
+        <td style="text-align:center">Regarding initial code</td>
+        <td>robustness...  </td>
+        <td style="text-align:center">CSCI3100</td>
+        <td style="text-align:center">Q&A</td>
+        <td style="text-align:center">Ben</td>
+        <td style="text-align:center">1 day ago</td>
     </tr>
     <tr>
         <th style="text-align:center">6</th>
-        <td style="text-align:center">...</td>
-        <td>... </td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
+        <td style="text-align:center">Talking on initial code</td>
+        <td>user-friendliness... </td>
+        <td style="text-align:center">CSCI3100</td>
+        <td style="text-align:center">Q&A</td>
+        <td style="text-align:center">Elton</td>
+        <td style="text-align:center">1 day ago</td>
     </tr>
     <tr>
         <th style="text-align:center">7</th>
-        <td style="text-align:center">...</td>
-        <td>... </td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
+        <td style="text-align:center">Discussing initial code</td>
+        <td>documentation... </td>
+        <td style="text-align:center">CSCI3100</td>
+        <td style="text-align:center">Q&A</td>
+        <td style="text-align:center">Justice</td>
+        <td style="text-align:center">1 day ago</td>
     </tr>
     <tr>
         <th style="text-align:center">8</th>
-        <td style="text-align:center">...</td>
-        <td>... </td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
-        <td style="text-align:center">...</td>
+        <td style="text-align:center">For initial code</td>
+        <td>other aspects... </td>
+        <td style="text-align:center">CSCI3100</td>
+        <td style="text-align:center">Q&A</td>
+        <td style="text-align:center">Dash</td>
+        <td style="text-align:center">1 day ago</td>
     </tr>
 </table>
 
 
-<!-- Footer for website info -->
+<!-- Partial: Footer for website info -->
 <footer>
     This website was built on <time>2021-03-19</time>. <b>© CSCI3100 Group F6</b>
 </footer>

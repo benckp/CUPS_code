@@ -1,0 +1,7 @@
+#Fri Mar 19 23:04:03 CST 2021
+base.0=C\:\\Users\\benckp\\OneDrive - The Chinese University of Hong Kong\\Year4sem2\\CSCI3100 - Software Engineering\\Project\\code\\CUPS_android\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+path.1=classes.dex
+renamed.1=classes2.dex
+path.0=classes.dex
+renamed.0=classes.dex
+base.1=C\:\\Users\\benckp\\OneDrive - The Chinese University of Hong Kong\\Year4sem2\\CSCI3100 - Software Engineering\\Project\\code\\CUPS_android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\classes.dex

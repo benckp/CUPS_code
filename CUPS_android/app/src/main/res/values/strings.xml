@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CUPS_android</string>
+    <string name="search_query">Search title or content...</string>
+    <string name="button_search">Search</string>
+</resources>

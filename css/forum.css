@@ -1,11 +1,18 @@
+/*  Remark:
+    This css file contains responsible for styling of forum page
+    We have completed all style of currently completed parts.
+    The other styling parts will be added once the content is updated */
+
+/* Set the navbar to fixed position */
 .topnav {
     overflow: hidden;
     background-color: #e9e9e9;
-    position: fixed; /* Set the navbar to fixed position */
-    top: 0; /* Position the navbar at the top of the page */
-    width: 100%; /* Full width */
+    position: fixed;
+    top: 0;
+    width: 100%;
 }
 
+/* Styling of the link button */
 .topnav a {
     float: left;
     display: block;
@@ -26,6 +33,8 @@
     color: white;
 }
 
+
+/* Styling of the search container */
 .topnav .search-container {
     float: left;
 }
@@ -38,7 +47,6 @@
 }
 
 .topnav .search-container button {
-    float: center;
     padding: 6px 10px;
     margin-top: 8px;
     margin-right: 16px;
@@ -52,23 +60,22 @@
     background: #ccc;
 }
 
-
+/* Setting to put the profile and settings button on right */
 .topnav-right {
     float: right;
 }
 
+
+/* Styling of the filter bar */
 .filter {
     margin-top: 50px; /* Add a top margin to avoid content overlay */
 }
 
-
-/* The navigation menu */
 .filter {
     overflow: hidden;
     background-color: #333;
 }
 
-/* Navigation links */
 .filter a {
     float: left;
     font-size: 16px;
@@ -78,13 +85,14 @@
     text-decoration: none;
 }
 
-/* The subnavigation menu */
+
+/* Add submenu in the filter bar, display when mouse is on it */
 .subfilter {
     float: left;
     overflow: hidden;
 }
 
-.reset button {
+.filter button {
     font-size: 16px;
     border: none;
     outline: none;
@@ -95,7 +103,17 @@
     margin: 0;
 }
 
-/* Subnav button */
+.filter input {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: black;
+    padding: 14px 16px;
+    background-color: #eee;
+    font-family: inherit;
+    margin: 0;
+}
+
 .subfilter .subfilterbtn {
     font-size: 16px;
     border: none;
@@ -107,15 +125,19 @@
     margin: 0;
 }
 
-/* Add a red background color to navigation links on hover */
 .filter a:hover, .subfilter:hover .subfilterbtn {
     background-color: red;
 }
+
 .filter a:hover, .reset:hover button {
     background-color: red;
 }
 
-/* Style the subnav content - positioned absolute */
+.filter a:hover, .subfilter-content button:hover {
+    background-color: #eee;
+    color: black;
+}
+
 .subfilter-content {
     display: none;
     position: absolute;
@@ -125,52 +147,56 @@
     z-index: 1;
 }
 
-/* Style the subnav links */
 .subfilter-content a {
     float: left;
     color: white;
     text-decoration: none;
 }
 
-/* Add a grey background color on hover */
 .subfilter-content a:hover {
     background-color: #eee;
     color: black;
 }
 
-/* When you move the mouse over the subnav container, open the subnav content */
 .subfilter:hover .subfilter-content {
     display: block;
 }
 
 
+/* Coloring and formatting of the forum list */
+/* TODO: as the list table will be replaced by individual blocks, this part will be removed */
 footer {
     background: rgb(119, 136, 153, 0.5);
     text-align: right;
 }
 
-#forumList{
+#forumList {
     background: rgb(127, 255, 212, 0.25);
 }
 
 #forumList {
-    border-collapse: collapse; /* Collapse borders */
-    width: 100%; /* Full-width */
-    border: 1px solid #ddd; /* Add a grey border */
-    font-size: 18px; /* Increase font-size */
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #ddd;
+    font-size: 18px;
 }
 
 #forumList th, #myTable td {
-    text-align: left; /* Left-align text */
-    padding: 12px; /* Add padding */
+    text-align: left;
+    padding: 12px;
 }
 
 #forumList tr {
-    /* Add a bottom border to all table rows */
     border-bottom: 1px solid #ddd;
 }
 
 #forumList tr.header, #myTable tr:hover {
-    /* Add a grey background color to the table header and on hover */
     background: rgb(72, 209, 204, 0.25);
 }
+
+/* Styling of the page footer */
+footer {
+    background: rgb(119, 136, 153, 0.5);
+    text-align: right;
+}
+
