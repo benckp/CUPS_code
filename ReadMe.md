@@ -13,7 +13,7 @@ It is developed using android studio. Note that it is a new feature which we did
 Remark: there are two demo images on the partial completed parts (forum searching and displaying).
 
 ## Initial Code Partial Function Demo Video
-https://drive.google.com/file/d/1A96YKZ45z5tmP83C53OHlO5IiLVajCZs/view?usp=sharing
+https://drive.google.com/file/d/1GC7leiVeOEgy4AK87-AI6CAqtzjOSuve/view?usp=sharing
 
 ## Ref
 - https://youtu.be/knGk9aUr4Do
