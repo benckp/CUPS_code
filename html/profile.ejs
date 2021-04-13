@@ -45,17 +45,18 @@
       <div class="head">
         <img src="CSCI 3100.jpg" alt="">
         <div class="container1">
-          <div id="name"><%=username%>></div>
-          <div id="info">Year2 Computer Science</div>
+          <div id="name"><%=username%></div>
+          <div id="info"><%=caption%></div>
         </div>
         <br>
-        <input style="font-size: 15px; width: 5%; margin-left: 10%; color: gray; border: none;" class="btn" type="button" name="" value="Edit">
+        <!-- <input style="font-size: 15px; width: 5%; margin-left: 10%; color: gray; border: none;" class="btn" type="button" name="" value="Edit"> -->
       </div>
       <div class="left">
         <div class="item" v-bind:class="currentChoice === 0 ? 'active' : ''" @click="handleClick(0)">My Post</div>
         <div class="item" v-bind:class="currentChoice === 1 ? 'active' : ''" @click="handleClick(1)">Following</div>
         <div class="item" v-bind:class="currentChoice === 2 ? 'active' : ''" @click="handleClick(2)">My Comments</div>
         <div class="item" v-bind:class="currentChoice === 3 ? 'active' : ''" @click="handleClick(3)">My Credits</div>
+        <div class="item" v-bind:class="currentChoice === 4 ? 'active' : ''" @click="handleClick(4)">Edit My Profile</div>
       </div>
       
       <div class="main">
@@ -147,10 +148,11 @@
            <% } %>
      </table>
         </div>
-        <div v-else>
+        <div v-if="currentChoice === 3">
          <div class="credit">
            Current credit is <%=credit%>
          </div>
+
          <!-- <div class="records">
            <table class = "table" id="forumList" >
              <tr class="header">
@@ -236,6 +238,30 @@
              </tr>
          </table>
          </div> -->
+        </div>
+        <div v-if="currentChoice === 4">
+          <div class="edit">
+            <div class="login-box">
+              <!-- <h1>Login</h1> -->
+              
+      
+                  <form method="POST" action="/process-edit">
+                      <div class="textbox">
+                          <i class="fa fa-user" aria-hidden="true"></i>
+                          <input type="text" placeholder="Username" name="username" value="">
+                      </div>
+              
+                      <div class="textbox">
+                          <i class="fa fa-lock"></i>
+                          <input type="text" placeholder="YearX Major" name="info" value="">
+                      </div>
+                      
+                      <input class="btn" type="submit" name="" value="Submit">
+                      
+                  </form>
+              
+          </div>
+          </div>
         </div>
      </div>
     </div>

@@ -170,6 +170,7 @@ server.get('/profile', urlencodedParser, (request, response) => {
     var own_post = [];
     var commented_post = [];
     var credit = 0;
+    var caption = "";
     if (request.session.loggedin) {
         db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
         FROM QUESTION, LIKED, USERS WHERE LIKED.PID = QUESTION.PID AND LIKED.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
@@ -192,15 +193,17 @@ server.get('/profile', urlencodedParser, (request, response) => {
                         commented_post.push(item);
                         // console.log(item.HEADING);
                     });	
-                    db.query(`SELECT CREDIT_BAL FROM USERS WHERE USERS.UID = ${request.session.uid};`, function(error, results, fields) {
+                    db.query(`SELECT CREDIT_BAL, CAPTION FROM USERS WHERE USERS.UID = ${request.session.uid};`, function(error, results, fields) {
                         if (error) throw error;
                         credit = results[0].CREDIT_BAL;
+                        caption = results[0].CAPTION;
                         var viewData = {
                             username: request.session.username,
                             liked_post: liked_post,
                             own_post: own_post,
                             commented_post: commented_post,
-                            credit: credit
+                            credit: credit,
+                            caption: caption
                         };
                         response.render(path.join(__dirname , "../html/profile"), viewData);
                         response.end();
@@ -276,6 +279,35 @@ server.get('/answer', urlencodedParser, (request, response) => {
     }
 });
 
+server.get('/edit', urlencodedParser, (request, response) => {
+    
+    if (request.session.loggedin) {
+        response.render(path.join(__dirname , "../html/Edit"));
+    }
+    else {
+        response.redirect('/');
+    }
+});
+
+server.post('/process-login', urlencodedParser, (request, response) => {
+    var name = request.body.username;
+    var info = request.body.info;
+
+    if (name && pw) {
+        db.query(`UPDATE USERS SET NAME = '${name}' AND CAPTION = '${info}'`, function(error, results, fields) {
+            if (error) throw error;
+			
+            response.redirect('/profile');
+
+			response.end();
+        });
+    } else {
+        
+        response.redirect('/profile');
+		response.end();
+    }
+});
+
 // After Login into the forum
 server.get('/logout', urlencodedParser, (request, response) => {
     request.session.destroy();
@@ -292,6 +324,9 @@ server.listen(3000, "127.0.0.1", () =>{
 
 /**
 MySQL part
+CREATE DATABASE project;
+USE project;
+
 // Create table ( Should be done before the program run)
 CREATE TABLE USERS(
     UID INT PRIMARY KEY, 
@@ -303,7 +338,8 @@ CREATE TABLE USERS(
     CREDIT_BAL INT DEFAULT 10, 
     CREDIT_GAIN INT DEFAULT 0, 
     LEVEL INT DEFAULT 0,
-    IS_AUTH BOOLEAN DEFAULT FALSE
+    IS_AUTH BOOLEAN DEFAULT FALSE,
+    CAPTION TEXT
 );
 CREATE TABLE QUESTION(
     PID INT AUTO_INCREMENT PRIMARY KEY, 
@@ -350,11 +386,6 @@ CREATE TABLE LIKED(
 
 // Registration
 INSERT INTO USERS VALUES( 1155000000, TRUE, 'admin', 'admin', 'admin', 'admin@gmail.com', DEFAULT, DEFAULT, DEFAULT, TRUE);
-INSERT INTO USERS VALUES( 1155000001, TRUE, 'mons', 'admin', 'mons', 'mons@gmail.com', 15, DEFAULT, DEFAULT, TRUE);
-INSERT INTO USERS VALUES( 1155000002, TRUE, 'paul', 'admin', 'paul', 'paul@gmail.com', 14, DEFAULT, DEFAULT, DEFAULT);
-INSERT INTO USERS VALUES( 1155000003, TRUE, 'kim', 'admin', 'kim', 'kim@gmail.com', 13, DEFAULT, DEFAULT, TRUE);
-INSERT INTO USERS VALUES( 1155000004, TRUE, 'lee', 'admin', 'lee', 'lee@gmail.com', 12, DEFAULT, DEFAULT, DEFAULT);
-INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gmail.com', 19, DEFAULT, DEFAULT, TRUE);
 
 // Email verification
 `'SELECT EMAIL FROM USERS WHERE UID = ${uid}'`
@@ -408,13 +439,74 @@ SELECT LOGIN_NAME, CREDIT_BAL FROM USERS ORDER BY CREDIT_BAL DESC LIMIT 10;
 
 
 All test case:
-INSERT INTO USERS VALUES( 1155000000, TRUE, 'admin', 'admin', 'admin', 'admin@gmail.com', DEFAULT, DEFAULT, DEFAULT, TRUE);
-INSERT INTO USERS VALUES( 1155000001, TRUE, 'mons', 'admin', 'mons', 'mons@gmail.com', 15, DEFAULT, DEFAULT, TRUE);
-INSERT INTO USERS VALUES( 1155000002, TRUE, 'paul', 'admin', 'paul', 'paul@gmail.com', 14, DEFAULT, DEFAULT, DEFAULT);
-INSERT INTO USERS VALUES( 1155000003, TRUE, 'kim', 'admin', 'kim', 'kim@gmail.com', 13, DEFAULT, DEFAULT, TRUE);
-INSERT INTO USERS VALUES( 1155000004, TRUE, 'lee', 'admin', 'lee', 'lee@gmail.com', 12, DEFAULT, DEFAULT, DEFAULT);
-INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gmail.com', 19, DEFAULT, DEFAULT, TRUE);
-INSERT INTO USERS VALUES( 2155000001, False, 'Prof. X', 'admin', 'Prof. X', 'profX@gmail.com', 19, DEFAULT, DEFAULT, TRUE);
+
+CREATE DATABASE project;
+USE project;
+
+CREATE TABLE USERS(
+    UID INT PRIMARY KEY, 
+    TYPE BOOLEAN NOT NULL, 
+    LOGIN_NAME VARCHAR(20) NOT NULL, 
+    PASSWORD VARCHAR(20) NOT NULL, 
+    NAME VARCHAR(40) NOT NULL, 
+    EMAIL VARCHAR(100) NOT NULL, 
+    CREDIT_BAL INT DEFAULT 10, 
+    CREDIT_GAIN INT DEFAULT 0, 
+    LEVEL INT DEFAULT 0,
+    IS_AUTH BOOLEAN DEFAULT FALSE,
+    CAPTION TEXT
+);
+CREATE TABLE QUESTION(
+    PID INT AUTO_INCREMENT PRIMARY KEY, 
+    UID INT NOT NULL, 
+    TYPE BOOLEAN NOT NULL, 
+    KEYWORDS VARCHAR(20) NOT NULL, 
+    CLASS VARCHAR(20) NOT NULL, 
+    HEADING VARCHAR(60) NOT NULL, 
+    TEXT_CONTENT TEXT NOT NULL, 
+    CREDIT INT, 
+    VOTE INT DEFAULT 0,
+    SUGGEST_ANS TEXT,
+    POST_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT F_USER_QUESTION FOREIGN KEY (UID) 
+    REFERENCES USERS(UID)
+);
+CREATE TABLE RESPONDS(
+    RID INT AUTO_INCREMENT PRIMARY KEY,
+    UID INT NOT NULL,
+    PID INT NOT NULL,
+    TEXT_CONTENT TEXT NOT NULL, 
+    GRAPHIC BLOB,
+    CONSTRAINT F_USER_RESPOND FOREIGN KEY (UID) 
+    REFERENCES USERS(UID),
+    CONSTRAINT F_QUESTION_RESPOND FOREIGN KEY (PID) 
+    REFERENCES QUESTION(PID)
+); 
+CREATE TABLE COMMENTS(
+    CID INT AUTO_INCREMENT PRIMARY KEY,
+    UID INT NOT NULL,
+    COMMENTING_ID INT NOT NULL,
+    TEXT_CONTENT TEXT NOT NULL,
+    CONSTRAINT F_USER_COMMENT FOREIGN KEY (UID) 
+    REFERENCES USERS(UID)
+);
+CREATE TABLE LIKED(
+    UID INT NOT NULL,
+    PID INT NOT NULL,
+    CONSTRAINT F_USER_LIKED FOREIGN KEY (UID) 
+    REFERENCES USERS(UID),
+    CONSTRAINT F_POST_LIKED FOREIGN KEY (PID) 
+    REFERENCES QUESTION(PID)
+);
+
+
+INSERT INTO USERS VALUES( 1155000000, TRUE, 'admin', 'admin', 'admin', 'admin@gmail.com', DEFAULT, DEFAULT, DEFAULT, TRUE, "Hi there, I am admin");
+INSERT INTO USERS VALUES( 1155000001, TRUE, 'mons', 'admin', 'mons', 'mons@gmail.com', 15, DEFAULT, DEFAULT, TRUE, NULL);
+INSERT INTO USERS VALUES( 1155000002, TRUE, 'paul', 'admin', 'paul', 'paul@gmail.com', 14, DEFAULT, DEFAULT, DEFAULT, NULL);
+INSERT INTO USERS VALUES( 1155000003, TRUE, 'kim', 'admin', 'kim', 'kim@gmail.com', 13, DEFAULT, DEFAULT, TRUE, NULL);
+INSERT INTO USERS VALUES( 1155000004, TRUE, 'lee', 'admin', 'lee', 'lee@gmail.com', 12, DEFAULT, DEFAULT, DEFAULT, NULL);
+INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gmail.com', 19, DEFAULT, DEFAULT, TRUE, NULL);
+INSERT INTO USERS VALUES( 1255000001, False, 'Prof. X', 'admin', 'Prof. X', 'profX@gmail.com', 19, DEFAULT, DEFAULT, TRUE, NULL);
 
 
 INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT);
