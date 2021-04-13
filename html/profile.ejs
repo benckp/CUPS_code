@@ -10,32 +10,31 @@
 </head>
 <body>
   <div id="app">
-    <div class="head">
-      <img src="LandP_bg.jpg" alt="">
-      <div class="container">
-        <div id="name"><%=username%></div>
-        <div id="info">Year2 Computer Science</div>
+    <div class="topnav">
+      <!-- TODO: use our designed CUPS icon to as Home button -->
+      <a href="/forum">Home</a>
+      <div class="search-container">
+          <form>
+              <input type="text" id="searchInput" placeholder="Search title or content...">
+              <button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
+          </form>
+      </div>
+      <div class="topnav-right">
+          <a href="/question">Question</a>
+          <a href="/task">Task</a>
+          <a href="/profile">Profile</a>
+          <a href="#contact">Settings</a>
       </div>
     </div>
-    <div class="left">
-      <div class="item" @click="handleClick(index)" v-for="(item, index) in list">{{item}}</div>
-    </div>
-    <div class="main">
-      <!-- this part will be changed according to user's clicking on the left side  -->
-       <!-- Here we will create some components and display them -->
-       <!-- if currentChoice is 'My Post', display the user's posts -->
-       <div v-if="currentChoice == 0">
-        <div v-for=" item in 5" class="myPost">
-          <h3>Post{{item}}</h3>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium assumenda nihil cum rem quidem. Error eveniet sit modi repellat, dolore sapiente adipisci, natus quam amet nemo, illum expedita mollitia! In earum vitae delectus reiciendis neque ipsum, laboriosam asperiores ducimus laborum nobis consequatur deleniti corporis, sed recusandae, quos itaque nemo enim numquam qui. Quod dignissimos explicabo beatae nobis, voluptatem facilis, modi aut voluptates amet, maiores impedit! Pariatur officia voluptatum ipsa minima illum at, magnam praesentium doloremque nemo aspernatur, maiores ducimus fuga, esse illo ex omnis ipsam quis voluptates reprehenderit voluptate nobis dolores debitis laborum? Natus praesentium placeat sunt sit eligendi alias eum hic, autem magnam fugit ab adipisci, rem provident soluta voluptatem maxime debitis in ipsam quod perferendis cum. Hic veritatis quam, corrupti esse unde voluptatibus consequatur eos, omnis est nesciunt quas iste. Dolorem quis asperiores nisi? Voluptatibus corrupti dolorum accusantium officiis omnis cumque ipsa iure corporis, commodi ab. Nam facere ab eligendi aliquid, eaque veritatis modi saepe ipsum reiciendis ducimus, amet optio expedita alias vel non, quod itaque porro suscipit maiores. Quaerat quibusdam sit eligendi ab alias ad, enim vero quis, dolor tenetur excepturi doloremque ut. Porro vero soluta voluptate, harum et veritatis itaque, iure minus, repudiandae doloremque magnam saepe?
+  <div class="mainbody">
+    <div class="container0">
+      <div class="mainhead">
+        <img src="LandP_bg.jpg" alt="">
+        <div class="container">
+          <div id="name">Justice</div>
+          <div id="info">Year2 Computer Science</div>
         </div>
-       </div>
-       <!-- if currentChoice is 'Following', display the user's following posts-->
-       <div v-else-if="currentChoice == 1">
-        <div v-for=" item in 3" class="myPost">
-          <h3>Following Post{{item}}</h3>
-          <!-- Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium assumenda nihil cum rem quidem. Error eveniet sit modi repellat, dolore sapiente adipisci, natus quam amet nemo, illum expedita mollitia! In earum vitae delectus reiciendis neque ipsum, laboriosam asperiores ducimus laborum nobis consequatur deleniti corporis, sed recusandae, quos itaque nemo enim numquam qui. Quod dignissimos explicabo beatae nobis, voluptatem facilis, modi aut voluptates amet, maiores impedit! Pariatur officia voluptatum ipsa minima illum at, magnam praesentium doloremque nemo aspernatur, maiores ducimus fuga, esse illo ex omnis ipsam quis voluptates reprehenderit voluptate nobis dolores debitis laborum? Natus praesentium placeat sunt sit eligendi alias eum hic, autem magnam fugit ab adipisci, rem provident soluta voluptatem maxime debitis in ipsam quod perferendis cum. Hic veritatis quam, corrupti esse unde voluptatibus consequatur eos, omnis est nesciunt quas iste. Dolorem quis asperiores nisi? Voluptatibus corrupti dolorum accusantium officiis omnis cumque ipsa iure corporis, commodi ab. Nam facere ab eligendi aliquid, eaque veritatis modi saepe ipsum reiciendis ducimus, amet optio expedita alias vel non, quod itaque porro suscipit maiores. Quaerat quibusdam sit eligendi ab alias ad, enim vero quis, dolor tenetur excepturi doloremque ut. Porro vero soluta voluptate, harum et veritatis itaque, iure minus, repudiandae doloremque magnam saepe? -->
-        </div>
+        <input style="font-size: 15px; width: 5%; margin-left: 10%; color: gray; border: none;" class="btn" type="button" name="" value="Edit">
       </div>
       <div class="left">
         <div class="item" v-bind:class="currentChoice === 0 ? 'active' : ''" @click="handleClick(0)">My Post</div>
