@@ -18,16 +18,8 @@
         <!-- A container for login -->
     <div class="login-box">
         <!-- <h1>Login</h1> -->
-        <div class="btn-box" >
-            <button type="button" class="toggle-btn" 
-            v-on:click="handleClickBtn1"
-            v-bind:class="currentStatus ? 'active' : ''">Log in</button>
-            <button type="button" class="toggle-btn" 
-            v-on:click="handleClickBtn2"
-            :class="!currentStatus ? 'active' : ''">Register</button>
-        </div>
         
-        <div v-if="currentStatus === true">
+
             <form method="POST" action="/process-login">
                 <div class="textbox">
                     <i class="fa fa-user" aria-hidden="true"></i>
@@ -38,35 +30,15 @@
                     <i class="fa fa-lock"></i>
                     <input type="password" placeholder="Password" name="password" value="">
                 </div>
+
+                <div class="textbox">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" placeholder="Password again" name="password" value="">
+                </div>
                 
+                <input class="btn" type="submit" name="" value="Reset">
                 
-                <input class="btn" type="submit" name="" value="Sign in">
-                <input style="font-size: 15px; width: 40%; text-align: left; color: gray;" class="btn" type="button" name="" value="Forget password">
             </form>
-        </div>
-        
-        <div v-else>
-            <form method="POST" action="/process-registration">
-                <div class="textbox">
-                    <i class="fa fa-user" aria-hidden="true"></i>
-                    <input type="text" placeholder="Username" name="name" value="">
-                </div>
-        
-                <div class="textbox">
-                    <i class="fa fa-lock"></i>
-                    <input type="password" placeholder="Password" name="password" value="">
-                </div>
-                <div class="textbox">
-                    <i class="fa fa-lock"></i>
-                    <input type="text" placeholder="SID" name="uid" value="">
-                </div>
-                <div class="textbox">
-                    <i class="fa fa-lock"></i>
-                    <input type="text" placeholder="CUHK email" name="email" value="">
-                </div>
-                <input class="btn" type="submit" name="" value="Register">
-            </form>
-        </div>
         
     </div>
     </div>
@@ -75,7 +47,6 @@
         const app = new Vue({
             el: "#app",
             data: {
-                currentStatus: true,
             },
             methods: {
                handleClickBtn1:function(){
