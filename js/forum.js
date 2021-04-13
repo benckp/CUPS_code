@@ -12,7 +12,6 @@ function search() {
     filter = input.value.toUpperCase();
     table = document.getElementById("forumList");
     tr = table.getElementsByTagName("tr");
-
     // Hide all post which does not contain the search query in its title
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[0];

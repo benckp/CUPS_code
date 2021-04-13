@@ -245,9 +245,21 @@ server.get('/newthread', urlencodedParser, (request, response) => {
 });
 
 server.get('/forum', urlencodedParser, (request, response) => {
-    
+    var post = [];
     if (request.session.loggedin) {
-        response.render(path.join(__dirname , "../html/forum"));
+        db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+        FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID;`, function(error, results, fields) {
+            if (error) throw error;
+            results.forEach(function(item){
+                post.push(item);
+                // console.log(item.HEADING);
+            });	
+            var viewData = {
+                post: post,
+            };
+            response.render(path.join(__dirname , "../html/forum"), viewData);
+            response.end();
+        });
     }
     else {
         response.redirect('/');
@@ -365,6 +377,10 @@ INSERT LIKED VALUES(uid, pid);
 // Unlike post
 DELETE FROM LIKED WHERE UID = ${uid} AND PID = ${pid};
 
+// Get all post
+SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID;
+
 // Check Liked
 SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
 FROM QUESTION, LIKED, USERS WHERE LIKED.PID = QUESTION.PID AND LIKED.UID = ${uid} AND QUESTION.UID = USERS.UID;
@@ -375,7 +391,7 @@ FROM QUESTION, USERS WHERE QUESTION.UID = ${uid} AND QUESTION.UID = USERS.UID;
 
 // Check comment post
 SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
-FROM QUESTION, RESPONDS, USERS WHERE RESPONDS.PID = QUESTION.PID AND RESPONDS.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;
+FROM QUESTION, RESPONDS, USERS WHERE RESPONDS.PID = QUESTION.PID AND RESPONDS.UID = ${uid} AND QUESTION.UID = USERS.UID;
 
 // Display profile
 'SELECT * FROM USERS WHERE LOGIN_NAME = ?', name

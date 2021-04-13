@@ -99,78 +99,21 @@
         <th style="text-align:center">Author </th>
         <th style="text-align:center">Time</th>
     </tr>
-    <tr>
-        <th style="text-align:center">1</th>
-        <td style="text-align:center">Hello World!</td>
-        <td>Quick question: do you... </td>
-        <td style="text-align:center">CSCI0000</td>
-        <td style="text-align:center">Task</td>
-        <td style="text-align:center">Dr CHAN</td>
-        <td style="text-align:center">9 hours ago</td>
-    </tr>
-    <tr>
-        <th style="text-align:center">2</th>
-        <td style="text-align:center">Hey guys!</td>
-        <td>Can someone help... </td>
-        <td style="text-align:center">ENGG0000</td>
-        <td style="text-align:center">Q&A</td>
-        <td style="text-align:center">Little CHAN</td>
-        <td style="text-align:center">5 hours ago</td>
-    </tr>
-    <tr>
-        <th style="text-align:center">3</th>
-        <td style="text-align:center">X-Men</td>
-        <td>Mutation, it is the key to our evolution... </td>
-        <td style="text-align:center">PSYC0000</td>
-        <td style="text-align:center">Task</td>
-        <td style="text-align:center">Prof X</td>
-        <td style="text-align:center">21 years ago</td>
-    </tr>
-    <tr>
-        <th style="text-align:center">4</th>
-        <td style="text-align:center">About initial code</td>
-        <td>completeness...  </td>
-        <td style="text-align:center">CSCI3100</td>
-        <td style="text-align:center">Q&A</td>
-        <td style="text-align:center">Danny</td>
-        <td style="text-align:center">1 day ago</td>
-    </tr>
-    <tr>
-        <th style="text-align:center">5</th>
-        <td style="text-align:center">Regarding initial code</td>
-        <td>robustness...  </td>
-        <td style="text-align:center">CSCI3100</td>
-        <td style="text-align:center">Q&A</td>
-        <td style="text-align:center">Ben</td>
-        <td style="text-align:center">1 day ago</td>
-    </tr>
-    <tr>
-        <th style="text-align:center">6</th>
-        <td style="text-align:center">Talking on initial code</td>
-        <td>user-friendliness... </td>
-        <td style="text-align:center">CSCI3100</td>
-        <td style="text-align:center">Q&A</td>
-        <td style="text-align:center">Elton</td>
-        <td style="text-align:center">1 day ago</td>
-    </tr>
-    <tr>
-        <th style="text-align:center">7</th>
-        <td style="text-align:center">Discussing initial code</td>
-        <td>documentation... </td>
-        <td style="text-align:center">CSCI3100</td>
-        <td style="text-align:center">Q&A</td>
-        <td style="text-align:center">Justice</td>
-        <td style="text-align:center">1 day ago</td>
-    </tr>
-    <tr>
-        <th style="text-align:center">8</th>
-        <td style="text-align:center">For initial code</td>
-        <td>other aspects... </td>
-        <td style="text-align:center">CSCI3100</td>
-        <td style="text-align:center">Q&A</td>
-        <td style="text-align:center">Dash</td>
-        <td style="text-align:center">1 day ago</td>
-    </tr>
+    <% for(var i = 0; i<post.length; i++) { %>
+        <tr>
+          <th style="text-align:center"><%=post[i].PID%></th>
+          <td style="text-align:center"><%=post[i].HEADING%></td>
+          <td><%=post[i].TEXT_CONTENT.substring(0, 15)%>... </td>
+          <td style="text-align:center"><%=post[i].CLASS%></td>
+          <td style="text-align:center"><%if (post[i].TYPE==1) {%>Q&A<%}else{%>Task<%}%></td>
+          <td style="text-align:center"><%=post[i].NAME%></td>
+          <td style="text-align:center">
+            <%if (Math.round((post[i].TIME / 60) /24) >0) {%> <%=Math.round((post[i].TIME / 60) /24)%> days
+            <%}else if (Math.round((post[i].TIME / 60)) >0) {%> <%=Math.round(post[i].TIME / 60)%> hours
+            <%}else {%> <%=post[i].TIME %> minutes<%}%>
+            ago</td>
+        </tr>
+        <% } %>
 </table>
 </div>
 </div>
