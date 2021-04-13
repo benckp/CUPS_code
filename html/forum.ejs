@@ -11,8 +11,12 @@
 <head>
     <meta charset="utf-8">
     <title>CUPS Forum</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" href="CUPSicon1.ico" type="image/x-icon/">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    	<link rel="preconnect" href="https://fonts.gstatic.com"> 
+    	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+    	<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="forum.css">
     <script src="forum.js"></script>
 </head>
@@ -22,25 +26,33 @@
 <!-- Partial: Top navigation with search bar -->
 <!-- TODO: link the top buttons to relevent pages -->
 <div class="topnav">
-    <!-- TODO: use our designed CUPS icon to as Home button -->
-    <a href="/forum">Home</a>
-    <div class="search-container">
-        <form>
-            <input type="text" id="searchInput" placeholder="Search title or content...">
-            <button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
-        </form>
-    </div>
-    <div class="topnav-right">
-        <a href="/question">Question</a>
-        <a href="/task">Task</a>
-        <a href="/profile">Profile</a>
-        <a href="#contact">Settings</a>
-    </div>
-</div>
-
+    <!-- Partial: Top navigation with search bar -->
+		<!-- TODO: link the top buttons to relevent pages -->
+		<nav class="sticky-top">
+			<div class="topnav">
+				<a href="/forum">
+					<img class="navicon" src="CUPSicon1.ico">
+				</a>
+				<div class="search-container">
+        			<form>
+            			<input type="text" id="searchInput" placeholder="Search title or content...">
+            			<button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
+        			</form>
+    			</div>
+    			<div class="topnav-right">
+        			<a href="/question">Question</a>
+        			<a href="/task">Task</a>
+        			<a href="/profile">Profile</a>
+        			<a href="#contact">Settings</a>
+    			</div>
+    		</div>
+    	</nav>
+    	<img class="navpic" src="navpic.jpg">
 <!-- filter navigation -->
 <!-- TODO: show an additional bar on selected filter selecting
            e.g show "type: Q&A" while Q&A post is filtered-->
+<div class="bg">
+<div class="content">
 <div class="filter">
     <div class="subfilter">
         <button class="subfilterbtn">Type <i class="fa fa-caret-down"></i></button>
@@ -165,12 +177,13 @@
         <td style="text-align:center">1 day ago</td>
     </tr>
 </table>
-
-
+</div>
+</div>
+<br>
 <!-- Partial: Footer for website info -->
-<footer>
-    This website was built on <time>2021-03-19</time>. <b>© CSCI3100 Group F6</b>
-</footer>
+<div class="footer">
+    		This website was built on <time>2021-03-19</time>. <b>© CSCI3100 Group F6</b>
+		</div>
 
 </body>
 </html>
