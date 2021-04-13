@@ -8,20 +8,22 @@
 	<script src="AnswerPost.js"></script>
 </head>
 <body>
-	<div class="container">
-		<div id="comments"> 
-			<div id="c1001" class="d-flex"></div>
-		</div>
-		<hr>
-		<h6>Add your comment:</h6>
-		<form>
-			<div class="mb-3">
-				<label for="new-comment" class="form-label">Comment</label>
-				<textarea class="form-control" id="new-comment" rows="3"></textarea>
-			</div>
-			<button type="button" class="btn btn-primary" onclick="processform()">Add comment</button>
-		</form>
-	</div>
+	<div class="webform">
+                <div id="comments"> 
+                    <div id="c1001" class="d-flex"></div>
+                    <hr>
+                </div>
+                <form class="formcontent">
+                    <fieldset>
+                        <legend>Add your comment:</legend>
+                        <div class="mb-3">
+                            <label for="new-comment" class="form-label">Comment</label>
+                            <textarea class="form-control" id="new-comment" rows="3"></textarea>
+                        </div>
+                        <button type="button" class="btn" onclick="processform()">Add comment</button>
+                    </fieldset>
+                </form>
+            </div>
 	<div class="GainCredit">
 		<!--Gain Credit by answering question in CUPS-->
 	</div>

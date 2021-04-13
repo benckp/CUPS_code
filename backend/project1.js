@@ -153,32 +153,77 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
     response.redirect('/verification');
 });
 
+
 server.get('/question', urlencodedParser, (request, response) => {
-    response.render(path.join(__dirname , "../html/CreatePost_homepage1"));
+    if (request.session.loggedin) {
+        response.render(path.join(__dirname , "../html/CreatePost_homepage1"));
+    }
+    else {
+        response.redirect('/');
+    }
 });
 
 server.get('/profile', urlencodedParser, (request, response) => {
-    response.render(path.join(__dirname , "../html/profile"));
+    if (request.session.loggedin) {
+        var viewData = {
+            username: request.session.username,
+        };
+        response.render(path.join(__dirname , "../html/profile"), viewData);
+        response.end();
+    }
+    else {
+        response.redirect('/');
+    }
 });
 
 server.get('/task', urlencodedParser, (request, response) => {
-    response.render(path.join(__dirname , "../html/CreatePost_homepage2"));
+    if (request.session.loggedin) {
+        response.render(path.join(__dirname , "../html/CreatePost_homepage2"));
+    }
+    else {
+        response.redirect('/');
+    }
+    
 });
 
 server.get('/newtask', urlencodedParser, (request, response) => {
-    response.render(path.join(__dirname , "../html/CreatePost_newtask"));
+    
+    if (request.session.loggedin) {
+        response.render(path.join(__dirname , "../html/CreatePost_newtask"));
+    }
+    else {
+        response.redirect('/');
+    }
 });
 
 server.get('/newthread', urlencodedParser, (request, response) => {
-    response.render(path.join(__dirname , "../html/CreatePost_newthread"));
+   
+    if (request.session.loggedin) {
+        response.render(path.join(__dirname , "../html/CreatePost_newthread"));
+    }
+    else {
+        response.redirect('/');
+    }
 });
 
 server.get('/forum', urlencodedParser, (request, response) => {
-    response.render(path.join(__dirname , "../html/forum"));
+    
+    if (request.session.loggedin) {
+        response.render(path.join(__dirname , "../html/forum"));
+    }
+    else {
+        response.redirect('/');
+    }
 });
 
 server.get('/answer', urlencodedParser, (request, response) => {
-    response.render(path.join(__dirname , "../html/AnswerPost"));
+    
+    if (request.session.loggedin) {
+        response.render(path.join(__dirname , "../html/AnswerPost"));
+    }
+    else {
+        response.redirect('/');
+    }
 });
 
 // After Login into the forum
@@ -238,6 +283,13 @@ CREATE TABLE COMMENTS(
     CID INT AUTO_INCREMENT PRIMARY KEY,
     UID INT NOT NULL,
     COMMENTING_ID INT NOT NULL,
+    TEXT_CONTENT TEXT NOT NULL,
+    CONSTRAINT F_USER_COMMENT FOREIGN KEY (UID) 
+    REFERENCES USERS(UID)
+);
+CREATE TABLE LIKED(
+    PID INT NOT NULL,
+    UID INT NOT NULL,
     TEXT_CONTENT TEXT NOT NULL,
     CONSTRAINT F_USER_COMMENT FOREIGN KEY (UID) 
     REFERENCES USERS(UID)

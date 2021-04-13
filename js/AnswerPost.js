@@ -19,5 +19,5 @@ function processform() {
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var dateTime = date+' '+time;
     newComment.querySelector("small").innerHTML = dateTime;
-    document.querySelector("form").reset;
+    document.getElementById('new-comment').value="";
 }
