@@ -41,6 +41,7 @@ server.set('view engine', 'ejs');
 server.use(session({
     secret: 'secret-key',
     loggedin: false,
+    uid: 0,
     username: "",
     resave: true,
     saveUninitialized: true
@@ -89,17 +90,18 @@ server.post('/process-login', urlencodedParser, (request, response) => {
     var pw = request.body.password;
 
     if (name && pw) {
-        db.query(`SELECT COUNT(UID) AS res FROM USERS WHERE LOGIN_NAME = '${name}' AND PASSWORD = '${pw}'`, function(error, results, fields) {
+        db.query(`SELECT UID FROM USERS WHERE LOGIN_NAME = '${name}' AND PASSWORD = '${pw}'`, function(error, results, fields) {
             if (error) throw error;
-			if (results[0].res > 0) {   // There are matches in the database
-				request.session.loggedin = true;
-				request.session.username = name;
-				response.redirect('/login_success');
-			} else {
+			if (results.length === 0) {   // There are no matches in the database
                 var viewData = {
                     wrong: true
                 };
                 response.render(path.join(__dirname ,"../html/LandP_login"), viewData);
+			} else {    
+                request.session.loggedin = true;
+				request.session.username = name;
+                request.session.uid = results[0].UID;
+				response.redirect('/login_success');
 			}			
 			response.end();
         });
@@ -164,12 +166,48 @@ server.get('/question', urlencodedParser, (request, response) => {
 });
 
 server.get('/profile', urlencodedParser, (request, response) => {
+    var liked_post = [];
+    var own_post = [];
+    var commented_post = [];
+    var credit = 0;
     if (request.session.loggedin) {
-        var viewData = {
-            username: request.session.username,
-        };
-        response.render(path.join(__dirname , "../html/profile"), viewData);
-        response.end();
+        db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+        FROM QUESTION, LIKED, USERS WHERE LIKED.PID = QUESTION.PID AND LIKED.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
+            if (error) throw error;
+            results.forEach(function(item){
+                liked_post.push(item);
+                // console.log(item.HEADING);
+            });	
+            db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+            FROM QUESTION, USERS WHERE QUESTION.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
+                if (error) throw error;
+                results.forEach(function(item){
+                    own_post.push(item);
+                    // console.log(item.HEADING);
+                });	
+                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+                FROM QUESTION, RESPONDS, USERS WHERE RESPONDS.PID = QUESTION.PID AND RESPONDS.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
+                    if (error) throw error;
+                    results.forEach(function(item){
+                        commented_post.push(item);
+                        // console.log(item.HEADING);
+                    });	
+                    db.query(`SELECT CREDIT_BAL FROM USERS WHERE USERS.UID = ${request.session.uid};`, function(error, results, fields) {
+                        if (error) throw error;
+                        credit = results[0].CREDIT_BAL;
+                        var viewData = {
+                            username: request.session.username,
+                            liked_post: liked_post,
+                            own_post: own_post,
+                            commented_post: commented_post,
+                            credit: credit
+                        };
+                        response.render(path.join(__dirname , "../html/profile"), viewData);
+                        response.end();
+                    });
+                });
+            });
+        });
     }
     else {
         response.redirect('/');
@@ -265,7 +303,8 @@ CREATE TABLE QUESTION(
     TEXT_CONTENT TEXT NOT NULL, 
     CREDIT INT, 
     VOTE INT DEFAULT 0,
-    SUGGEST_ANS TEXT NOT NULL,      // ? Why should it be not null ?
+    SUGGEST_ANS TEXT,
+    POST_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT F_USER_QUESTION FOREIGN KEY (UID) 
     REFERENCES USERS(UID)
 );
@@ -274,6 +313,7 @@ CREATE TABLE RESPONDS(
     UID INT NOT NULL,
     PID INT NOT NULL,
     TEXT_CONTENT TEXT NOT NULL, 
+    GRAPHIC BLOB,
     CONSTRAINT F_USER_RESPOND FOREIGN KEY (UID) 
     REFERENCES USERS(UID),
     CONSTRAINT F_QUESTION_RESPOND FOREIGN KEY (PID) 
@@ -288,16 +328,16 @@ CREATE TABLE COMMENTS(
     REFERENCES USERS(UID)
 );
 CREATE TABLE LIKED(
-    PID INT NOT NULL,
     UID INT NOT NULL,
-    TEXT_CONTENT TEXT NOT NULL,
-    CONSTRAINT F_USER_COMMENT FOREIGN KEY (UID) 
-    REFERENCES USERS(UID)
+    PID INT NOT NULL,
+    CONSTRAINT F_USER_LIKED FOREIGN KEY (UID) 
+    REFERENCES USERS(UID),
+    CONSTRAINT F_POST_LIKED FOREIGN KEY (PID) 
+    REFERENCES QUESTION(PID)
 );
 
 // Registration
 INSERT INTO USERS VALUES( 1155000000, TRUE, 'admin', 'admin', 'admin', 'admin@gmail.com', DEFAULT, DEFAULT, DEFAULT, TRUE);
-
 INSERT INTO USERS VALUES( 1155000001, TRUE, 'mons', 'admin', 'mons', 'mons@gmail.com', 15, DEFAULT, DEFAULT, TRUE);
 INSERT INTO USERS VALUES( 1155000002, TRUE, 'paul', 'admin', 'paul', 'paul@gmail.com', 14, DEFAULT, DEFAULT, DEFAULT);
 INSERT INTO USERS VALUES( 1155000003, TRUE, 'kim', 'admin', 'kim', 'kim@gmail.com', 13, DEFAULT, DEFAULT, TRUE);
@@ -311,15 +351,89 @@ INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gm
 `'SELECT * FROM USERS WHERE LOGIN_NAME = '${name}' AND PASSWORD = '${pw}''`
 
 // Ask Question / Set up task  (Changing the type)
-INSERT INTO QUESTION VALUES( 0, uid, type, keywords, class, heading, text_content, credit, DEFAULT, NULL);
+INSERT INTO QUESTION VALUES( 0, uid, type, keywords, class, heading, text_content, credit, DEFAULT, NULL, DEFAULT);
+
+// Respond
+INSERT RESPONDS VALUES(0, uid, pid, text, graphic);
 
 // Comment
 INSERT COMMENTS VALUES(0, uid, comment_id, text);
+
+// Like post
+INSERT LIKED VALUES(uid, pid);
+
+// Unlike post
+DELETE FROM LIKED WHERE UID = ${uid} AND PID = ${pid};
+
+// Check Liked
+SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+FROM QUESTION, LIKED, USERS WHERE LIKED.PID = QUESTION.PID AND LIKED.UID = ${uid} AND QUESTION.UID = USERS.UID;
+
+// Check Own post
+SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+FROM QUESTION, USERS WHERE QUESTION.UID = ${uid} AND QUESTION.UID = USERS.UID;
+
+// Check comment post
+SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+FROM QUESTION, RESPONDS, USERS WHERE RESPONDS.PID = QUESTION.PID AND RESPONDS.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;
 
 // Display profile
 'SELECT * FROM USERS WHERE LOGIN_NAME = ?', name
 
 // Leaderboard  (Only top ten would be shown)
 SELECT LOGIN_NAME, CREDIT_BAL FROM USERS ORDER BY CREDIT_BAL DESC LIMIT 10;
+
+
+
+
+
+
+
+
+
+All test case:
+INSERT INTO USERS VALUES( 1155000000, TRUE, 'admin', 'admin', 'admin', 'admin@gmail.com', DEFAULT, DEFAULT, DEFAULT, TRUE);
+INSERT INTO USERS VALUES( 1155000001, TRUE, 'mons', 'admin', 'mons', 'mons@gmail.com', 15, DEFAULT, DEFAULT, TRUE);
+INSERT INTO USERS VALUES( 1155000002, TRUE, 'paul', 'admin', 'paul', 'paul@gmail.com', 14, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO USERS VALUES( 1155000003, TRUE, 'kim', 'admin', 'kim', 'kim@gmail.com', 13, DEFAULT, DEFAULT, TRUE);
+INSERT INTO USERS VALUES( 1155000004, TRUE, 'lee', 'admin', 'lee', 'lee@gmail.com', 12, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gmail.com', 19, DEFAULT, DEFAULT, TRUE);
+INSERT INTO USERS VALUES( 2155000001, False, 'Prof. X', 'admin', 'Prof. X', 'profX@gmail.com', 19, DEFAULT, DEFAULT, TRUE);
+
+
+INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Help", "ENGG0000", "Hey guys!", "Can someone help...", 1, DEFAULT, NULL, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000004, TRUE, "Science fiction", "PSYC0000", "X-Men", "Mutation, it is the key to our evolution...", 3, DEFAULT, NULL, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "About initial code", "completeness...", 5, DEFAULT, NULL, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "Regarding initial code", "robustness...", 4, DEFAULT, NULL, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000002, TRUE, "Programming", "CSCI3100", "Talking on initial code", "user-friendliness...", 3, DEFAULT, NULL, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000003, TRUE, "Programming", "CSCI3100", "Discussing initial code", "documentation...", 2, DEFAULT, NULL, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000003, TRUE, "Programming", "CSCI3100", "For initial code", "other aspects...", 2, DEFAULT, NULL, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000000, TRUE, "Testing", "TEST0000", "Testing", "Working...", 1, DEFAULT, NULL, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1255000001, FALSE, "Story", "UGFH1000", "Oedipus the King", "Oedipus the King unfolds as a murder mystery, a political thriller, and a psychological whodunit. Throughout this mythic story of patricide and incest, Sophocles emphasizes the irony of a man determined to track down, expose, and punish an assassin, who turns out to be himself.
+As the play opens, the citizens of Thebes beg their king, Oedipus, to lift the plague that threatens to destroy the city. Oedipus has already sent his brother-in-law, Creon, to the oracle to learn what to do.
+On his return, Creon announces that the oracle instructs them to find the murderer of Laius, the king who ruled Thebes before Oedipus. The discovery and punishment of the murderer will end the plague. At once, Oedipus sets about to solve the murder.
+Summoned by the king, the blind prophet Tiresias at first refuses to speak, but finally accuses Oedipus himself of killing Laius. Oedipus mocks and rejects the prophet angrily, ordering him to leave, but not before Tiresias hints darkly of an incestuous marriage and a future of blindness, infamy, and wandering.
+Oedipus attempts to gain advice from Jocasta, the queen; she encourages him to ignore prophecies, explaining that a prophet once told her that Laius, her husband, would die at the hands of their son. According to Jocasta, the prophecy did not come true because the baby died, abandoned, and Laius himself was killed by a band of robbers at a crossroads.
+Oedipus becomes distressed by Jocasta's remarks because just before he came to Thebes he killed a man who resembled Laius at a crossroads. To learn the truth, Oedipus sends for the only living witness to the murder, a shepherd.
+Another worry haunts Oedipus. As a young man, he learned from an oracle that he was fated to kill his father and marry his mother. Fear of the prophecy drove him from his home in Corinth and brought him ultimately to Thebes. Again, Jocasta advises him not to worry about prophecies.
+Oedipus finds out from a messenger that Polybus, king of Corinth, Oedipus' father, has died of old age. Jocasta rejoices — surely this is proof that the prophecy Oedipus heard is worthless. Still, Oedipus worries about fulfilling the prophecy with his mother, Merope, a concern Jocasta dismisses.
+Overhearing, the messenger offers what he believes will be cheering news. Polybus and Merope are not Oedipus' real parents. In fact, the messenger himself gave Oedipus to the royal couple when a shepherd offered him an abandoned baby from the house of Laius.
+Oedipus becomes determined to track down the shepherd and learn the truth of his birth. Suddenly terrified, Jocasta begs him to stop, and then runs off to the palace, wild with grief.
+Confident that the worst he can hear is a tale of his lowly birth, Oedipus eagerly awaits the shepherd. At first the shepherd refuses to speak, but under threat of death he tells what he knows — Oedipus is actually the son of Laius and Jocasta.
+And so, despite his precautions, the prophecy that Oedipus dreaded has actually come true. Realizing that he has killed his father and married his mother, Oedipus is agonized by his fate.
+Rushing into the palace, Oedipus finds that the queen has killed herself. Tortured, frenzied, Oedipus takes the pins from her gown and rakes out his eyes, so that he can no longer look upon the misery he has caused. Now blinded and disgraced, Oedipus begs Creon to kill him, but as the play concludes, he quietly submits to Creon's leadership, and humbly awaits the oracle that will determine whether he will stay in Thebes or be cast out forever.", 5, DEFAULT, NULL, DEFAULT);
+
+INSERT LIKED VALUES(1155000000, 3);
+INSERT LIKED VALUES(1155000000, 7);
+INSERT LIKED VALUES(1155000000, 2);
+INSERT LIKED VALUES(1155000000, 5);
+INSERT LIKED VALUES(1155000000, 10);
+
+INSERT RESPONDS VALUES(0, 1155000000, 7, "Nice post!", NULL);
+
 */
+
+
+
 

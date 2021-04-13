@@ -1,3 +1,4 @@
+/*Regular*/
 body{
   	background-image: url('bg1.jpg');
  	background-size: cover;
@@ -88,91 +89,80 @@ img.navpic{
 	margin-right: 200px;
 }
 
-.mainbody{
-  background-color: rgba(220, 136, 231, .2);
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  size: 100%;
+/*New Thread*/
+.top-bar {
+    margin: 0;
+    overflow: hidden;
+    background-color: skyblue;
+    padding: 0 40px;
+    font-family: 'Oswald', sans-serif;
 }
 
-.container0{
-  width: 80%;
-  margin-left: 10%;
-  background-color: #fff;
+.form-control {
+    width: 100%;
+    height: 80px;
 }
 
-
-.head img{
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-top: 5%;
-  text-align: center;
-  line-height: 150px;
-  margin-left: 5%;
-}
-.container1{
-  height: 80px;
-  width: 300px;
-  display: inline-block;
-  /* border: red solid 1px; */
-  margin-top: 100px;
-  margin-left: 80px;
-  position: absolute;;
-}
-.active{
-  color: rgb(72, 100, 204);
-}
-#name{
-  	font-size: 40px;
-  	font: bold;
-  	font-family: 'Dancing Script', cursive;
-}
-#info{
-  	font-size: 18px;
-  	margin-top: 20px;
-  	color: dimgrey;
-  	font-family: 'Lora', serif;
-}
-.left{
-  	height: 10%;
-  	width: 20%;
-  	margin-left: 6%;
-  	font-family: 'Lora', serif;
-}
-.item{
-  flex: 1;
-  text-align: center;
-  font-size: 15px;
-  border: #e9e9e9bb 2px solid;
-}
-.item:hover{
-  background-color: rgb(72, 100, 204);
+.btn{
+	overflow: hidden;
+    padding: 6px 10px;
+    margin-top: 5px;
+    margin-right: 16px;
+    margin-bottom: 5px;
+    background: #ddd;
+    font-size: 15px
 }
 
-#forumList {
-  background: rgb(127, 255, 212, 0.25);
+.formcontent {
+	background-color: #F6F6EF;
+	overflow: hidden;
+	font-size: 15px
 }
 
-#forumList {
-  border-collapse: collapse;
-  width: 100%;
-  border: 1px solid #ddd;
-  font-size: 18px;
+.mb-3{
+	font-size: 20px;
 }
 
-#forumList th, #myTable td {
-  text-align: left;
-  padding: 12px;
+#comments{
+	background-color: white;
 }
 
-#forumList tr {
-  border-bottom: 1px solid #ddd;
+.form-label{
+	font-size: 15px
 }
 
-#forumList tr.header, #myTable tr:hover {
-  background: rgb(72, 209, 204, 0.25);
+.yourinput{
+	background-color: white;
 }
 
+/*Create Post*/
+.main {
+    background-color: #F6F6EF;
+    padding: 10px 15px;
+}
+
+.createpost h1, h4, ol {
+    margin: 0;
+}
+
+.createpost a {
+    text-decoration: none;
+    color: black;
+}
+
+p.subform {
+    margin: 5px 0;
+
+}
+
+label{
+	font-family: 'Merriweather', serif;
+}
+
+div.subforum{
+	font-family: 'Lora', serif;
+}
+
+div.subforum-title{
+	font-family: 'Noto Serif', serif;;
+}

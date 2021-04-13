@@ -1,188 +1,189 @@
-<body>
-    
-        <div class="top-bar">
-            <h1>
-                CUPS - Test only
-            </h1>
-        </div>
-        <div class="main">
-            <ol>
-                <h4><a href="profile">Profile</a></h4>
-                <h4><a href="question">Questions</a></h4>
-                <h4><a href="task">Tasks</a></h4>
-            </ol>
-        </div>
-        <div class="top-bar">
-            <h1>
-                Reference1 only (Question page)
-            </h1>
-        </div>
-        <div class="main">
-            <ol>
-            </ol>
-        </div>
-        <script src="CreatePost_data.js"></script>
-        <script>
-            console.log(threads);
-            var container = document.querySelector('ol');
-            <div class="subforum">
-                <div class="subforum-title">
-                    <h1>CUPS Homepage</h1>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CreatePost_homepage1</title>
+        <link rel="icon" href="CUPSicon1.ico" type="image/x-icon/">
+        <link rel="stylesheet" href="Project.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com"> 
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lora:ital@1&family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <!-- Partial: Top navigation with search bar -->
+        <!-- TODO: link the top buttons to relevent pages -->
+        <nav class="sticky-top">
+            <div class="topnav">
+                <a href="/forum">
+                    <img class="navicon" src="CUPSicon1.ico">
+                </a>
+                <div class="search-container">
+                    <form>
+                        <input type="text" id="searchInput" placeholder="Search title or content...">
+                        <button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
+                    </form>
                 </div>
-                <div class="subforum-row">
-                    <div class="subforum-icon subforum-column center">
-                        <i class="fa fa-car center"></i>
-                    </div>
-                    <div class="subforum-description subforum-column">
-                        <h4><a href="newthread">Ask new questions (For student)</a></h4>
-                        <p>A sample student ask question page</p>
-                    </div>
-                    <div class="subforum-stats subforum-column center">
-                        <span>24 Posts | 12 Topics</span>
-                    </div>
-                    <div class="subforum-info subforum-column">
-                        <b><a href="newthread">Last post</a></b> by <a href="newthread">stu</a>
-                        <br>on <small>17 Mar 2021</small>
-                             </div>
-                    </div>
-                    <hr class="subforum-devider">
+                <div class="topnav-right">
+                    <a href="/question">Question</a>
+                    <a href="/task">Task</a>
+                    <a href="/profile">Profile</a>
+                    <a href="#contact">Settings</a>
+                </div>
+            </div>
+        </nav>
+        <img class="navpic" src="navpic.jpg">
+        <div class="content">
+            <div class="createpost">
+                <div class="top-bar">
+                    <h1>
+                        CUPS - Test only
+                    </h1>
+                </div>
+                <div class="main">
+                    <ol>
+                        <h4><a href="profile">Profile</a></h4>
+                        <h4><a href="question">Questions</a></h4>
+                        <h4><a href="task">Tasks</a></h4>
+                    </ol>
+                </div>
+                <div class="top-bar">
+                    <h1>
+                        Reference1 only (Question page)
+                    </h1>
+                </div>
+                <div class="main">
+                    <ol>
+                    </ol>
+                </div>
+                <script src="CreatePost_data.js"></script>
+                <script>
+                    console.log(threads);
+                    var container = document.querySelector('ol');
+                    <div class="subforum">
+                        <div class="subforum-title">
+                            <h1>CUPS Homepage</h1>
+                        </div>
                         <div class="subforum-row">
                             <div class="subforum-icon subforum-column center">
                                 <i class="fa fa-car center"></i>
                             </div>
                             <div class="subforum-description subforum-column">
-                                <h4><a href="newtask">Assign new task (For teacher)</a></h4>
-                                <p>A sample teacher assign task page</p>
+                                <h4><a href="newthread">Ask new questions (For student)</a></h4>
+                                <p>A sample student ask question page</p>
                             </div>
                             <div class="subforum-stats subforum-column center">
                                 <span>24 Posts | 12 Topics</span>
                             </div>
                             <div class="subforum-info subforum-column">
-                                <b><a href="newtask">Last post</a></b> by <a href="newtask">hi123</a>
+                                <b><a href="newthread">Last post</a></b> by <a href="newthread">stu</a>
                                 <br>on <small>17 Mar 2021</small>
-                        </div>
+                                     </div>
                             </div>
-                        </div>
+                            <hr class="subforum-devider">
+                                <div class="subforum-row">
+                                    <div class="subforum-icon subforum-column center">
+                                        <i class="fa fa-car center"></i>
+                                    </div>
+                                    <div class="subforum-description subforum-column">
+                                        <h4><a href="newtask">Assign new task (For teacher)</a></h4>
+                                        <p>A sample teacher assign task page</p>
+                                    </div>
+                                    <div class="subforum-stats subforum-column center">
+                                        <span>24 Posts | 12 Topics</span>
+                                    </div>
+                                    <div class="subforum-info subforum-column">
+                                        <b><a href="newtask">Last post</a></b> by <a href="newtask">hi123</a>
+                                        <br>on <small>17 Mar 2021</small>
                                 </div>
-                </div>
-            </div>
+                                    </div>
+                                </div>
+                                        </div>
+                        </div>
+                    </div>
 
-        </script>
-
-
-        <div class="subforum">
-            <div class="subforum-title">
-                <h1>CUPS Homepage</h1>
-            </div>
-            <div class="subforum-row">
-                <div class="subforum-icon subforum-column center">
-                    <i class="fa fa-car center"></i>
-                </div>
-                <div class="subforum-description subforum-column">
-                    <h4><a href="newthread">For student</a></h4>
-                    <p>A sample student ask question page</p>
-                </div>
-                <div class="subforum-stats subforum-column center">
-                    <span>24 Posts | 12 Topics</span>
-                </div>
-                <div class="subforum-info subforum-column">
-                    <b><a href="newthread">Last post</a></b> by <a href="newthread">stu</a>
-                    <br>on <small>17 Mar 2021</small>
-                </div>
-            </div>
-            <hr class="subforum-devider">
-            <div class="subforum-row">
-                <div class="subforum-icon subforum-column center">
-                    <i class="fa fa-car center"></i>
-                </div>
-                <div class="subforum-description subforum-column">
-                    <h4><a href="newtask">For teacher</a></h4>
-                    <p>A sample teacher assign task page</p>
-                </div>
-                <div class="subforum-stats subforum-column center">
-                    <span>24 Posts | 12 Topics</span>
-                </div>
-                <div class="subforum-info subforum-column">
-                    <b><a href="newtask">Last post</a></b> by <a href="newtask">hi123</a>
-                    <br>on <small>17 Mar 2021</small>
-                </div>
-            </div>
-            <hr class="subforum-devider">
-            <div class="subforum-row">
-                <div class="subforum-icon subforum-column center">
-                    <i class="fa fa-car center"></i>
-                </div>
-                <div class="subforum-description subforum-column">
-                    <h4><a href="#">Description Title</a></h4>
-                    <p>Description Content: let's try to be cool, otherwise,w at 'sthe point in libing together with people youdont' live.</p>
-                </div>
-                <div class="subforum-stats subforum-column center">
-                    <span>24 Posts | 12 Topics</span>
-                </div>
-                <div class="subforum-info subforum-column">
-                    <b><a href="">Last post</a></b> by <a href="">JustAUser</a>
-                    <br>on <small>12 Dec 2020</small>
-                </div>
-            </div>
-            <hr class="subforum-devider">
-            <div class="subforum-row">
-                <div class="subforum-icon subforum-column center">
-                    <i class="fa fa-car center"></i>
-                </div>
-                <div class="subforum-description subforum-column">
-                    <h4><a href="#">Description Title</a></h4>
-                    <p>Description Content: let's try to be cool, otherwise,w at 'sthe point in libing together with people youdont' live.</p>
-                </div>
-                <div class="subforum-stats subforum-column center">
-                    <span>24 Posts | 12 Topics</span>
-                </div>
-                <div class="subforum-info subforum-column">
-                    <b><a href="">Last post</a></b> by <a href="">JustAUser</a>
-                    <br>on <small>12 Dec 2020</small>
-                </div>
-            </div>
+                </script>
 
 
+                <div class="subforum">
+                    <div class="subforum-title">
+                        <h1>CUPS Homepage</h1>
+                    </div>
+                    <div class="subforum-row">
+                        <div class="subforum-icon subforum-column center">
+                            <i class="fa fa-car center"></i>
+                        </div>
+                        <div class="subforum-description subforum-column">
+                            <h4><a href="newthread">For student</a></h4>
+                            <p>A sample student ask question page</p>
+                        </div>
+                        <div class="subforum-stats subforum-column center">
+                            <span>24 Posts | 12 Topics</span>
+                        </div>
+                        <div class="subforum-info subforum-column">
+                            <b><a href="newthread">Last post</a></b> by <a href="newthread">stu</a>
+                            <br>on <small>17 Mar 2021</small>
+                        </div>
+                    </div>
+                    <hr class="subforum-devider">
+                    <div class="subforum-row">
+                        <div class="subforum-icon subforum-column center">
+                            <i class="fa fa-car center"></i>
+                        </div>
+                        <div class="subforum-description subforum-column">
+                            <h4><a href="newtask">For teacher</a></h4>
+                            <p>A sample teacher assign task page</p>
+                        </div>
+                        <div class="subforum-stats subforum-column center">
+                            <span>24 Posts | 12 Topics</span>
+                        </div>
+                        <div class="subforum-info subforum-column">
+                            <b><a href="newtask">Last post</a></b> by <a href="newtask">hi123</a>
+                            <br>on <small>17 Mar 2021</small>
+                        </div>
+                    </div>
+                    <hr class="subforum-devider">
+                    <div class="subforum-row">
+                        <div class="subforum-icon subforum-column center">
+                            <i class="fa fa-car center"></i>
+                        </div>
+                        <div class="subforum-description subforum-column">
+                            <h4><a href="#">Description Title</a></h4>
+                            <p>Description Content: let's try to be cool, otherwise,w at 'sthe point in libing together with people youdont' live.</p>
+                        </div>
+                        <div class="subforum-stats subforum-column center">
+                            <span>24 Posts | 12 Topics</span>
+                        </div>
+                        <div class="subforum-info subforum-column">
+                            <b><a href="">Last post</a></b> by <a href="">JustAUser</a>
+                            <br>on <small>12 Dec 2020</small>
+                        </div>
+                    </div>
+                    <hr class="subforum-devider">
+                    <div class="subforum-row">
+                        <div class="subforum-icon subforum-column center">
+                            <i class="fa fa-car center"></i>
+                        </div>
+                        <div class="subforum-description subforum-column">
+                            <h4><a href="#">Description Title</a></h4>
+                            <p>Description Content: let's try to be cool, otherwise,w at 'sthe point in libing together with people youdont' live.</p>
+                        </div>
+                        <div class="subforum-stats subforum-column center">
+                            <span>24 Posts | 12 Topics</span>
+                        </div>
+                        <div class="subforum-info subforum-column">
+                            <b><a href="">Last post</a></b> by <a href="">JustAUser</a>
+                            <br>on <small>12 Dec 2020</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <style>
-        body { margin: 10px 60px; background-image: url('LandP_bg.jpg'); }
-
-            a {
-                text-decoration: none;
-                color: black;
-            }
-
-            h1, h4, ol {
-                margin: 0;
-            }
-
-            p {
-                margin: 5px 0;
-            }
-
-            .top-bar {
-                background-color: skyblue;
-                padding: 0 40px;
-            }
-
-            .main {
-                background-color: #F6F6EF;
-                padding: 10px 15px;
-            }
-
-            .row {
-                padding: 5px 0;
-            }
-
-            .bottom {
-                display: flex;
-                color: grey;
-                font-size: 12px;
-            }
-
-            .timestamp {
-                padding-right: 10px;
-            }
-        </style>
-</body>
+        <br>
+        <div class="footer">
+            This website was built on <time>2021-03-19</time>. <b>© CSCI3100 Group F6</b>
+        </div>
+    </body>
+</html>

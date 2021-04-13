@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="icon" href="CUPSicon1.ico" type="image/x-icon/">
+    <title>Login</title>
     <link rel="stylesheet" type="text/css" href="LandP_style1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com"> 
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
     <% if(locals.wrong) { %>
         <script src="test_warning.js"></script>
     <% } %>
@@ -42,6 +46,7 @@
         
     </div>
     </div>
+    <img class="logo" src="CSCI 3100.jpg">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <script>
         const app = new Vue({
@@ -58,5 +63,9 @@
             }
         });
     </script>
+    <br>
+    <div class="footer">
+        This website was built on <time>2021-03-19</time>. <b>© CSCI3100 Group F6</b>
+    </div>
 </body>
 </html>
