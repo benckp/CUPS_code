@@ -7,29 +7,42 @@
   <title>Profile</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="profile_style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com"> 
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lora:ital@1&family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@1,700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="app">
-    <div class="topnav">
-      <!-- TODO: use our designed CUPS icon to as Home button -->
-      <a href="/forum">Home</a>
-      <div class="search-container">
+    <!-- Partial: Top navigation with search bar -->
+    <!-- TODO: link the top buttons to relevent pages -->
+    <nav class="sticky-top">
+      <div class="topnav">
+        <a href="/forum">
+          <img class="navicon" src="CUPSicon1.ico">
+        </a>
+        <div class="search-container">
           <form>
-              <input type="text" id="searchInput" placeholder="Search title or content...">
-              <button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
+            <input type="text" id="searchInput" placeholder="Search title or content...">
+            <button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
           </form>
-      </div>
-      <div class="topnav-right">
+        </div>
+        <div class="topnav-right">
           <a href="/question">Question</a>
           <a href="/task">Task</a>
           <a href="/profile">Profile</a>
           <a href="#contact">Settings</a>
+        </div>
       </div>
-    </div>
-  <div class="mainbody">
-    <div class="container0">
-      <div class="mainhead">
-        <img src="LandP_bg.jpg" alt="">
+    </nav>
+    <img class="navpic" src="navpic.jpg">
+    <div id="app">
+    <div class="content">
+    <div class="mainbody">
+    <div class="container">
+      <div class="head">
+        <img src="CSCI 3100.jpg" alt="">
         <div class="container">
           <div id="name">Justice</div>
           <div id="info">Year2 Computer Science</div>
@@ -394,9 +407,11 @@
       </div>
     </div>
   </div>
-    <footer>
+  </div>
+  <br>
+    <div class="footer">
       This website was built on <time>2021-03-19</time>. <b>© CSCI3100 Group F6</b>
-    </footer>
+    </div>
  
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
