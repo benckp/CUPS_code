@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>CUPS - New Task</title>
+        <link rel="icon" href="CUPSicon1.ico" type="image/x-icon/">
+        <link rel="stylesheet" href="Project.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com"> 
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap" rel="stylesheet">
+		<script src="AnswerPost.js"></script>
+    </head>
+    <body>
+        <!-- Partial: Top navigation with search bar -->
+        <!-- TODO: link the top buttons to relevent pages -->
+        <nav class="sticky-top">
+            <div class="topnav">
+                <a href="/forum">
+                    <img class="navicon" src="CUPSicon1.ico">
+                </a>
+                <div class="search-container">
+                    <form>
+                        <input type="text" id="searchInput" placeholder="Search title or content...">
+                        <button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="topnav-right">
+                    <a href="/question">Question</a>
+                    <a href="/task">Task</a>
+                    <a href="/profile">Profile</a>
+                    <a href="#contact">Settings</a>
+                </div>
+            </div>
+        </nav>
+        <img class="navpic" src="navpic.jpg">
+        <div class="content">
+            <form class="formcontent">
+                <div class="top-bar">
+                    <h1>Enter a New Task</h1>
+                </div>
+                <fieldset>
+                    <label for="qname">Question:</label>
+                    <input type="text" id="qname" name="qname"><br><br>
+
+                    <label for="type">Hashtag:</label>
+                    <input type="text" id="type" name="type"><br><br>
+                    <label for="textcontent">Content:</label>
+                    <textarea id="textcontent" name="textcontent" cols="50" rows="10"></textarea><br><br>
+
+                    <label for="graphics">Select image:</label>
+                    <input type="file" id="graphics" name="graphics" accept="image/*">
+                    <br /><br />
+
+                    <label for="credit">Credit offer (1-10):</label>
+                    <input type="number" min="1" max="10" id="credit" name="credit"><br><br>
+
+
+                    <label for="suggestedanswer">Suggested Answer:</label>
+                    <textarea name="suggestedanswer" cols="50" rows="10"></textarea><br><br>
+
+                    <button type="submit" class="btn" onclick="createtask();">Submit</button>
+                </fieldset>
+            </form>
+            
+        </div>
+        <br>
+        <div class="footer">
+            This website was built on <time>2021-03-19</time>. <b>© CSCI3100 Group F6</b>
+        </div>
+       
+    </body>
+</html>
