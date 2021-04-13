@@ -18,7 +18,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
+<!-- Partial: Top navigation with search bar -->
+    <!-- TODO: link the top buttons to relevent pages -->
+    <nav class="sticky-top">
+      <div class="topnav">
+        <a href="/forum">
+          <img class="navicon" src="CUPSicon1.ico">
+        </a>
+        <div class="search-container">
+          <form>
+            <input type="text" id="searchInput" placeholder="Search title or content...">
+            <button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
+          </form>
+        </div>
+        <div class="topnav-right">
+          <a href="/question">Question</a>
+          <a href="/task">Task</a>
+          <a href="/profile">Profile</a>
+          <a href="#contact">Settings</a>
+        </div>
+      </div>
+    </nav>
+    <img class="navpic" src="navpic.jpg">
     <div id="app">
+    <div class="content">
         <!-- A container for login -->
     <div class="login-box">
         <!-- <h1>Login</h1> -->
@@ -41,6 +64,7 @@
         
     </div>
     </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <script>
         const app = new Vue({
@@ -57,5 +81,9 @@
             }
         });
     </script>
+    <br>
+    <div class="footer">
+      This website was built on <time>2021-03-19</time>. <b>© CSCI3100 Group F6</b>
+    </div>
 </body>
 </html>
