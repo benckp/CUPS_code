@@ -10,10 +10,10 @@ The database has used MySQL. We will proceed to deploy our service to AWS s.t. o
 
 ### Android App
 It is developed using android studio. Note that it is a new feature which we didn't put in our initial design doc. Thanks to our tutor, Mr SHEN, for the suggestion to us. Since we are all new to app development, there is only a partially implemented forum search and display page in the apps. We will try to make it cool in the next phase.  
-Remark: there are two demo imagine on the partial completed parts (forum searching and displaying).
+Remark: there are two demo images on the partial completed parts (forum searching and displaying).
 
 ## Initial Code Partial Function Demo Video
-https://drive.google.com/file/d/1A96YKZ45z5tmP83C53OHlO5IiLVajCZs/view?usp=sharing
+https://drive.google.com/file/d/1GC7leiVeOEgy4AK87-AI6CAqtzjOSuve/view?usp=sharing
 
 ## Ref
 - https://youtu.be/knGk9aUr4Do

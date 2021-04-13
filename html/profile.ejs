@@ -5,6 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="profile_style.css">
 </head>
 <body>
@@ -35,46 +36,389 @@
           <h3>Following Post{{item}}</h3>
           <!-- Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium assumenda nihil cum rem quidem. Error eveniet sit modi repellat, dolore sapiente adipisci, natus quam amet nemo, illum expedita mollitia! In earum vitae delectus reiciendis neque ipsum, laboriosam asperiores ducimus laborum nobis consequatur deleniti corporis, sed recusandae, quos itaque nemo enim numquam qui. Quod dignissimos explicabo beatae nobis, voluptatem facilis, modi aut voluptates amet, maiores impedit! Pariatur officia voluptatum ipsa minima illum at, magnam praesentium doloremque nemo aspernatur, maiores ducimus fuga, esse illo ex omnis ipsam quis voluptates reprehenderit voluptate nobis dolores debitis laborum? Natus praesentium placeat sunt sit eligendi alias eum hic, autem magnam fugit ab adipisci, rem provident soluta voluptatem maxime debitis in ipsam quod perferendis cum. Hic veritatis quam, corrupti esse unde voluptatibus consequatur eos, omnis est nesciunt quas iste. Dolorem quis asperiores nisi? Voluptatibus corrupti dolorum accusantium officiis omnis cumque ipsa iure corporis, commodi ab. Nam facere ab eligendi aliquid, eaque veritatis modi saepe ipsum reiciendis ducimus, amet optio expedita alias vel non, quod itaque porro suscipit maiores. Quaerat quibusdam sit eligendi ab alias ad, enim vero quis, dolor tenetur excepturi doloremque ut. Porro vero soluta voluptate, harum et veritatis itaque, iure minus, repudiandae doloremque magnam saepe? -->
         </div>
-       </div>
-       <!-- if currentChioce is 'Likes', display the user's liked posts -->
-       <div v-else-if="currentChoice == 2">
-        <div v-for=" item in 8" class="myPost">
-          <h3>Liked Post{{item}}</h3>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium assumenda nihil cum rem quidem. Error eveniet sit modi repellat, dolore sapiente adipisci, natus quam amet nemo, illum expedita mollitia! In earum vitae delectus reiciendis neque ipsum, laboriosam asperiores ducimus laborum nobis consequatur deleniti corporis, sed recusandae, quos itaque nemo enim numquam qui. Quod dignissimos explicabo beatae nobis, voluptatem facilis, modi aut voluptates amet, maiores impedit! Pariatur officia voluptatum ipsa minima illum at, magnam praesentium doloremque nemo aspernatur, maiores ducimus fuga, esse illo ex omnis ipsam quis voluptates reprehenderit voluptate nobis dolores debitis laborum? Natus praesentium placeat sunt sit eligendi alias eum hic, autem magnam fugit ab adipisci, rem provident soluta voluptatem maxime debitis in ipsam quod perferendis cum. Hic veritatis quam, corrupti esse unde voluptatibus consequatur eos, omnis est nesciunt quas iste. Dolorem quis asperiores nisi? Voluptatibus corrupti dolorum accusantium officiis omnis cumque ipsa iure corporis, commodi ab. Nam facere ab eligendi aliquid, eaque veritatis modi saepe ipsum reiciendis ducimus, amet optio expedita alias vel non, quod itaque porro suscipit maiores. Quaerat quibusdam sit eligendi ab alias ad, enim vero quis, dolor tenetur excepturi doloremque ut. Porro vero soluta voluptate, harum et veritatis itaque, iure minus, repudiandae doloremque magnam saepe?
-        </div>
-       </div>
-       <!-- if currentChoice is 'My Credit', display the user's credit balance and income expenditure records -->
-       <div v-else>
-        <div class="credit">
-          Current credit is {{currentCredit}}
-        </div>
-        <!-- Here is just a demo, later the records will introduce from the database -->
-        <div class="records">
-          <div v-for="item in 10" class="incomeRecords">
-            Income 10 credits from Post 996 at Jan 1st, 2020
+      </div>
+      <div class="left">
+        <div class="item" v-bind:class="currentChoice === 0 ? 'active' : ''" @click="handleClick(0)">My Post</div>
+        <div class="item" v-bind:class="currentChoice === 1 ? 'active' : ''" @click="handleClick(1)">Following</div>
+        <div class="item" v-bind:class="currentChoice === 2 ? 'active' : ''" @click="handleClick(2)">My Comments</div>
+        <div class="item" v-bind:class="currentChoice === 3 ? 'active' : ''" @click="handleClick(3)">My Credits</div>
+      </div>
+      <div class="main">
+         <div v-if="currentChoice === 0">
+          My Post
+          <table class = "table" id="forumList" >
+            <tr class="header">
+                <th style="text-align:center">Post ID</th>
+                <th style="text-align:center">Title</th>
+                <th style="text-align:center">Preview of content</th>
+                <th style="text-align:center">Course</th>
+                <th style="text-align:center">Type</th>
+                <th style="text-align:center">Author </th>
+                <th style="text-align:center">Time</th>
+            </tr>
+            <tr>
+                <th style="text-align:center">1</th>
+                <td style="text-align:center">Hello World!</td>
+                <td>Quick question: do you... </td>
+                <td style="text-align:center">CSCI0000</td>
+                <td style="text-align:center">Task</td>
+                <td style="text-align:center">Dr CHAN</td>
+                <td style="text-align:center">9 hours ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">2</th>
+                <td style="text-align:center">Hey guys!</td>
+                <td>Can someone help... </td>
+                <td style="text-align:center">ENGG0000</td>
+                <td style="text-align:center">Q&A</td>
+                <td style="text-align:center">Little CHAN</td>
+                <td style="text-align:center">5 hours ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">3</th>
+                <td style="text-align:center">X-Men</td>
+                <td>Mutation, it is the key to our evolution... </td>
+                <td style="text-align:center">PSYC0000</td>
+                <td style="text-align:center">Task</td>
+                <td style="text-align:center">Prof X</td>
+                <td style="text-align:center">21 years ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">4</th>
+                <td style="text-align:center">About initial code</td>
+                <td>completeness...  </td>
+                <td style="text-align:center">CSCI3100</td>
+                <td style="text-align:center">Q&A</td>
+                <td style="text-align:center">Danny</td>
+                <td style="text-align:center">1 day ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">5</th>
+                <td style="text-align:center">Regarding initial code</td>
+                <td>robustness...  </td>
+                <td style="text-align:center">CSCI3100</td>
+                <td style="text-align:center">Q&A</td>
+                <td style="text-align:center">Ben</td>
+                <td style="text-align:center">1 day ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">6</th>
+                <td style="text-align:center">Talking on initial code</td>
+                <td>user-friendliness... </td>
+                <td style="text-align:center">CSCI3100</td>
+                <td style="text-align:center">Q&A</td>
+                <td style="text-align:center">Elton</td>
+                <td style="text-align:center">1 day ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">7</th>
+                <td style="text-align:center">Discussing initial code</td>
+                <td>documentation... </td>
+                <td style="text-align:center">CSCI3100</td>
+                <td style="text-align:center">Q&A</td>
+                <td style="text-align:center">Justice</td>
+                <td style="text-align:center">1 day ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">8</th>
+                <td style="text-align:center">For initial code</td>
+                <td>other aspects... </td>
+                <td style="text-align:center">CSCI3100</td>
+                <td style="text-align:center">Q&A</td>
+                <td style="text-align:center">Dash</td>
+                <td style="text-align:center">1 day ago</td>
+            </tr>
+        </table>
           </div>
-          <div v-for="item in 10" class="expenseRecords">
-            Cost 10 credits on Post 886 at Jan 1st, 2020
+         <div v-else-if="currentChoice === 1">
+          Following
+          <table class = "table" id="forumList" >
+            <tr class="header">
+                <th style="text-align:center">Post ID</th>
+                <th style="text-align:center">Title</th>
+                <th style="text-align:center">Preview of content</th>
+                <th style="text-align:center">Course</th>
+                <th style="text-align:center">Type</th>
+                <th style="text-align:center">Author </th>
+                <th style="text-align:center">Time</th>
+            </tr>
+            <tr>
+                <th style="text-align:center">1</th>
+                <td style="text-align:center">Hello World!</td>
+                <td>Quick question: do you... </td>
+                <td style="text-align:center">CSCI0000</td>
+                <td style="text-align:center">Task</td>
+                <td style="text-align:center">Dr CHAN</td>
+                <td style="text-align:center">9 hours ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">2</th>
+                <td style="text-align:center">Hey guys!</td>
+                <td>Can someone help... </td>
+                <td style="text-align:center">ENGG0000</td>
+                <td style="text-align:center">Q&A</td>
+                <td style="text-align:center">Little CHAN</td>
+                <td style="text-align:center">5 hours ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">3</th>
+                <td style="text-align:center">X-Men</td>
+                <td>Mutation, it is the key to our evolution... </td>
+                <td style="text-align:center">PSYC0000</td>
+                <td style="text-align:center">Task</td>
+                <td style="text-align:center">Prof X</td>
+                <td style="text-align:center">21 years ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">4</th>
+                <td style="text-align:center">About initial code</td>
+                <td>completeness...  </td>
+                <td style="text-align:center">CSCI3100</td>
+                <td style="text-align:center">Q&A</td>
+                <td style="text-align:center">Danny</td>
+                <td style="text-align:center">1 day ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">5</th>
+                <td style="text-align:center">Regarding initial code</td>
+                <td>robustness...  </td>
+                <td style="text-align:center">CSCI3100</td>
+                <td style="text-align:center">Q&A</td>
+                <td style="text-align:center">Ben</td>
+                <td style="text-align:center">1 day ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">6</th>
+                <td style="text-align:center">Talking on initial code</td>
+                <td>user-friendliness... </td>
+                <td style="text-align:center">CSCI3100</td>
+                <td style="text-align:center">Q&A</td>
+                <td style="text-align:center">Elton</td>
+                <td style="text-align:center">1 day ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">7</th>
+                <td style="text-align:center">Discussing initial code</td>
+                <td>documentation... </td>
+                <td style="text-align:center">CSCI3100</td>
+                <td style="text-align:center">Q&A</td>
+                <td style="text-align:center">Justice</td>
+                <td style="text-align:center">1 day ago</td>
+            </tr>
+            <tr>
+                <th style="text-align:center">8</th>
+                <td style="text-align:center">For initial code</td>
+                <td>other aspects... </td>
+                <td style="text-align:center">CSCI3100</td>
+                <td style="text-align:center">Q&A</td>
+                <td style="text-align:center">Dash</td>
+                <td style="text-align:center">1 day ago</td>
+            </tr>
+        </table>
+         </div>
+         <div v-else-if="currentChoice === 2">
+         Likes
+         <table class = "table" id="forumList" >
+          <tr class="header">
+              <th style="text-align:center">Post ID</th>
+              <th style="text-align:center">Title</th>
+              <th style="text-align:center">Preview of content</th>
+              <th style="text-align:center">Course</th>
+              <th style="text-align:center">Type</th>
+              <th style="text-align:center">Author </th>
+              <th style="text-align:center">Time</th>
+          </tr>
+          <tr>
+              <th style="text-align:center">1</th>
+              <td style="text-align:center">Hello World!</td>
+              <td>Quick question: do you... </td>
+              <td style="text-align:center">CSCI0000</td>
+              <td style="text-align:center">Task</td>
+              <td style="text-align:center">Dr CHAN</td>
+              <td style="text-align:center">9 hours ago</td>
+          </tr>
+          <tr>
+              <th style="text-align:center">2</th>
+              <td style="text-align:center">Hey guys!</td>
+              <td>Can someone help... </td>
+              <td style="text-align:center">ENGG0000</td>
+              <td style="text-align:center">Q&A</td>
+              <td style="text-align:center">Little CHAN</td>
+              <td style="text-align:center">5 hours ago</td>
+          </tr>
+          <tr>
+              <th style="text-align:center">3</th>
+              <td style="text-align:center">X-Men</td>
+              <td>Mutation, it is the key to our evolution... </td>
+              <td style="text-align:center">PSYC0000</td>
+              <td style="text-align:center">Task</td>
+              <td style="text-align:center">Prof X</td>
+              <td style="text-align:center">21 years ago</td>
+          </tr>
+          <tr>
+              <th style="text-align:center">4</th>
+              <td style="text-align:center">About initial code</td>
+              <td>completeness...  </td>
+              <td style="text-align:center">CSCI3100</td>
+              <td style="text-align:center">Q&A</td>
+              <td style="text-align:center">Danny</td>
+              <td style="text-align:center">1 day ago</td>
+          </tr>
+          <tr>
+              <th style="text-align:center">5</th>
+              <td style="text-align:center">Regarding initial code</td>
+              <td>robustness...  </td>
+              <td style="text-align:center">CSCI3100</td>
+              <td style="text-align:center">Q&A</td>
+              <td style="text-align:center">Ben</td>
+              <td style="text-align:center">1 day ago</td>
+          </tr>
+          <tr>
+              <th style="text-align:center">6</th>
+              <td style="text-align:center">Talking on initial code</td>
+              <td>user-friendliness... </td>
+              <td style="text-align:center">CSCI3100</td>
+              <td style="text-align:center">Q&A</td>
+              <td style="text-align:center">Elton</td>
+              <td style="text-align:center">1 day ago</td>
+          </tr>
+          <tr>
+              <th style="text-align:center">7</th>
+              <td style="text-align:center">Discussing initial code</td>
+              <td>documentation... </td>
+              <td style="text-align:center">CSCI3100</td>
+              <td style="text-align:center">Q&A</td>
+              <td style="text-align:center">Justice</td>
+              <td style="text-align:center">1 day ago</td>
+          </tr>
+          <tr>
+              <th style="text-align:center">8</th>
+              <td style="text-align:center">For initial code</td>
+              <td>other aspects... </td>
+              <td style="text-align:center">CSCI3100</td>
+              <td style="text-align:center">Q&A</td>
+              <td style="text-align:center">Dash</td>
+              <td style="text-align:center">1 day ago</td>
+          </tr>
+      </table>
+         </div>
+         <div v-else>
+          <div class="credit">
+            Current credit is {{currentCredit}}
           </div>
-        </div>
-       </div>
+          <div class="records">
+            <table class = "table" id="forumList" >
+              <tr class="header">
+                  <th style="text-align:center">Post ID</th>
+                  <th style="text-align:center">Title</th>
+                  <th style="text-align:center">Preview of content</th>
+                  <th style="text-align:center">Course</th>
+                  <th style="text-align:center">Type</th>
+                  <th style="text-align:center">Author </th>
+                  <th style="text-align:center">Time</th>
+              </tr>
+              <tr>
+                  <th style="text-align:center">1</th>
+                  <td style="text-align:center">Hello World!</td>
+                  <td>Quick question: do you... </td>
+                  <td style="text-align:center">CSCI0000</td>
+                  <td style="text-align:center">Task</td>
+                  <td style="text-align:center">Dr CHAN</td>
+                  <td style="text-align:center">9 hours ago</td>
+              </tr>
+              <tr>
+                  <th style="text-align:center">2</th>
+                  <td style="text-align:center">Hey guys!</td>
+                  <td>Can someone help... </td>
+                  <td style="text-align:center">ENGG0000</td>
+                  <td style="text-align:center">Q&A</td>
+                  <td style="text-align:center">Little CHAN</td>
+                  <td style="text-align:center">5 hours ago</td>
+              </tr>
+              <tr>
+                  <th style="text-align:center">3</th>
+                  <td style="text-align:center">X-Men</td>
+                  <td>Mutation, it is the key to our evolution... </td>
+                  <td style="text-align:center">PSYC0000</td>
+                  <td style="text-align:center">Task</td>
+                  <td style="text-align:center">Prof X</td>
+                  <td style="text-align:center">21 years ago</td>
+              </tr>
+              <tr>
+                  <th style="text-align:center">4</th>
+                  <td style="text-align:center">About initial code</td>
+                  <td>completeness...  </td>
+                  <td style="text-align:center">CSCI3100</td>
+                  <td style="text-align:center">Q&A</td>
+                  <td style="text-align:center">Danny</td>
+                  <td style="text-align:center">1 day ago</td>
+              </tr>
+              <tr>
+                  <th style="text-align:center">5</th>
+                  <td style="text-align:center">Regarding initial code</td>
+                  <td>robustness...  </td>
+                  <td style="text-align:center">CSCI3100</td>
+                  <td style="text-align:center">Q&A</td>
+                  <td style="text-align:center">Ben</td>
+                  <td style="text-align:center">1 day ago</td>
+              </tr>
+              <tr>
+                  <th style="text-align:center">6</th>
+                  <td style="text-align:center">Talking on initial code</td>
+                  <td>user-friendliness... </td>
+                  <td style="text-align:center">CSCI3100</td>
+                  <td style="text-align:center">Q&A</td>
+                  <td style="text-align:center">Elton</td>
+                  <td style="text-align:center">1 day ago</td>
+              </tr>
+              <tr>
+                  <th style="text-align:center">7</th>
+                  <td style="text-align:center">Discussing initial code</td>
+                  <td>documentation... </td>
+                  <td style="text-align:center">CSCI3100</td>
+                  <td style="text-align:center">Q&A</td>
+                  <td style="text-align:center">Justice</td>
+                  <td style="text-align:center">1 day ago</td>
+              </tr>
+              <tr>
+                  <th style="text-align:center">8</th>
+                  <td style="text-align:center">For initial code</td>
+                  <td>other aspects... </td>
+                  <td style="text-align:center">CSCI3100</td>
+                  <td style="text-align:center">Q&A</td>
+                  <td style="text-align:center">Dash</td>
+                  <td style="text-align:center">1 day ago</td>
+              </tr>
+          </table>
+          </div>
+         </div>
+      </div>
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <footer>
+      This website was built on <time>2021-03-19</time>. <b>© CSCI3100 Group F6</b>
+    </footer>
+ 
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
   <script>
     const app = new Vue({
       el: '#app',
       data: {
-        list: ['My Post', 'Following', 'Likes','My Credits'],
         currentChoice: 0,
         currentCredit: 320,
+        myPost: [],
+        following: [],
+        comments: [],
+        credits: []
       },
       methods: {
         handleClick(e){
           this.currentChoice = e;
+          console.log(this.currentChoice);
         }
       }
-    })
+    });
   </script>
 </body>
 </html>

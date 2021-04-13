@@ -1,26 +1,101 @@
-.head{
-  border: red solid 1px;
-  margin-top: 100px;
-  width: 90%;
-  margin-left: 5%;
+.topnav {
+  overflow: hidden;
+  background-color: #e9e9e9;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  border-bottom: #e9e9e9 1px solid;
 }
 
-.head img{
-  width: 200px;
-  height: 200px;
+/* Styling of the link button */
+.topnav a {
+  float: left;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #2196F3;
+  color: white;
+}
+
+
+/* Styling of the search container */
+.topnav .search-container {
+  float: left;
+}
+
+.topnav input[type=text] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+}
+
+.topnav .search-container button {
+  padding: 6px 10px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.topnav .search-container button:hover {
+  background: #ccc;
+}
+
+/* Setting to put the profile and settings button on right */
+.topnav-right {
+  float: right;
+}
+
+.mainbody{
+  background-color: rgba(220, 136, 231, .2);
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  size: 100%;
+}
+
+.container0{
+  width: 80%;
+  margin-left: 10%;
+  background-color: #fff;
+}
+
+
+.mainhead img{
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   display: inline-block;
-  margin-top: 3%;
+  margin-top: 5%;
+  text-align: center;
+  line-height: 150px;
   margin-left: 5%;
 }
 .container{
-  height: 180px;
+  height: 80px;
   width: 300px;
   display: inline-block;
-  border: red solid 1px;
+  /* border: red solid 1px; */
   margin-top: 100px;
   margin-left: 80px;
   position: absolute;;
+}
+.active{
+  color: red;
 }
 #name{
   font-size: 40px;
@@ -33,8 +108,50 @@
   color: dimgrey;
 }
 .left{
-  border:orange solid 1px;
-  height: 10%;
-  width: 20%;
-  margin-left: 6%;
+  /* border:orange solid 1px; */
+  width: 100%;
+  display: flex;
+}
+.item{
+  flex: 1;
+  text-align: center;
+  font-size: 22px;
+  border: #e9e9e9bb 2px solid;
+}
+.item:hover{
+  background-color: #e6e6e6;
+}
+
+#forumList {
+  background: rgb(127, 255, 212, 0.25);
+}
+
+#forumList {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#forumList th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#forumList tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#forumList tr.header, #myTable tr:hover {
+  background: rgb(72, 209, 204, 0.25);
+}
+
+footer {
+  background: rgb(119, 136, 153, 0.5);
+  text-align: right;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
 }
