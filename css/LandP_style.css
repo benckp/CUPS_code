@@ -5,6 +5,12 @@ body{
  	background-attachment: fixed;
 }
 
+img.navicon{
+	padding: 5px 10px;
+	height: 40px;
+	float: left;
+}
+
 .footer {
     background: rgb(119, 136, 153);
     text-align: right;
