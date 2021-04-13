@@ -12,6 +12,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap" rel="stylesheet">
+		<script src="AnswerPost.js"></script>
     </head>
     <body>
         <!-- Partial: Top navigation with search bar -->
@@ -54,30 +55,22 @@
                     <input type="file" id="graphics" name="graphics" accept="image/*">
                     <br /><br />
 
-                    <label for="credit">Credit offer:</label>
-                    <input type="number" min="0" max="10" id="credit" name="credit"><br><br>
+                    <label for="credit">Credit offer (1-10):</label>
+                    <input type="number" min="1" max="10" id="credit" name="credit"><br><br>
 
 
                     <label for="suggestedanswer">Suggested Answer:</label>
                     <textarea name="suggestedanswer" cols="50" rows="10"></textarea><br><br>
 
-                    <button type="submit" class="btn" onclick="showInput();">Submit</button>
+                    <button type="submit" class="btn" onclick="createtask();">Submit</button>
                 </fieldset>
             </form>
-            <p class="yourinput">
-                Your input: <br>
-                <span id='display'></span>
-            </p>
+            
         </div>
         <br>
         <div class="footer">
             This website was built on <time>2021-03-19</time>. <b>© CSCI3100 Group F6</b>
         </div>
-        <script language="JavaScript">
-            function showInput() {
-            document.getElementById('display').innerHTML =
-            document.getElementById("qname").value + document.getElementById("credit").value + document.getElementById("textcontent").value;
-            }
-        </script>
+       
     </body>
 </html>
