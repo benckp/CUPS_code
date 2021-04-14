@@ -132,8 +132,8 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
     var email = request.body.email;
     var uid = request.body.uid;
     // Save to the database
-    db.query(`INSERT INTO USERS VALUES( '${uid}', TRUE, '${username}', '${pw}', '${name}', '${email}', DEFAULT, DEFAULT, DEFAULT, DEFAULT)`, function(error, results, fields) {
-        // if (error) throw error;
+    db.query(`INSERT INTO USERS VALUES( '${uid}', TRUE, '${username}', '${pw}', '${name}', '${email}', DEFAULT, DEFAULT, DEFAULT, DEFAULT, null, null)`, function(error, results, fields) {
+        if (error) throw error;
     });
 
     // Need verify
