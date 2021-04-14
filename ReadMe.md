@@ -1,8 +1,17 @@
-# CSCI3100 Group F6 Chinese University Problem-solving System (CUPS) initial code
+# CSCI3100 Group F6 Chinese University Problem-solving System (CUPS) complete code
 
 ## System Structure
 ### Front end
-It is developed using html5, css and js (Bootstrap, Vue). The executable completed part are mainly about our main functions but not styling or ui. We will proceed to incorperate the CUHK feature into our design.
+It is developed using html5, css and js (Bootstrap, Vue). We have divided the front end implementation into 5 parts: Login, Profile, Homepage (Forum), CreatePost, and AnswerPost pages. Each parts has one ejs(html) file, one css file. There are also seperated js file for forum and answer page.
+#### User Interface
+Thanks to our tutor, Mr SHEN, for the suggestions, we included CUHK feature in our interface design. For example, the background photo is a drawing of the CUHK science centre, and the homepage highlighted photo is of the CUHK whole screen. On the other hand, we have used fresh color as our main color, so that the design can feature out the energetic compus in CUHK.
+
+#### Login page
+At the login page, the user can login with their account and password, or register with a new account using cuhk email. We also provide assistent for users who forget their password.
+
+#### Home page (Forum)
+At the home page, list of forums are displayed. Users can sort the posts by clicking on the header of the table. Moreover, they can also search 
+
 
 ### Backend
 It is developed in Nodejs and Express.
