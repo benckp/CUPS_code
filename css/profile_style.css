@@ -88,6 +88,26 @@ margin-left: 200px;
 margin-right: 200px;
 }
 
+a.newpo{
+    float: left;
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+a.newpo:hover{
+    background-color: #ddd;
+    color: black;
+}
+
+a.newpo:active {
+    background-color: #2196F3;
+    color: white;
+}
+
 .mainbody{
 /* background-color: rgba(220, 136, 231, .2); */
 margin: 0;

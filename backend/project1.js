@@ -106,14 +106,13 @@ server.get('/verification', urlencodedParser, (request, response) => {
 });
 
 server.post('/process-registration', urlencodedParser, (request, response) => {
-    var username = request.body.username;
+    var username = request.body.name;
     var pw = request.body.password;
     var name = username;
     var email = request.body.email;
     var uid = request.body.uid;
-
     // Save to the database
-    db.query(`INSERT INTO USERS VALUES( '${uid}', TRUE, '${username}', '${pw}', '${name}', '${email}', DEFAULT, DEFAULT, DEFAULT, DEFAULT)`, function(error, results, fields) {
+    db.query(`INSERT INTO USERS VALUES( '${uid}', TRUE, '${username}', '${pw}', '${name}', '${email}', DEFAULT, DEFAULT, DEFAULT, DEFAULT, null, null)`, function(error, results, fields) {
         if (error) throw error;
     });
 
