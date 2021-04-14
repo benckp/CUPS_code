@@ -100,7 +100,8 @@ server.post('/process-login', urlencodedParser, (request, response) => {
         });
     } else {
         var viewData = {
-            wrong: true
+            wrong: true,
+            passvc: true
         };
         request.session.last_url = '/process-login' ;
         response.render(path.join(__dirname ,"../html/LandP_login"), viewData);
@@ -419,16 +420,18 @@ server.post('/check_verification', urlencodedParser, (request, response) => {
     if (vc) {
         db.query(`SELECT IS_AUTH FROM USERS WHERE UID = '${request.session.uid}'`, function(error, results, fields) {
             if (error) throw error;
-            if (vc === results[0].IS_AUTH) {
-                db.query(`UPDATE USERS SET IS_AUTH = NULL WHERE UID = '${request.session.uid}'`, function(error, results, fields) {
-                    request.session.is_auth = null;
-                    response.redirect('/forum');
-                    response.end();
-                });
-            }
-            else {
-                response.redirect('/');
-                    response.end();
+            if (results.length>0) {
+                if (vc == results[0].IS_AUTH) {
+                    db.query(`UPDATE USERS SET IS_AUTH = NULL WHERE UID = '${request.session.uid}'`, function(error, results, fields) {
+                        request.session.is_auth = null;
+                        response.redirect('/forum');
+                        response.end();
+                    });
+                }
+                else {
+                    response.redirect('/');
+                        response.end();
+                }
             }
             
         });
