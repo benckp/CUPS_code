@@ -1,97 +1,95 @@
-/*  Remark:
-    This css file contains responsible for styling of forum page
-    We have completed all style of currently completed parts.
-    The other styling parts will be added once the content is updated */
+/*  This css file contains responsible for styling of forum page */
 
 /* Set the navbar to fixed position */
 body{
-  background-image: url('bg1.jpg');
- background-size: cover;
- background-attachment: fixed;
+    background-image: url('bg1.jpg');
+    background-size: cover;
+    background-attachment: fixed;
 }
 
 img.navicon{
-padding: 5px 10px;
-height: 40px;
-float: left;
+    padding: 5px 10px;
+    height: 40px;
+    float: left;
 }
 
 img.navpic{
-width: 100%;
+    width: 100%;
 }
 
 .topnav{
-background-color: rgb(72, 209, 204, 0.5);
-overflow: hidden;
-size: cover;
-  top: 0;
-  width: 100%;
+    background-color: rgb(72, 209, 204, 0.8);
+    overflow: hidden;
+    size: cover;
+    top: 0;
+    width: 100%;
 }
 
 .topnav-right {
-  float: right;
-  font-family: 'Noto Serif', serif;
+    float: right;
+    font-family: 'Noto Serif', serif;
 }
 
 .topnav-right a{
-float: left;
-  display: block;
-  color: black;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
+    float: left;
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
 }
 
 .topnav-right a:hover {
-  background-color: #ddd;
-  color: black;
+    background-color: #ddd;
+    color: black;
 }
 
 .topnav-right a.active {
-  background-color: #2196F3;
-  color: white;
+    background-color: #2196F3;
+    color: white;
 }
 
 .topnav .search-container {
-padding: 5px 5px;
-  float: left;
+    padding: 5px 5px;
+    float: left;
 }
 
 .topnav input[type=text] {
-  padding: 6px;
-  margin-top: 5px;
-  font-size: 17px;
-  border: none;
+    padding: 6px;
+    margin-top: 5px;
+    font-size: 17px;
+    border: none;
 }
 
 .topnav .search-container button {
-  padding: 6px 10px;
-  margin-top: 5px;
-  margin-right: 16px;
-  background: #ddd;
-  font-size: 17px;
-  border: none;
-  cursor: pointer;
+    padding: 6px 10px;
+    margin-top: 5px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
 }
 
 .topbnav .search-container button:hover {
-  background: #ccc;
+    background: #ccc;
 }
 
 .footer {
-  background: rgb(119, 136, 153);
-  text-align: right;
-  position: fixed;
-  left: 0;
- bottom: 0;
-  width: 100%;
-  color: white;
+    background: rgb(119, 136, 153);
+    text-align: right;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
 }
 
 .content{
-margin-left: 200px;
-margin-right: 200px;
+    margin-left: 200px;
+    margin-right: 200px;
+    margin-bottom: 50px;
 }
 
 a.newpo{
@@ -115,7 +113,7 @@ a.newpo:active {
 }
 #forumList {
     margin-top: 50px; /* Add a top margin to avoid content overlay */
-    background: rgb(127, 255, 212, 0.25);
+    background: rgb(127, 255, 212, 0.45);
 }
 
 #forumList {
@@ -135,7 +133,12 @@ a.newpo:active {
 }
 
 #forumList tr.header, #myTable tr:hover {
-    background: rgb(72, 209, 204, 0.25);
+    background: rgb(72, 209, 204, 0.6);
 }
 
 
+/* Styling of the page footer */
+footer {
+    background: rgb(119, 136, 153, 0.4);
+    text-align: right;
+}
