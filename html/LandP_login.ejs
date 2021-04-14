@@ -94,8 +94,25 @@
     </div>
     </div>
     <%} else {%>
+    <div class="login-box">
+        <form method="POST" action="/check_verification">
+            <div class="textbox">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <input type="text" placeholder="Verification Code" name="vcode" value="">
+            </div>
+            <!-- <div class="textbox">
+                <i class="fa fa-lock"></i>
+                <input type="password" placeholder="New Password" name="password" value="">
+            </div>
+            <div class="textbox">
+                <i class="fa fa-lock"></i>
+                <input type="password" placeholder="New Password Again" name="dpassword" value="">
+            </div> -->
+            <input class="btn" type="submit" name="" value="Submit">
+        </form>
+    </div>
 
-        <%}%>
+    <%}%>
     <img class="logo" src="CSCI 3100.jpg">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <script>

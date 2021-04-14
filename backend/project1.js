@@ -55,12 +55,22 @@ server.use(session({
 
 server.get(['/', '/login'], (request, response) => {
     request.session.last_url = '/login' ;
-    response.render(path.join(__dirname , "../html/LandP_login"));
+    var viewData = {
+        passvc: true
+    }
+    response.render(path.join(__dirname , "../html/LandP_login"), viewData);
 });
 
 server.get('/login_success', (request, response) => {
     request.session.last_url = '/login_success' ;
-    response.redirect("/forum");
+    if (!request.session.is_auth)
+        response.redirect("/forum");
+    else {
+        var viewData = {
+            passvc: false
+        }
+        response.render(path.join(__dirname , "../html/LandP_login"), viewData);
+    }
 });
 
 // create application/json parser
@@ -198,7 +208,8 @@ server.get('/question', urlencodedParser, (request, response) => {
             response.redirect('/');
         }
     } else {
-        var todo = 0;
+        response.redirect('/');
+                    response.end();
     }
 });
 
@@ -261,7 +272,8 @@ server.get('/profile', urlencodedParser, (request, response) => {
             response.redirect('/');
         }
     } else {
-        var todo = 0;
+        response.redirect('/');
+                    response.end();
     }
 });
 
@@ -275,7 +287,8 @@ server.get('/newtask', urlencodedParser, (request, response) => {
     }
 }
 else {
-    var todo = 0;
+    response.redirect('/');
+                    response.end();
 }
 });
 
@@ -289,7 +302,8 @@ server.get('/newthread', urlencodedParser, (request, response) => {
     }
 }
 else {
-var todo = 0;
+    response.redirect('/');
+    response.end();
 }
 });
 
@@ -339,7 +353,8 @@ server.post('/process-newthread', urlencodedParser, (request, response) => {
         response.redirect('/');
     }
 } else {
-    var todo = 0;
+    response.redirect('/');
+    response.end();
 }
 });
 
@@ -393,8 +408,30 @@ server.get('/forum', urlencodedParser, (request, response) => {
     }
 }
 else {
-    var todo = 0;
+    response.redirect('/');
+    response.end();
 }
+});
+
+server.post('/check_verification', urlencodedParser, (request, response) => {
+    var vc = request.body.vcode;
+    if (vc) {
+        db.query(`SELECT IS_AUTH FROM USERS WHERE UID = '${request.session.uid}'`, function(error, results, fields) {
+            if (error) throw error;
+            if (vc === results[0].IS_AUTH) {
+                db.query(`UPDATE USERS SET IS_AUTH = NULL WHERE UID = '${request.session.uid}'`, function(error, results, fields) {
+                    request.session.is_auth = null;
+                    response.redirect('/forum');
+                    response.end();
+                });
+            }
+            else {
+                response.redirect('/');
+                    response.end();
+            }
+            
+        });
+    } 
 });
 
 server.post('/process-comment', urlencodedParser, (request, response) => {
