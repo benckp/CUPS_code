@@ -1,45 +1,3 @@
-// --- To Dash: Please help me implementing the following backend implementation.-----------------------
-// Delete the unnessary comments afterward. Thanksss!
-
-
-// Connect to MySQL server and load data using ExpressJs
-// Query: SELECT * FROM users, questions WHERE users.UID = questions.UID ORDER BY questions.PID ASC
-// Result set: results
-
-// Type is true iff it is a Q&A post
-// isSolved is true iff it is solved (or ended for a task)
-// The variable should be loaded by mySQL query, delete the variable definition afterward
-var results = [
-    {
-        'UID': 1,
-        'PID': 1,
-        'Name': 'name1',
-        'Type': true,
-        'Class': 'CSCI',
-        'isSolved': true,
-        'Heading': 'Heading1',
-        'TextContent': 'manywordsssssssssssss',
-        'Credit': 10,
-        'Time': '02:01 03/08/20'
-    },
-    {
-        'UID': 2,
-        'PID': 2,
-        'Name': 'name2',
-        'Type': false,
-        'Class': 'STAT',
-        'isSolved': false,
-        'Heading': 'Heading2',
-        'TextContent': 'MWAIORHOIAWHTIORHWHOIRHAIOTHIAUWHTROIAHIEURAJIUEDOAWHDOHJDIJHJJHHOUJVWAOHUIUHAIVDHUAYDBAWUVFYIBWAFRYIABWRUFIWABBAJAWOIT',
-        'Credit': 20,
-        'Time': '13:41 14/04/21'
-    }
-]
-console.log(results)
-console.log(results[0].Name)
-console.log(results[1].Class)
-
-// -------------------------------------------------------------------------------------------------------
 // loadPosts will be executed on load, print data in results to table displayed
 function loadPosts() {
     var table = document.getElementById("forumList");
@@ -56,10 +14,10 @@ function loadPosts() {
             + '</b><br><small> Credit ' + results[i].Credit + '</small>')
             + '</td>' + '<td>'
             + '<a href="#PID" onMouseOver ="this.style.color=\'blue\'" onMouseOut="this.style.color=\'black\'" style="color: black; text-decoration: none;">' // TODO: link the content to answer post page
-            + '<big><b>'
+            + '<b>'
             + '【' + results[i].Class + '】 '
             + results[i].Heading
-            + '</big></b>' + '<br>' + '<small>'
+            + '</b>' + '<br>' + '<small>'
             + results[i].TextContent.slice(0, 30)
             + '</small>' + '</a>'
             + '</td>' + '<td style="text-align:center">'

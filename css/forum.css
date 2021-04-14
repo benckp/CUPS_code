@@ -1,29 +1,26 @@
-/*  Remark:
-    This css file contains responsible for styling of forum page
-    We have completed all style of currently completed parts.
-    The other styling parts will be added once the content is updated */
+/*  This css file contains responsible for styling of forum page */
 
 /* Set the navbar to fixed position */
 body{
   background-image: url('bg1.jpg');
- background-size: cover;
- background-attachment: fixed;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 img.navicon{
-padding: 5px 10px;
-height: 40px;
-float: left;
+  padding: 5px 10px;
+  height: 40px;
+  float: left;
 }
 
 img.navpic{
-width: 100%;
+  width: 100%;
 }
 
 .topnav{
-background-color: rgb(72, 209, 204, 0.5);
-overflow: hidden;
-size: cover;
+  background-color: rgb(72, 209, 204, 0.8);
+  overflow: hidden;
+  size: cover;
   top: 0;
   width: 100%;
 }
@@ -34,7 +31,7 @@ size: cover;
 }
 
 .topnav-right a{
-float: left;
+  float: left;
   display: block;
   color: black;
   text-align: center;
@@ -54,7 +51,7 @@ float: left;
 }
 
 .topnav .search-container {
-padding: 5px 5px;
+  padding: 5px 5px;
   float: left;
 }
 
@@ -84,56 +81,64 @@ padding: 5px 5px;
   text-align: right;
   position: fixed;
   left: 0;
- bottom: 0;
+  bottom: 0;
   width: 100%;
   color: white;
 }
 
 .content{
-margin-left: 200px;
-margin-right: 200px;
+  margin-left: 200px;
+  margin-right: 200px;
+  margin-bottom: 50px;
 }
 
 a.newpo{
-    float: left;
-    display: block;
-    color: black;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
+  float: left;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
 }
 
 a.newpo:hover{
-    background-color: #ddd;
-    color: black;
+  background-color: #ddd;
+  color: black;
 }
 
 a.newpo:active {
-    background-color: #2196F3;
-    color: white;
+  background-color: #2196F3;
+  color: white;
 }
 #forumList {
-    margin-top: 50px; /* Add a top margin to avoid content overlay */
-    background: rgb(127, 255, 212, 0.25);
+  margin-top: 50px; /* Add a top margin to avoid content overlay */
+  background: rgb(127, 255, 212, 0.45);
 }
 
 #forumList {
-    border-collapse: collapse;
-    width: 100%;
-    border: 1px solid #ddd;
-    font-size: 18px;
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
 }
 
 #forumList th, #myTable td {
-    text-align: left;
-    padding: 12px;
+  text-align: left;
+  padding: 12px;
 }
 
 #forumList tr {
-    border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 #forumList tr.header, #myTable tr:hover {
-    background: rgb(72, 209, 204, 0.25);
+  background: rgb(72, 209, 204, 0.6);
+}
+
+
+/* Styling of the page footer */
+footer {
+  background: rgb(119, 136, 153, 0.4);
+  text-align: right;
 }
