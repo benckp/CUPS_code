@@ -1,0 +1,127 @@
+<!-- Name:   CHU, Kai Pan -->
+<!-- SID:    1155110879 -->
+<!-- Group:  F6 -->
+<!-- Topic:  CSCI3100 Initial Code - html for forum page -->
+<!-- Remark: The persudo code are indicated by TODO
+             while others are the partial implementation-->
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>CUPS Forum</title>
+    <link rel="icon" href="CUPSicon1.ico" type="image/x-icon/">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    	<link rel="preconnect" href="https://fonts.gstatic.com"> 
+    	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+    	<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="forum.css">
+    <script src="forum.js"></script>
+</head>
+<body>
+    <!-- Partial: Top navigation with search bar -->
+		<!-- TODO: link the top buttons to relevent pages -->
+		<nav class="sticky-top">
+			<div class="topnav">
+				<a href="/forum">
+					<img class="navicon" src="CUPSicon1.ico">
+				</a>
+				<div class="search-container">
+        			<form>
+            			<input type="text" id="searchInput" placeholder="Search title or content...">
+            			<button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
+        			</form>
+    			</div>
+    			<div class="topnav-right">
+        			<a href="/question">Question</a>
+        			<a href="/task">Task</a>
+        			<a href="/profile">Profile</a>
+        			<a href="#contact">Settings</a>
+    			</div>
+    		</div>
+    	</nav>
+    	<img class="navpic" src="navpic.jpg">
+<!-- filter navigation -->
+<!-- TODO: show an additional bar on selected filter selecting
+           e.g show "type: Q&A" while Q&A post is filtered-->
+<div class="bg">
+<div class="content">
+<div class="filter">
+    <div class="subfilter">
+        <button class="subfilterbtn">Type <i class="fa fa-caret-down"></i></button>
+        <div class="subfilter-content">
+            <button class="button" onclick="">Q&A </button>
+            <button class="button" onclick="">Task </button>
+        </div>
+    </div>
+    <div class="subfilter">
+        <button class="subfilterbtn">Course <i class="fa fa-caret-down"></i></button>
+        <div class="subfilter-content">
+            <input type="text" id="courseInput" placeholder="Search course code...">
+        </div>
+    </div>
+    <div class="subfilter">
+        <button class="subfilterbtn">Department <i class="fa fa-caret-down"></i></button>
+        <div class="subfilter-content">
+            <input type="text" id="deptInput" placeholder="Search department...">
+        </div>
+    </div>
+    <div class="subfilter">
+        <button class="subfilterbtn">Sort by <i class="fa fa-caret-down"></i></button>
+        <div class="subfilter-content">
+            <button class="button" onclick="">Post ID </button>
+            <button class="button" onclick="">Course </button>
+            <button class="button" onclick="">Type </button>
+            <button class="button" onclick="">Time </button>
+        </div>
+    </div>
+    <div class="reset">
+        <button class="button" onclick="">Reset filter </button>
+    </div>
+</div>
+
+<!-- Partial: List of related post -->
+<!-- TODO: We will proceed to use individual blocks for each post,
+           e.g. like google search result display -->
+<!-- TODO: The post will be automatically updated using db -->
+<!-- TODO: The user can get access to the corresponding post answering page by clicking the post -->
+<!-- TODO: We will have some indicating icon / color to indicate whether a post is answered or not -->
+<!-- TODO: Credit payment amount will also be displayed -->
+<table class = "table" id="forumList" >
+    <tr class="header">
+        <th style="text-align:center">Post ID</th>
+        <th style="text-align:center">Title</th>
+        <th style="text-align:center">Preview of content</th>
+        <th style="text-align:center">Course</th>
+        <th style="text-align:center">Type</th>
+        <th style="text-align:center">Author </th>
+        <th style="text-align:center">Time</th>
+    </tr>
+    <% for(var i = 0; i<post.length; i++) { %>
+        <tr>
+          <th style="text-align:center"><%=post[i].PID%></th>
+          <td style="text-align:center"><%=post[i].HEADING%></td>
+          <td><%=post[i].TEXT_CONTENT.substring(0, 15)%>... </td>
+          <td style="text-align:center"><%=post[i].CLASS%></td>
+          <td style="text-align:center"><%if (post[i].TYPE==1) {%>Q&A<%}else{%>Task<%}%></td>
+          <td style="text-align:center"><%=post[i].NAME%></td>
+          <td style="text-align:center">
+            <%if (Math.round((post[i].TIME / 60) /24) >0) {%> <%=Math.round((post[i].TIME / 60) /24)%> days
+            <%}else if (Math.round((post[i].TIME / 60)) >0) {%> <%=Math.round(post[i].TIME / 60)%> hours
+            <%}else {%> <%=post[i].TIME %> minutes<%}%>
+            ago</td>
+        </tr>
+        <% } %>
+</table>
+</div>
+</div>
+<br>
+<!-- Partial: Footer for website info -->
+<div class="footer">
+    		This website was built on <time>2021-03-19</time>. <b>© CSCI3100 Group F6</b>
+		</div>
+
+</body>
+</html>

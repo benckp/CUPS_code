@@ -44,9 +44,17 @@
     <div class="container0">
       <div class="head">
         <% if (utype===1) {%>
+          <% if (propic) {%>
           <img style="border:rgba(94, 168, 211, 0.7) 3px solid;" src="data:image/png;base64,<%= propic %>" alt="">
+          <%} else {%>
+            <img style="border:rgba(94, 168, 211, 0.7) 3px solid;" src="CSCI 3100.jpg" alt="">
+            <%}%>
         <%} else {%>
-          <img style="border:rgba(211, 94, 94, 0.7) 3px solid;" src="CSCI 3100.jpg" alt="">
+          <% if (propic) {%>
+          <img style="border:rgba(211, 94, 94, 0.7) 3px solid;" src="data:image/png;base64,<%= propic %>" alt="">
+          <%} else {%>
+            <img style="border:rgba(211, 94, 94, 0.7) 3px solid;" src="CSCI 3100.jpg" alt="">
+            <%}%>
         <%}%>
         <div class="container1">
           <div id="name"><%=username%></div>

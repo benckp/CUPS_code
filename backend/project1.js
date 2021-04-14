@@ -223,7 +223,6 @@ server.get('/profile', urlencodedParser, (request, response) => {
     var credit = 0;
     var caption = "";
     var utype = true;
-    var buf = "";
     var propic;
     
     if (request.session.loggedin) {
@@ -254,10 +253,6 @@ server.get('/profile', urlencodedParser, (request, response) => {
                         caption = results[0].CAPTION;
                         utype = results[0].TYPE;
                         propic = results[0].PROFILE_PIC;
-                        // console.log(propic);
-                        // fs.writeFileSync(propic, buf);
-                        // var propic = Buffer.from( buf.toString('hex'),'hex');
-                        // propic = results[0].PROFILE_PIC.toString('base64');
                         var viewData = {
                             username: request.session.username,
                             liked_post: liked_post,
@@ -313,7 +308,7 @@ server.get('/newthread', urlencodedParser, (request, response) => {
 server.get('/forum', urlencodedParser, (request, response) => {
     var post = [];
     if (request.session.loggedin) {
-        db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+        db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
         FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID;`, function(error, results, fields) {
             if (error) throw error;
             results.forEach(function(item){
@@ -436,6 +431,7 @@ CREATE TABLE QUESTION(
     VOTE INT DEFAULT 0,
     SUGGEST_ANS TEXT,
     POST_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    SOLVED BOOLEAN DEFAULT FALSE,
     CONSTRAINT F_USER_QUESTION FOREIGN KEY (UID) 
     REFERENCES USERS(UID)
 );
@@ -552,6 +548,7 @@ CREATE TABLE QUESTION(
     VOTE INT DEFAULT 0,
     SUGGEST_ANS TEXT,
     POST_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    SOLVED BOOLEAN DEFAULT FALSE,
     CONSTRAINT F_USER_QUESTION FOREIGN KEY (UID) 
     REFERENCES USERS(UID)
 );
@@ -560,7 +557,7 @@ CREATE TABLE RESPONDS(
     UID INT NOT NULL,
     PID INT NOT NULL,
     TEXT_CONTENT TEXT NOT NULL, 
-    GRAPHIC BLOB,
+    GRAPHIC LONGBLOB,
     CONSTRAINT F_USER_RESPOND FOREIGN KEY (UID) 
     REFERENCES USERS(UID),
     CONSTRAINT F_QUESTION_RESPOND FOREIGN KEY (PID) 
@@ -593,15 +590,15 @@ INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gm
 INSERT INTO USERS VALUES( 1255000001, False, 'Prof. X', 'admin', 'Prof. X', 'profX@gmail.com', 19, DEFAULT, DEFAULT, TRUE, NULL, NULL);
 
 
-INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Help", "ENGG0000", "Hey guys!", "Can someone help...", 1, DEFAULT, NULL, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000004, TRUE, "Science fiction", "PSYC0000", "X-Men", "Mutation, it is the key to our evolution...", 3, DEFAULT, NULL, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "About initial code", "completeness...", 5, DEFAULT, NULL, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "Regarding initial code", "robustness...", 4, DEFAULT, NULL, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000002, TRUE, "Programming", "CSCI3100", "Talking on initial code", "user-friendliness...", 3, DEFAULT, NULL, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000003, TRUE, "Programming", "CSCI3100", "Discussing initial code", "documentation...", 2, DEFAULT, NULL, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000003, TRUE, "Programming", "CSCI3100", "For initial code", "other aspects...", 2, DEFAULT, NULL, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000000, TRUE, "Testing", "TEST0000", "Testing", "Working...", 1, DEFAULT, NULL, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Help", "ENGG0000", "Hey guys!", "Can someone help...", 1, DEFAULT, NULL, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000004, TRUE, "Science fiction", "PSYC0000", "X-Men", "Mutation, it is the key to our evolution...", 3, DEFAULT, NULL, DEFAULT, TRUE);
+INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "About initial code", "completeness...", 5, DEFAULT, NULL, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "Regarding initial code", "robustness...", 4, DEFAULT, NULL, DEFAULT, TRUE);
+INSERT INTO QUESTION VALUES( 0, 1155000002, TRUE, "Programming", "CSCI3100", "Talking on initial code", "user-friendliness...", 3, DEFAULT, NULL, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000003, TRUE, "Programming", "CSCI3100", "Discussing initial code", "documentation...", 2, DEFAULT, NULL, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000003, TRUE, "Programming", "CSCI3100", "For initial code", "other aspects...", 2, DEFAULT, NULL, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000000, TRUE, "Testing", "TEST0000", "Testing", "Working...", 1, DEFAULT, NULL, DEFAULT, TRUE);
 INSERT INTO QUESTION VALUES( 0, 1255000001, FALSE, "Story", "UGFH1000", "Oedipus the King", "Oedipus the King unfolds as a murder mystery, a political thriller, and a psychological whodunit. Throughout this mythic story of patricide and incest, Sophocles emphasizes the irony of a man determined to track down, expose, and punish an assassin, who turns out to be himself.
 As the play opens, the citizens of Thebes beg their king, Oedipus, to lift the plague that threatens to destroy the city. Oedipus has already sent his brother-in-law, Creon, to the oracle to learn what to do.
 On his return, Creon announces that the oracle instructs them to find the murderer of Laius, the king who ruled Thebes before Oedipus. The discovery and punishment of the murderer will end the plague. At once, Oedipus sets about to solve the murder.
@@ -614,7 +611,7 @@ Overhearing, the messenger offers what he believes will be cheering news. Polybu
 Oedipus becomes determined to track down the shepherd and learn the truth of his birth. Suddenly terrified, Jocasta begs him to stop, and then runs off to the palace, wild with grief.
 Confident that the worst he can hear is a tale of his lowly birth, Oedipus eagerly awaits the shepherd. At first the shepherd refuses to speak, but under threat of death he tells what he knows — Oedipus is actually the son of Laius and Jocasta.
 And so, despite his precautions, the prophecy that Oedipus dreaded has actually come true. Realizing that he has killed his father and married his mother, Oedipus is agonized by his fate.
-Rushing into the palace, Oedipus finds that the queen has killed herself. Tortured, frenzied, Oedipus takes the pins from her gown and rakes out his eyes, so that he can no longer look upon the misery he has caused. Now blinded and disgraced, Oedipus begs Creon to kill him, but as the play concludes, he quietly submits to Creon's leadership, and humbly awaits the oracle that will determine whether he will stay in Thebes or be cast out forever.", 5, DEFAULT, NULL, DEFAULT);
+Rushing into the palace, Oedipus finds that the queen has killed herself. Tortured, frenzied, Oedipus takes the pins from her gown and rakes out his eyes, so that he can no longer look upon the misery he has caused. Now blinded and disgraced, Oedipus begs Creon to kill him, but as the play concludes, he quietly submits to Creon's leadership, and humbly awaits the oracle that will determine whether he will stay in Thebes or be cast out forever.", 5, DEFAULT, NULL, DEFAULT, DEFAULT);
 
 INSERT LIKED VALUES(1155000000, 3);
 INSERT LIKED VALUES(1155000000, 7);
