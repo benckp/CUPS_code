@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer');
 const path = require("path");
 const { type } = require("jquery");
 const upload = require("express-fileupload");
+const querystring = require('querystring');
 
 const server = express();
 
@@ -46,41 +47,18 @@ server.use(session({
     loggedin: false,
     uid: 0,
     username: "",
+    last_url: "",
     resave: true,
     saveUninitialized: true
 }));
 
-// server.get( '/index', (request, response) => {
-//     var greet;
-//     if (request.session.loggedin) {
-//         greet = "Hi " + request.session.username + ", Welcome back"; 
-//     } else {
-//         greet = "You havn't logged in";
-//     }
-//     // Get Leaderboard information
-//     var record;
-//     db.query('SELECT LOGIN_NAME AS name, CREDIT_BAL AS credit FROM USERS ORDER BY CREDIT_BAL DESC LIMIT 10', function(error, results, fields) {
-//         if (error) throw error;
-//         if (results.length > 0) {   
-//             record = results;
-//         } 	
-//         // Have to wait for the result in mySql, so it must be inside the query
-//         var viewData = {
-//             greeting: greet,
-//             loggedin: request.session.loggedin,
-//             leaderboard_record: record
-//         };
-//         response.render(path.join(__dirname ,"../html/test_index"), viewData);
-//         response.end();
-//     });
-    
-// });
-
 server.get(['/', '/login'], (request, response) => {
+    request.session.last_url = '/login' ;
     response.render(path.join(__dirname , "../html/LandP_login"));
 });
 
 server.get('/login_success', (request, response) => {
+    request.session.last_url = '/login_success' ;
     response.redirect("/forum");
 });
 
@@ -112,6 +90,7 @@ server.post('/process-login', urlencodedParser, (request, response) => {
         var viewData = {
             wrong: true
         };
+        request.session.last_url = '/process-login' ;
         response.render(path.join(__dirname ,"../html/LandP_login"), viewData);
 		response.end();
     }
@@ -122,6 +101,7 @@ server.get('/verification', urlencodedParser, (request, response) => {
         wrong: false,
         verify: true
     };
+    request.session.last_url = '/verification' ;
     response.render(path.join(__dirname , "../html/LandP_login"), viewData);
 });
 
@@ -155,6 +135,7 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
         console.log('Email sent: ' + info.response);
         }
     });
+    request.session.last_url = '/process-registration' ;
     response.redirect('/verification');
 });
 
@@ -162,21 +143,6 @@ server.post('/process-forgetpw', urlencodedParser, (request, response) => {
     var email = request.body.email;
     var mail_title = "";
     var mail_content = "";
-    // var pw = request.body.password;
-    // var dpw = request.body.dpassword;
-    // if (pw == dpw) {
-    //         // Save to the database
-    //     db.query(`UPDATE USERS SET PASSWORD = '${pw}' WHERE UID = ${uid}`, function(error, results, fields) {
-    //         if (error) throw error;
-    //     });
-    // }
-    // else {
-    //     var viewData = {
-    //         wrong2: true
-    //     };
-    //     response.render(path.join(__dirname ,"../html/LandP_login"), viewData);
-	// 	response.end();
-    // }
     db.query(`SELECT PASSWORD FROM USERS WHERE EMAIL = '${email}'`, function(error, results, fields) {
         if (error) throw error;
         if(results.length>0) {
@@ -202,6 +168,7 @@ server.post('/process-forgetpw', urlencodedParser, (request, response) => {
             console.log('Email sent: ' + info.response);
             }
         });
+        request.session.last_url = '/process-forgetpw' ;
         response.redirect('/');
     });
     
@@ -209,6 +176,7 @@ server.post('/process-forgetpw', urlencodedParser, (request, response) => {
 
 server.get('/question', urlencodedParser, (request, response) => {
     if (request.session.loggedin) {
+        request.session.last_url = '/question' ;
         response.render(path.join(__dirname , "../html/CreatePost_homepage1"));
     }
     else {
@@ -263,6 +231,7 @@ server.get('/profile', urlencodedParser, (request, response) => {
                             utype: utype,
                             propic: propic
                         };
+                        request.session.last_url = '/profile' ;
                         response.render(path.join(__dirname , "../html/profile"), viewData);
                         response.end();
                     });
@@ -308,29 +277,81 @@ server.get('/newthread', urlencodedParser, (request, response) => {
 server.get('/forum', urlencodedParser, (request, response) => {
     var post = [];
     if (request.session.loggedin) {
-        db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
-        FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID;`, function(error, results, fields) {
-            if (error) throw error;
-            results.forEach(function(item){
-                post.push(item);
-                // console.log(item.HEADING);
-            });	
-            var viewData = {
-                post: post,
-            };
-            response.render(path.join(__dirname , "../html/forum"), viewData);
-            response.end();
-        });
+        if (!request.query.pid) {
+            db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+            FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID;`, function(error, results, fields) {
+                if (error) throw error;
+                results.forEach(function(item){
+                    post.push(item);
+                    // console.log(item.HEADING);
+                });	
+                var viewData = {
+                    post: post,
+                };
+                request.session.last_url = '/forum' ;
+                response.render(path.join(__dirname , "../html/forum"), viewData);
+                response.end();
+            });
+        }
+        else {
+            db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+            FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${request.query.pid};`, function(error, results, fields) {
+                if (error) throw error;
+                    // results.forEach(function(item){
+                //     post.push(item);
+                //     // console.log(item.HEADING);
+                // });	
+                var viewData = {
+                    results: results[0]
+                };
+                request.session.last_url = `/profile?pid=${request.query.pid}` ;
+                response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
+                response.end();
+            });
+        }
     }
     else {
         response.redirect('/');
     }
 });
 
-server.get('/answer', urlencodedParser, (request, response) => {
-    
+server.post('/process-comment', urlencodedParser, (request, response) => {
+    var pid = request.session.last_url.split('=')[1];
+    var comment = request.body.comment;
+    var pic; 
+    var buf;
+    var que; 
+    var com = [];
+    if (request.files) {
+        pic =  request.files.graphics;
+        buf = pic.data.toString('base64');
+    }
     if (request.session.loggedin) {
-        response.render(path.join(__dirname , "../html/AnswerPost"));
+        if (comment) {
+            db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, '${comment}', NULL, DEFAULT);`, function(error, results, fields) {
+                if (error) throw error;
+                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${pid};`, function(error, results, fields) {
+                    if (error) throw error;
+                    que = results[0];
+                    db.query(`SELECT RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT
+                    FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${pid};`, function(error, results, fields) {
+                        if (error) throw error;
+                            results.forEach(function(item){
+                            com.push(item);
+                            // console.log(item.NAME);
+                        });	
+                        var viewData = {
+                            results: que,
+                            comment: com
+                        };
+                        request.session.last_url = `/profile?pid=${pid}` ;
+                        response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
+                        response.end();
+                    });
+                });
+            });
+        }
     }
     else {
         response.redirect('/');
@@ -340,18 +361,21 @@ server.get('/answer', urlencodedParser, (request, response) => {
 server.post('/process-edit', urlencodedParser, (request, response) => {
     var name = request.body.username;
     var info = request.body.info;
-    var propic = request.files.propic;
+    var propic;var buf;
+    if (request.files) {
+        propic = request.files.propic;
     // console.log(typeof(propic));
-    var buf = propic.data.toString('base64');
-    if (propic) {
+        buf = propic.data.toString('base64');
+    }
+    if (propic && !name && !info) {
         db.query(`UPDATE USERS SET PROFILE_PIC = '${buf}' WHERE USERS.UID = ${request.session.uid}`, function(error, results, fields) {
             if (error) throw error;
             response.redirect('/profile');
 			response.end();
         });
     } 
-
-    else if (name && info) {
+    
+    else if (name && info && !propic) {
         db.query(`UPDATE USERS SET NAME = '${name}', CAPTION = '${info}' WHERE USERS.UID = ${request.session.uid}`, function(error, results, fields) {
             if (error) throw error;
 			request.session.username = name;
@@ -360,7 +384,7 @@ server.post('/process-edit', urlencodedParser, (request, response) => {
 			response.end();
         });
     } 
-    else if (!name && info) {
+    else if (!name && info && !propic) {
         db.query(`UPDATE USERS SET  CAPTION = '${info}' WHERE USERS.UID=${request.session.uid}`, function(error, results, fields) {
             if (error) throw error;
 			
@@ -369,7 +393,7 @@ server.post('/process-edit', urlencodedParser, (request, response) => {
 			response.end();
         });
     }
-    else if (name && !info) {
+    else if (name && !info && !propic) {
         db.query(`UPDATE USERS SET NAME = '${name}' WHERE USERS.UID=${request.session.uid}`, function(error, results, fields) {
             if (error) throw error;
 			request.session.username = name;
@@ -440,7 +464,7 @@ CREATE TABLE RESPONDS(
     UID INT NOT NULL,
     PID INT NOT NULL,
     TEXT_CONTENT TEXT NOT NULL, 
-    GRAPHIC BLOB,
+    GRAPHIC LONGBLOB,
     CONSTRAINT F_USER_RESPOND FOREIGN KEY (UID) 
     REFERENCES USERS(UID),
     CONSTRAINT F_QUESTION_RESPOND FOREIGN KEY (PID) 
@@ -558,6 +582,7 @@ CREATE TABLE RESPONDS(
     PID INT NOT NULL,
     TEXT_CONTENT TEXT NOT NULL, 
     GRAPHIC LONGBLOB,
+    POST_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT F_USER_RESPOND FOREIGN KEY (UID) 
     REFERENCES USERS(UID),
     CONSTRAINT F_QUESTION_RESPOND FOREIGN KEY (PID) 
@@ -619,7 +644,8 @@ INSERT LIKED VALUES(1155000000, 2);
 INSERT LIKED VALUES(1155000000, 5);
 INSERT LIKED VALUES(1155000000, 10);
 
-INSERT RESPONDS VALUES(0, 1155000000, 7, "Nice post!", NULL);
+INSERT RESPONDS VALUES(0, 1155000000, 7, "Nice post!", NULL, DEFAULT);
+
 
 */
 
