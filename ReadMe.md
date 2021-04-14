@@ -1,4 +1,4 @@
-# CSCI3100 Group F6 Chinese University Problem-solving System (CUPS) complete code
+# CSCI3100 Group F6 Chinese University Problem-solving System (CUPS) Complete Code
 
 ## Front end
 It is developed using html5, css and js (Bootstrap, Vue). We have divided the front end implementation into 5 parts: Login, Profile, Homepage (Forum), CreatePost, and AnswerPost pages. Each parts has one ejs(html) file, one css file. There are also seperated js file for forum and answer page.
