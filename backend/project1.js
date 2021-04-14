@@ -275,6 +275,8 @@ server.get('/newthread', urlencodedParser, (request, response) => {
 
 server.get('/forum', urlencodedParser, (request, response) => {
     var post = [];
+    var com = [];
+    var que;
     if (request.session.loggedin) {
         if (!request.query.pid) {
             db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
@@ -296,16 +298,22 @@ server.get('/forum', urlencodedParser, (request, response) => {
             db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
             FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${request.query.pid};`, function(error, results, fields) {
                 if (error) throw error;
-                    // results.forEach(function(item){
-                //     post.push(item);
-                //     // console.log(item.HEADING);
-                // });	
-                var viewData = {
-                    results: results[0]
-                };
-                request.session.last_url = `/profile?pid=${request.query.pid}` ;
-                response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
-                response.end();
+                que = results[0];
+                db.query(`SELECT RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
+                 FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${request.query.pid};`, function(error, results, fields) {
+                    if (error) throw error;
+                        results.forEach(function(item){
+                        com.push(item);
+                        // console.log(item.NAME);
+                    });	
+                    var viewData = {
+                        results: que,
+                        com: com
+                    };
+                    request.session.last_url = `/profile?pid=${request.query.pid}` ;
+                    response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
+                    response.end();
+                });
             });
         }
     }
@@ -333,7 +341,7 @@ server.post('/process-comment', urlencodedParser, (request, response) => {
                 FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${pid};`, function(error, results, fields) {
                     if (error) throw error;
                     que = results[0];
-                    db.query(`SELECT RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT
+                    db.query(`SELECT RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
                     FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${pid};`, function(error, results, fields) {
                         if (error) throw error;
                             results.forEach(function(item){
@@ -342,7 +350,7 @@ server.post('/process-comment', urlencodedParser, (request, response) => {
                         });	
                         var viewData = {
                             results: que,
-                            comment: com
+                            com: com
                         };
                         request.session.last_url = `/profile?pid=${pid}` ;
                         response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
