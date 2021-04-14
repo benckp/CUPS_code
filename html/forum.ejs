@@ -1,104 +1,120 @@
-<!-- Group:  F6 -->
 <!-- Topic:  CSCI3100 Initial Code - html for forum page -->
-<!-- Remark: The persudo code are indicated by TODO
-             while others are the partial implementation-->
+<!-- Group:  F6 -->
+<!-- Intro:  This page is the main page of the web interface. Focus on show, search and sort posts. -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>CUPS Forum</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="forum.css">
+    <script src="forum.js"></script>
+</head>
 
 
-             <!DOCTYPE html>
-             <html lang="en">
-             <head>
-                 <meta charset="utf-8">
-                 <title>CUPS Forum</title>
-                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-                 <link rel="stylesheet" href="forum.css">
-                 <script src="forum.js"></script>
-             </head>
-             <!-- <body onload="loadPosts()"> -->
-             <body>
-             <!-- Partial: Top navigation with search bar -->
-        <!-- TODO: link the top buttons to relevent pages -->
-        <nav class="sticky-top">
-            <div class="topnav">
-                <a href="/forum">
-                    <img class="navicon" src="CUPSicon1.ico">
-                </a>
-                <div class="search-container">
-                    <form>
-                        <input type="text" id="searchInput" placeholder="Search title or content...">
-                        <button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
-                    </form>
-                </div>
-                <a href="#createPost" class="newpo"><b>New Post </b><i class="fa fa-edit"></i> </a>
-                <div class="topnav-right">
-                <!-- TODO: change href to other pages accordingly -->
-                <a href="/profile"><i class="fa fa-user"></i></a>
-                <a href="/logout"><i class="fa fa-sign-out"></i></a>
-            </div>
-            </div>
-        </nav>
-        <img class="navpic" src="navpic.jpg">
-             <div class="content">
-             
-             <!-- Partial: List of related post -->
-             <!-- TODO: grey display, yellow when mouse on it-->
-             <!-- TODO: The post will be automatically updated using db -->
-             <!-- TODO: The user can get access to the corresponding post answering page by clicking the post -->
-             <!-- TODO: We will have some indicating icon / color to indicate whether a post is answered or not -->
-             <!-- TODO: Credit payment amount will also be displayed -->
-             <table class="table" id="forumList" >
-                 <tr class="header"> <b>
-                     <th onMouseOver ="this.style.color='blue'" onMouseOut="this.style.color='black'" onclick="sortTable(0)" style="text-align:center">Post ID &#x21F3</th>
-                     <th onMouseOver ="this.style.color='blue'" onMouseOut="this.style.color='black'" onclick="sortTable(1)" style="text-align:center">Type &#x21F3</th>
-                     <th onMouseOver ="this.style.color='blue'" onMouseOut="this.style.color='black'" onclick="sortTable(2)" >Headings &#x21F3</th>
-                     <th style="text-align:center"> Latest Publish</th></b>
-                 </tr>
-                 <% for(var i = 0; i<post.length; i++) { %>
-                    <tr> 
-                        <b>
-                            <td style="text-align:center">
-                                <%=post[i].PID%>
-                            </td>  
-                            <b>
-                                <td style="text-align:center"> 
-                            
-                                    <%if (post[i].SOLVED) {%> Solved &#9989 <%} else {%> <%if (post[i].TYPE==1) {%>Question &#10068<%}else{%>Task &#10069<%}}%>
-                                    </b>
-                                <br>
-                                <small> Credit:  <%=post[i].CREDIT%> </small>
-                            </td>
-                       <td>
-                           <!--  TODO: link the content to answer post page -->
-                           <a href="?pid=<%=post[i].PID%>" onMouseOver ="this.style.color='blue'" onMouseOut="this.style.color='black'" style="color: black; text-decoration: none;"> 
-                               <big><b>
-                                   【 <%=post[i].CLASS%> 】<%=post[i].HEADING%>
-                               </big></b>
-                               <br>
-                               <small> 
-                                   <%=post[i].TEXT_CONTENT.substring(0, 20)%>... 
-                               </small>
-                           </a>
-                       </td>
-                       <td style="text-align:center"> <%=post[i].NAME%>
-                           <br>
-                           <small> <%if (Math.round((post[i].TIME / 60) /24) >0) {%> <%=Math.round((post[i].TIME / 60) /24)%> days
-                               <%}else if (Math.round((post[i].TIME / 60)) >0) {%> <%=Math.round(post[i].TIME / 60)%> hours
-                               <%}else {%> <%=post[i].TIME %> minutes<%}%>
-                               ago
-                           </small>
-                       </td>
-                   </tr>
-                   <%}%>
-
-             </table>
-             
-             <button type="button" onclick="search()"><i class="fa fa-search"></i></button>
-           </div>
-             
-             <!-- Partial: Footer for website info -->
-             <div class="footer">
-            This website was built on <time>2021-03-19</time>. <b>© CSCI3100 Group F6</b>
+<body>
+<!-- Top navigation bar with search bar; link different icon button to other pages -->
+<nav class="sticky-top">
+    <div class="topnav">
+        <a href="/forum">
+            <img style="max-height:35px" class="navicon" src="CUPSicon1.ico">
+        </a>
+        <div class="search-container">
+            <form>
+                <input type="text" id="searchInput" placeholder="Search title or content...">
+                <button type="button" onclick="search()"><i class="fa fa-search"></i></button>
+            </form>
         </div>
-             
-             </body>
-             </html>
+        <a href="#createPost" class="newpo"><b>New Post </b><i class="fa fa-edit"></i> </a>
+        <div class="topnav-right">
+            <a href="#profile"><i class="fa fa-user"></i></a>
+            <a href="#logout"><i class="fa fa-sign-out"></i></a>
+        </div>
+    </div>
+</nav>
+
+
+<!-- Background Image -->
+<img class="navpic" src="navpic.jpg">
+
+
+<!-- Show list of posts and link the content word to the corresponding page -->
+<!-- 1. Show the question type and whether it is solved, credit if not solved -->
+<!-- 2. Show the class, heading and preview (first 30 letters) of the post -->
+<!-- 3. Show the Name of the author and the time of publish -->
+<div class="content">
+    <table class="table" id="forumList">
+        <tr class="header"><b>
+                <th onMouseOver="this.style.color='blue'" onMouseOut="this.style.color='black'" onclick="sortTable(0)"
+                    style="text-align:center">Post ID &#x21F3
+                </th>
+                <th onMouseOver="this.style.color='blue'" onMouseOut="this.style.color='black'" onclick="sortTable(1)"
+                    style="text-align:center">Type &#x21F3
+                </th>
+                <th onMouseOver="this.style.color='blue'" onMouseOut="this.style.color='black'" onclick="sortTable(2)">
+                    Headings &#x21F3
+                </th>
+                <th style="text-align:center"> Latest Publish</th>
+            </b>
+        </tr>
+        <% for(var i = 0; i < post.length; i++) { %>
+            <tr>
+                <b>
+                    <td style="text-align:center">
+                        <%= post[i].PID %>
+                    </td>
+                </b>
+                <b>
+                    <td style="text-align:center">
+
+                        <% if (post[i].SOLVED) { %> Solved &#9989
+                        <% } else { %>
+                            <% if (post[i].TYPE == 1) { %>Question &#10068
+                            <% }else{ %>Task &#10069
+                        <% }} %>
+                </b>
+                <br>
+                <small> Credit: <%= post[i].CREDIT %> </small>
+                </td>
+                <td>
+                    <!--  TODO: link the content to answer post page -->
+                    <a href="?pid=<%= post[i].PID %>" onMouseOver="this.style.color='blue'"
+                       onMouseOut="this.style.color='black'" style="color: black; text-decoration: none;">
+                        <b><big>
+                                【<%= post[i].CLASS %>】<%= post[i].HEADING %>
+                            </big></b>
+                        <br>
+                        <small>
+                            <%= post[i].TEXT_CONTENT.substring(0, 20) %>...
+                        </small>
+                    </a>
+                </td>
+                <td style="text-align:center"> <%= post[i].NAME %>
+                    <br>
+                    <small>
+                        <% if (Math.round((post[i].TIME / 60) / 24) > 0) { %>
+                            <%= Math.round((post[i].TIME / 60) / 24) %> days
+                        <% }else if (Math.round((post[i].TIME / 60)) > 0) { %>
+                            <%= Math.round(post[i].TIME / 60) %> hours
+                        <% }else { %>
+                            <%= post[i].TIME %> minutes
+                        <% } %>
+                        ago
+                    </small>
+                </td>
+            </tr>
+        <% } %>
+    </table>
+</div>
+
+<!-- Footer for website info -->
+<div class="footer">
+    This website was built on
+    <time>2021-03-19</time>
+    . <b>© CSCI3100 Group F6</b>
+</div>
+
+</body>
+</html>
