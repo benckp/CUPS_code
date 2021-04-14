@@ -13,6 +13,9 @@
     <% if(locals.wrong) { %>
         <script src="test_warning.js"></script>
     <% } %>
+    <% if(locals.wrong2) { %>
+        <script>alert("The new password and the verication one are not the same.")</script>
+    <% } %>
     <% if(locals.verify) { %>
         <script>alert("Email has already sent to your email address. Please check.")</script>
     <% } %>
@@ -24,14 +27,12 @@
         <!-- <h1>Login</h1> -->
         <div class="btn-box" >
             <button type="button" class="toggle-btn" 
-            v-on:click="handleClickBtn1"
-            v-bind:class="currentStatus ? 'active' : ''">Log in</button>
+            v-bind:class="currentChoice === 0 ? 'active' : ''" @click="handleClick(0)">Log in</button>
             <button type="button" class="toggle-btn" 
-            v-on:click="handleClickBtn2"
-            :class="!currentStatus ? 'active' : ''">Register</button>
+            v-bind:class="currentChoice === 1 ? 'active' : ''" @click="handleClick(1)">Register</button>
         </div>
         
-        <div v-if="currentStatus === true">
+        <div v-if="currentStatus === 0">
             <form method="POST" action="/process-login">
                 <div class="textbox">
                     <i class="fa fa-user" aria-hidden="true"></i>
@@ -45,11 +46,12 @@
                 
                 
                 <input class="btn" type="submit" name="" value="Sign in">
-                <input style="font-size: 15px; width: 40%; text-align: left; color: gray;" class="btn" type="button" name="" value="Forget password">
+                <input style="font-size: 15px; width: 40%; text-align: left; color: gray;" class="btn" 
+                v-bind:class="currentChoice === 2 ? 'active' : ''" @click="handleClick(2)" type="button" name="" value="Forget password">
             </form>
         </div>
         
-        <div v-else>
+        <div v-else-if="currentStatus === 1">
             <form method="POST" action="/process-registration">
                 <div class="textbox">
                     <i class="fa fa-user" aria-hidden="true"></i>
@@ -71,7 +73,23 @@
                 <input class="btn" type="submit" name="" value="Register">
             </form>
         </div>
-        
+        <div v-else-if="currentStatus === 2">
+            <form method="POST" action="/process-forgetpw">
+                <div class="textbox">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    <input type="text" placeholder="CUHK Email" name="email" value="">
+                </div>
+                <!-- <div class="textbox">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" placeholder="New Password" name="password" value="">
+                </div>
+                <div class="textbox">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" placeholder="New Password Again" name="dpassword" value="">
+                </div> -->
+                <input class="btn" type="submit" name="" value="Submit">
+            </form>
+        </div>
     </div>
     </div>
     <img class="logo" src="CSCI 3100.jpg">
@@ -80,15 +98,21 @@
         const app = new Vue({
             el: "#app",
             data: {
-                currentStatus: true,
+                currentStatus: 0,
             },
+            // methods: {
+            //    handleClickBtn1:function(){
+            //        this.currentStatus = true;                  
+            //    },
+            //    handleClickBtn2:function(){
+            //         this.currentStatus = false;
+            //    },
+            // }
             methods: {
-               handleClickBtn1:function(){
-                   this.currentStatus = true;                  
-               },
-               handleClickBtn2:function(){
-                    this.currentStatus = false;
-               },
+                handleClick(e){
+                this.currentStatus = e;
+                console.log(this.currentStatus);
+                }
             }
         });
     </script>

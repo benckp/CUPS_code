@@ -5,6 +5,7 @@ const mysql = require("mysql");
 const session = require("express-session");
 const nodemailer = require('nodemailer');
 const path = require("path");
+const { type } = require("jquery");
 
 const server = express();
 
@@ -155,14 +156,53 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
     response.redirect('/verification');
 });
 
-server.get('/forgetpw', urlencodedParser, (request, response) => {
-    
-    if (request.session.loggedin) {
-        response.render(path.join(__dirname , "../html/Edit"));
-    }
-    else {
+server.post('/process-forgetpw', urlencodedParser, (request, response) => {
+    var email = request.body.email;
+    var mail_title = "";
+    var mail_content = "";
+    // var pw = request.body.password;
+    // var dpw = request.body.dpassword;
+    // if (pw == dpw) {
+    //         // Save to the database
+    //     db.query(`UPDATE USERS SET PASSWORD = '${pw}' WHERE UID = ${uid}`, function(error, results, fields) {
+    //         if (error) throw error;
+    //     });
+    // }
+    // else {
+    //     var viewData = {
+    //         wrong2: true
+    //     };
+    //     response.render(path.join(__dirname ,"../html/LandP_login"), viewData);
+	// 	response.end();
+    // }
+    db.query(`SELECT PASSWORD FROM USERS WHERE EMAIL = '${email}'`, function(error, results, fields) {
+        if (error) throw error;
+        if(results.length>0) {
+            var pw = results[0].PASSWORD;
+            mail_title = "CUPD: Here is your password";
+            mail_content = `Your password is "${pw}". If you do not press forget password, just ignore this email.`;
+        }
+        else {
+            mail_title = "CUPD: You have not registered yet";
+            mail_content = `Come and join us by registering an account!`;
+        }
+        var mailOptions = {
+            from: 'csci3100f6project@gmail.com',
+            to: `${email}`,
+            subject: mail_title,
+            text: mail_content
+        }
+
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+            console.log(error);
+            } else {
+            console.log('Email sent: ' + info.response);
+            }
+        });
         response.redirect('/');
-    }
+    });
+    
 });
 
 server.get('/question', urlencodedParser, (request, response) => {
@@ -180,6 +220,7 @@ server.get('/profile', urlencodedParser, (request, response) => {
     var commented_post = [];
     var credit = 0;
     var caption = "";
+    var utype = true;
     if (request.session.loggedin) {
         db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
         FROM QUESTION, LIKED, USERS WHERE LIKED.PID = QUESTION.PID AND LIKED.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
@@ -202,17 +243,19 @@ server.get('/profile', urlencodedParser, (request, response) => {
                         commented_post.push(item);
                         // console.log(item.HEADING);
                     });	
-                    db.query(`SELECT CREDIT_BAL, CAPTION FROM USERS WHERE USERS.UID = ${request.session.uid};`, function(error, results, fields) {
+                    db.query(`SELECT CREDIT_BAL, CAPTION, TYPE FROM USERS WHERE USERS.UID = ${request.session.uid};`, function(error, results, fields) {
                         if (error) throw error;
                         credit = results[0].CREDIT_BAL;
                         caption = results[0].CAPTION;
+                        utype = results[0].TYPE;
                         var viewData = {
                             username: request.session.username,
                             liked_post: liked_post,
                             own_post: own_post,
                             commented_post: commented_post,
                             credit: credit,
-                            caption: caption
+                            caption: caption,
+                            utype: utype
                         };
                         response.render(path.join(__dirname , "../html/profile"), viewData);
                         response.end();
