@@ -23,9 +23,6 @@ It is developed in Nodejs and Express. The database has used MySQL server.
 ## Android App (Incomplete)
 It is developed using android studio. However, there are only two demo images on the partial completed parts (forum searching and displaying) since we are not able to finish it in tight schedule. 
 
-# Complete Code Function Demo Video
-https://drive.google.com/file/d/1GC7leiVeOEgy4AK87-AI6CAqtzjOSuve/view?usp=sharing
-
 # Ref
 - https://youtu.be/knGk9aUr4Do
 - https://www.youtube.com/watch?v=Hixx31BX5kY&t=304s 
