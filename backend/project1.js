@@ -155,6 +155,15 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
     response.redirect('/verification');
 });
 
+server.get('/forgetpw', urlencodedParser, (request, response) => {
+    
+    if (request.session.loggedin) {
+        response.render(path.join(__dirname , "../html/Edit"));
+    }
+    else {
+        response.redirect('/');
+    }
+});
 
 server.get('/question', urlencodedParser, (request, response) => {
     if (request.session.loggedin) {
@@ -279,23 +288,12 @@ server.get('/answer', urlencodedParser, (request, response) => {
     }
 });
 
-server.get('/edit', urlencodedParser, (request, response) => {
-    
-    if (request.session.loggedin) {
-        response.render(path.join(__dirname , "../html/Edit"));
-    }
-    else {
-        response.redirect('/');
-    }
-});
-
 server.post('/process-edit', urlencodedParser, (request, response) => {
     var name = request.body.username;
     var info = request.body.info;
-
+    
     if (name && info) {
-        console.log("111111111111111111111");
-        db.query(`UPDATE USERS SET NAME = '${name}' AND CAPTION = '${info}'`, function(error, results, fields) {
+        db.query(`UPDATE USERS SET NAME = '${name}', CAPTION = '${info}' WHERE USERS.UID = ${request.session.uid}`, function(error, results, fields) {
             if (error) throw error;
 			request.session.username = name;
             response.redirect('/profile');
@@ -304,8 +302,7 @@ server.post('/process-edit', urlencodedParser, (request, response) => {
         });
     } 
     else if (!name && info) {
-        console.log("222222222222222222222");
-        db.query(`UPDATE USERS SET  CAPTION = '${info}'`, function(error, results, fields) {
+        db.query(`UPDATE USERS SET  CAPTION = '${info}' WHERE USERS.UID=${request.session.uid}`, function(error, results, fields) {
             if (error) throw error;
 			
             response.redirect('/profile');
@@ -314,8 +311,7 @@ server.post('/process-edit', urlencodedParser, (request, response) => {
         });
     }
     else if (name && !info) {
-        console.log("333333333333333333");
-        db.query(`UPDATE USERS SET NAME = '${name}'`, function(error, results, fields) {
+        db.query(`UPDATE USERS SET NAME = '${name}' WHERE USERS.UID=${request.session.uid}`, function(error, results, fields) {
             if (error) throw error;
 			request.session.username = name;
             response.redirect('/profile');
