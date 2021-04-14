@@ -1,12 +1,11 @@
 
-
-
-
 function processform() {
     /*check if user input sth in the comment box, otherwise show alert*/
     var c = document.querySelector("#new-comment").value;
-    if (c == "")
+    if (c == ""){
         alert("Please don't leave the Comment Box blank");
+        return
+    }
     /*get user information*/
     let lastComment = document.querySelector("#comments").lastElementChild;
     let newComment = document.createElement("div");
