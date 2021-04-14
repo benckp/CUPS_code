@@ -1,29 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Answering Post</title>
+	<title>Post</title>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="AnswerPost.js"></script>
+	<link rel="stylesheet" href="AnswerPost.css">
+	<link rel="icon" href="CUPSicon1.ico" type="image/x-icon/">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com"> 
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap" rel="stylesheet">
 </head>
 <body>
-	<div class="container">
-		<div id="comments"> 
-			<div id="c1001" class="d-flex"></div>
-		</div>
-		<hr>
-		<h6>Add your comment:</h6>
-		<form>
-			<div class="mb-3">
-				<label for="new-comment" class="form-label">Comment</label>
-				<textarea class="form-control" id="new-comment" rows="3"></textarea>
-			</div>
-			<button type="button" class="btn btn-primary" onclick="processform()">Add comment</button>
-		</form>
-	</div>
-	<div class="GainCredit">
-		<!--Gain Credit by answering question in CUPS-->
-	</div>
-</body>
+	<!-- Partial: Top navigation with search bar -->
+        <!-- TODO: link the top buttons to relevent pages -->
+        <nav class="sticky-top">
+            <div class="topnav">
+                <a href="/forum">
+                    <img class="navicon" src="CUPSicon1.ico">
+                </a>
+                <div class="search-container">
+                    <form>
+                        <input type="text" id="searchInput" placeholder="Search title or content...">
+                        <button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="topnav-right">
+                    <a href="/question">Question</a>
+                    <a href="/task">Task</a>
+                    <a href="/profile">Profile</a>
+                    <a href="#contact">Settings</a>
+                </div>
+            </div>
+        </nav>
+        <img class="navpic" src="navpic.jpg">
+		<div class="content">
+			<div class="top-bar">
+                <h1>Regarding Initial Code</h1>
+            </div>
+            <form class="formcontent">
+                <fieldset>
+                	<p class="posttime">1 day ago</p>
+                    <p class="info">Ben &nbsp; CSCI3100 &nbsp; Q&A </p>
+                    <p class="postcontent">Robustness is a difficult to define quality. Why robustness would become equivalent to correctness (or reliability).</p>
+                </fieldset>
+            <div class="top-bar">
+                <h1>Reply</h1>
+            </div>
+            <div class="webform">
+                <div id="comments"> 
+                    <div id="c1001" class="d-flex"></div>
+                    <hr>
+                </div>
+                <form class="formcontent">
+                    <fieldset>
+                        <legend>Add your comment:</legend>
+                        <div class="mb-3">
+                            <label for="new-comment" class="form-label">Comment</label>
+                            <textarea class="form-control" id="new-comment" rows="3"></textarea>
+                            <label for="graphics" class="form-label">Select image:</label>
+                        	<input type="file" id="graphics" name="graphics" accept="image/*">
+                        </div>
+                        <br>
+                        <button type="button" class="btn" onclick="processform()">Add comment</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+	</body>
 </html>

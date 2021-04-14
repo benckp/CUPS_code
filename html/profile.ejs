@@ -44,9 +44,9 @@
     <div class="container0">
       <div class="head">
         <% if (utype===1) {%>
-        <img style="box-shadow: 0 0 20px 9px rgba(252, 175, 9, 0.801)" src="CSCI 3100.jpg" alt="">
+          <img style="border:rgba(94, 168, 211, 0.7) 3px solid;" src="data:image/png;base64,<%= propic %>" alt="">
         <%} else {%>
-          <img style="box-shadow: 0 0 20px 9px rgba(45, 238, 45, 0.801)" src="CSCI 3100.jpg" alt="">
+          <img style="border:rgba(211, 94, 94, 0.7) 3px solid;" src="CSCI 3100.jpg" alt="">
         <%}%>
         <div class="container1">
           <div id="name"><%=username%></div>
@@ -171,7 +171,7 @@
               <!-- <h1>Login</h1> -->
               
       
-                  <form method="POST" action="/process-edit">
+                  <form method="POST" action="/process-edit" enctype="multipart/form-data">
                       <div class="textbox">
                           <i class="fa fa-user" aria-hidden="true"></i>
                           <input style="font-size: 18px; border: 0; border-bottom: 1px gray solid; background-color: transparent;" type="text" placeholder="Username" name="username" value="">
@@ -181,7 +181,10 @@
                           <i class="fa fa-info-circle" aria-hidden="true"></i>
                           <input style="font-size: 18px; border: 0; border-bottom: 1px gray solid; background-color: transparent;" type="text" placeholder="YearX Major" name="info" value="">
                       </div>
-                      
+                      <br>
+                      <label for="graphics">Select image:</label>
+                      <input type="file" id="graphics" name="propic" accept="image/*">  
+                      <br>
                       <input style="font-size: 18px; color: gray;" class="btn" type="submit" name="" value="Submit">
                       
                   </form>

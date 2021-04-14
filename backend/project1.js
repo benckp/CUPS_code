@@ -1,4 +1,4 @@
-
+const fs = require("fs");
 const express = require("express");
 const bodyParser = require('body-parser')
 const mysql = require("mysql");
@@ -6,6 +6,7 @@ const session = require("express-session");
 const nodemailer = require('nodemailer');
 const path = require("path");
 const { type } = require("jquery");
+const upload = require("express-fileupload");
 
 const server = express();
 
@@ -38,6 +39,7 @@ var transporter = nodemailer.createTransport({
 server.use(express.static(path.join(__dirname , "../css")));
 server.use(express.static(path.join(__dirname , "../js")));
 server.use(express.static(path.join(__dirname , "../img")));
+server.use(upload());
 server.set('view engine', 'ejs');
 server.use(session({
     secret: 'secret-key',
@@ -221,6 +223,9 @@ server.get('/profile', urlencodedParser, (request, response) => {
     var credit = 0;
     var caption = "";
     var utype = true;
+    var buf = "";
+    var propic;
+    
     if (request.session.loggedin) {
         db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
         FROM QUESTION, LIKED, USERS WHERE LIKED.PID = QUESTION.PID AND LIKED.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
@@ -243,11 +248,16 @@ server.get('/profile', urlencodedParser, (request, response) => {
                         commented_post.push(item);
                         // console.log(item.HEADING);
                     });	
-                    db.query(`SELECT CREDIT_BAL, CAPTION, TYPE FROM USERS WHERE USERS.UID = ${request.session.uid};`, function(error, results, fields) {
+                    db.query(`SELECT CREDIT_BAL, CAPTION, TYPE, PROFILE_PIC FROM USERS WHERE USERS.UID = ${request.session.uid};`, function(error, results, fields) {
                         if (error) throw error;
                         credit = results[0].CREDIT_BAL;
                         caption = results[0].CAPTION;
                         utype = results[0].TYPE;
+                        propic = results[0].PROFILE_PIC;
+                        // console.log(propic);
+                        // fs.writeFileSync(propic, buf);
+                        // var propic = Buffer.from( buf.toString('hex'),'hex');
+                        // propic = results[0].PROFILE_PIC.toString('base64');
                         var viewData = {
                             username: request.session.username,
                             liked_post: liked_post,
@@ -255,7 +265,8 @@ server.get('/profile', urlencodedParser, (request, response) => {
                             commented_post: commented_post,
                             credit: credit,
                             caption: caption,
-                            utype: utype
+                            utype: utype,
+                            propic: propic
                         };
                         response.render(path.join(__dirname , "../html/profile"), viewData);
                         response.end();
@@ -334,8 +345,18 @@ server.get('/answer', urlencodedParser, (request, response) => {
 server.post('/process-edit', urlencodedParser, (request, response) => {
     var name = request.body.username;
     var info = request.body.info;
-    
-    if (name && info) {
+    var propic = request.files.propic;
+    // console.log(typeof(propic));
+    var buf = propic.data.toString('base64');
+    if (propic) {
+        db.query(`UPDATE USERS SET PROFILE_PIC = '${buf}' WHERE USERS.UID = ${request.session.uid}`, function(error, results, fields) {
+            if (error) throw error;
+            response.redirect('/profile');
+			response.end();
+        });
+    } 
+
+    else if (name && info) {
         db.query(`UPDATE USERS SET NAME = '${name}', CAPTION = '${info}' WHERE USERS.UID = ${request.session.uid}`, function(error, results, fields) {
             if (error) throw error;
 			request.session.username = name;
@@ -400,6 +421,7 @@ CREATE TABLE USERS(
     CREDIT_GAIN INT DEFAULT 0, 
     LEVEL INT DEFAULT 0,
     IS_AUTH BOOLEAN DEFAULT FALSE,
+    PROFILE_PIC BLOB,
     CAPTION TEXT
 );
 CREATE TABLE QUESTION(
@@ -515,6 +537,7 @@ CREATE TABLE USERS(
     CREDIT_GAIN INT DEFAULT 0, 
     LEVEL INT DEFAULT 0,
     IS_AUTH BOOLEAN DEFAULT FALSE,
+    PROFILE_PIC LONGBLOB,
     CAPTION TEXT
 );
 CREATE TABLE QUESTION(
@@ -561,13 +584,13 @@ CREATE TABLE LIKED(
 );
 
 
-INSERT INTO USERS VALUES( 1155000000, TRUE, 'admin', 'admin', 'admin', 'admin@gmail.com', DEFAULT, DEFAULT, DEFAULT, TRUE, "Hi there, I am admin");
-INSERT INTO USERS VALUES( 1155000001, TRUE, 'mons', 'admin', 'mons', 'mons@gmail.com', 15, DEFAULT, DEFAULT, TRUE, NULL);
-INSERT INTO USERS VALUES( 1155000002, TRUE, 'paul', 'admin', 'paul', 'paul@gmail.com', 14, DEFAULT, DEFAULT, DEFAULT, NULL);
-INSERT INTO USERS VALUES( 1155000003, TRUE, 'kim', 'admin', 'kim', 'kim@gmail.com', 13, DEFAULT, DEFAULT, TRUE, NULL);
-INSERT INTO USERS VALUES( 1155000004, TRUE, 'lee', 'admin', 'lee', 'lee@gmail.com', 12, DEFAULT, DEFAULT, DEFAULT, NULL);
-INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gmail.com', 19, DEFAULT, DEFAULT, TRUE, NULL);
-INSERT INTO USERS VALUES( 1255000001, False, 'Prof. X', 'admin', 'Prof. X', 'profX@gmail.com', 19, DEFAULT, DEFAULT, TRUE, NULL);
+INSERT INTO USERS VALUES( 1155000000, TRUE, 'admin', 'admin', 'admin', 'admin@gmail.com', DEFAULT, DEFAULT, DEFAULT, TRUE, NULL, "Hi there, I am admin");
+INSERT INTO USERS VALUES( 1155000001, TRUE, 'mons', 'admin', 'mons', 'mons@gmail.com', 15, DEFAULT, DEFAULT, TRUE, NULL, NULL);
+INSERT INTO USERS VALUES( 1155000002, TRUE, 'paul', 'admin', 'paul', 'paul@gmail.com', 14, DEFAULT, DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO USERS VALUES( 1155000003, TRUE, 'kim', 'admin', 'kim', 'kim@gmail.com', 13, DEFAULT, DEFAULT, TRUE, NULL, NULL);
+INSERT INTO USERS VALUES( 1155000004, TRUE, 'lee', 'admin', 'lee', 'lee@gmail.com', 12, DEFAULT, DEFAULT, DEFAULT, NULL, NULL);
+INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gmail.com', 19, DEFAULT, DEFAULT, TRUE, NULL, NULL);
+INSERT INTO USERS VALUES( 1255000001, False, 'Prof. X', 'admin', 'Prof. X', 'profX@gmail.com', 19, DEFAULT, DEFAULT, TRUE, NULL, NULL);
 
 
 INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT);
