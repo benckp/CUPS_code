@@ -30,11 +30,16 @@ img.navicon{
     width: 340px;
     height: 480px;
     position: absolute;
+    margin: 5% 0%;
+    padding: 5%;
     top: 40%;
     left: 25%;
     transform: translate(-50%,-50%);
     color: black;
     background: transparent;
+    border-style: groove;
+    border-color: white;
+    border-width: 5px;
 }
 
 .btn-box{
