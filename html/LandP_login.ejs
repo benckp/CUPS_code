@@ -22,6 +22,7 @@
 </head>
 <body>
     <div id="app">
+        <%if (passvc) {%>
         <!-- A container for login -->
     <div class="login-box">
         <!-- <h1>Login</h1> -->
@@ -92,6 +93,9 @@
         </div>
     </div>
     </div>
+    <%} else {%>
+
+        <%}%>
     <img class="logo" src="CSCI 3100.jpg">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <script>

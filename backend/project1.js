@@ -46,6 +46,7 @@ server.use(session({
     secret: 'secret-key',
     loggedin: false,
     uid: 0,
+    is_auth: "",
     username: "",
     last_url: "",
     resave: true,
@@ -71,7 +72,7 @@ server.post('/process-login', urlencodedParser, (request, response) => {
     var pw = request.body.password;
 
     if (name && pw) {
-        db.query(`SELECT UID, NAME FROM USERS WHERE LOGIN_NAME = '${name}' AND PASSWORD = '${pw}'`, function(error, results, fields) {
+        db.query(`SELECT UID, NAME, IS_AUTH FROM USERS WHERE LOGIN_NAME = '${name}' AND PASSWORD = '${pw}'`, function(error, results, fields) {
             if (error) throw error;
 			if (results.length === 0) {   // There are no matches in the database
                 var viewData = {
@@ -82,6 +83,7 @@ server.post('/process-login', urlencodedParser, (request, response) => {
                 request.session.loggedin = true;
 				request.session.username = results[0].NAME;
                 request.session.uid = results[0].UID;
+                request.session.is_auth = results[0].IS_AUTH;
 				response.redirect('/login_success');
 			}			
 			response.end();
@@ -111,20 +113,31 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
     var name = username;
     var email = request.body.email;
     var uid = request.body.uid;
-    // Save to the database
-    db.query(`INSERT INTO USERS VALUES( '${uid}', TRUE, '${username}', '${pw}', '${name}', '${email}', DEFAULT, DEFAULT, DEFAULT, DEFAULT, null, null)`, function(error, results, fields) {
+ 
+    // Ref: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+    function makeid(length) {
+        var result           = [];
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789,./;\'[]!@#$%^&*()+=';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+          result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
+       }
+       return result.join('');
+    }
+    var vc = makeid(5);
+       // Save to the database
+       db.query(`INSERT INTO USERS VALUES( '${uid}', TRUE, '${username}', '${pw}', '${name}', '${email}', DEFAULT, DEFAULT, DEFAULT, '${vc}', null, null)`, function(error, results, fields) {
         if (error) throw error;
     });
-
     // Need verify
     // Send email
     var mailOptions = {
         from: 'csci3100f6project@gmail.com',
         to: `${email}`,
-        subject: 'Sending Email using Node.js',
+        subject: 'Sending Verificatoin Email by using Node.js',
         // The email should contain a hash-coded link to verify the account
         // TODO
-        text: 'You have successfully verified! Please don\'t reply this email'
+        text: `Herre is your verification code: ${vc}. Please don\'t reply this email`
     }
 
     transporter.sendMail(mailOptions, function(error, info){
@@ -134,8 +147,10 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
         console.log('Email sent: ' + info.response);
         }
     });
+
     request.session.last_url = '/process-registration' ;
     response.redirect('/verification');
+
 });
 
 server.post('/process-forgetpw', urlencodedParser, (request, response) => {
@@ -174,12 +189,16 @@ server.post('/process-forgetpw', urlencodedParser, (request, response) => {
 });
 
 server.get('/question', urlencodedParser, (request, response) => {
-    if (request.session.loggedin) {
-        request.session.last_url = '/question' ;
-        response.render(path.join(__dirname , "../html/CreatePost_homepage1"));
-    }
-    else {
-        response.redirect('/');
+    if (!request.session.is_auth) {
+        if (request.session.loggedin) {
+            request.session.last_url = '/question' ;
+            response.render(path.join(__dirname , "../html/CreatePost_homepage1"));
+        }
+        else {
+            response.redirect('/');
+        }
+    } else {
+        var todo = 0;
     }
 });
 
@@ -191,76 +210,87 @@ server.get('/profile', urlencodedParser, (request, response) => {
     var caption = "";
     var utype = true;
     var propic;
-    
-    if (request.session.loggedin) {
-        db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
-        FROM QUESTION, LIKED, USERS WHERE LIKED.PID = QUESTION.PID AND LIKED.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
-            if (error) throw error;
-            results.forEach(function(item){
-                liked_post.push(item);
-                // console.log(item.HEADING);
-            });	
+    if (!request.session.is_auth) {
+        if (request.session.loggedin) {
             db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
-            FROM QUESTION, USERS WHERE QUESTION.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
+            FROM QUESTION, LIKED, USERS WHERE LIKED.PID = QUESTION.PID AND LIKED.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
                 if (error) throw error;
                 results.forEach(function(item){
-                    own_post.push(item);
+                    liked_post.push(item);
                     // console.log(item.HEADING);
                 });	
                 db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
-                FROM QUESTION, RESPONDS, USERS WHERE RESPONDS.PID = QUESTION.PID AND RESPONDS.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
+                FROM QUESTION, USERS WHERE QUESTION.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
                     if (error) throw error;
                     results.forEach(function(item){
-                        commented_post.push(item);
+                        own_post.push(item);
                         // console.log(item.HEADING);
                     });	
-                    db.query(`SELECT CREDIT_BAL, CAPTION, TYPE, PROFILE_PIC FROM USERS WHERE USERS.UID = ${request.session.uid};`, function(error, results, fields) {
+                    db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+                    FROM QUESTION, RESPONDS, USERS WHERE RESPONDS.PID = QUESTION.PID AND RESPONDS.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
                         if (error) throw error;
-                        credit = results[0].CREDIT_BAL;
-                        caption = results[0].CAPTION;
-                        utype = results[0].TYPE;
-                        propic = results[0].PROFILE_PIC;
-                        var viewData = {
-                            username: request.session.username,
-                            liked_post: liked_post,
-                            own_post: own_post,
-                            commented_post: commented_post,
-                            credit: credit,
-                            caption: caption,
-                            utype: utype,
-                            propic: propic
-                        };
-                        request.session.last_url = '/profile' ;
-                        response.render(path.join(__dirname , "../html/profile"), viewData);
-                        response.end();
+                        results.forEach(function(item){
+                            commented_post.push(item);
+                            // console.log(item.HEADING);
+                        });	
+                        db.query(`SELECT CREDIT_BAL, CAPTION, TYPE, PROFILE_PIC FROM USERS WHERE USERS.UID = ${request.session.uid};`, function(error, results, fields) {
+                            if (error) throw error;
+                            credit = results[0].CREDIT_BAL;
+                            caption = results[0].CAPTION;
+                            utype = results[0].TYPE;
+                            propic = results[0].PROFILE_PIC;
+                            var viewData = {
+                                username: request.session.username,
+                                liked_post: liked_post,
+                                own_post: own_post,
+                                commented_post: commented_post,
+                                credit: credit,
+                                caption: caption,
+                                utype: utype,
+                                propic: propic
+                            };
+                            request.session.last_url = '/profile' ;
+                            response.render(path.join(__dirname , "../html/profile"), viewData);
+                            response.end();
+                        });
                     });
                 });
             });
-        });
-    }
-    else {
-        response.redirect('/');
+        }
+        else {
+            response.redirect('/');
+        }
+    } else {
+        var todo = 0;
     }
 });
 
 server.get('/newtask', urlencodedParser, (request, response) => {
-    
+    if (!request.session.is_auth) {
     if (request.session.loggedin) {
         response.render(path.join(__dirname , "../html/CreatePost_newtask"));
     }
     else {
         response.redirect('/');
     }
+}
+else {
+    var todo = 0;
+}
 });
 
 server.get('/newthread', urlencodedParser, (request, response) => {
-   
+    if (!request.session.is_auth) {
     if (request.session.loggedin) {
         response.render(path.join(__dirname , "../html/CreatePost_newthread"));
     }
     else {
         response.redirect('/');
     }
+}
+else {
+var todo = 0;
+}
 });
 
 server.post('/process-newthread', urlencodedParser, (request, response) => {
@@ -275,6 +305,7 @@ server.post('/process-newthread', urlencodedParser, (request, response) => {
         pic =  request.files.graphics;
         buf = pic.data.toString('base64');
     }
+    if (!request.session.is_auth) {
     if (request.session.loggedin) {
         if (!request.files) {
             console.log(content);
@@ -307,12 +338,16 @@ server.post('/process-newthread', urlencodedParser, (request, response) => {
     else {
         response.redirect('/');
     }
+} else {
+    var todo = 0;
+}
 });
 
 server.get('/forum', urlencodedParser, (request, response) => {
     var post = [];
     var com = [];
     var que;
+    if (!request.session.is_auth) {
     if (request.session.loggedin) {
         if (!request.query.pid) {
             db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
@@ -356,6 +391,10 @@ server.get('/forum', urlencodedParser, (request, response) => {
     else {
         response.redirect('/');
     }
+}
+else {
+    var todo = 0;
+}
 });
 
 server.post('/process-comment', urlencodedParser, (request, response) => {
@@ -495,6 +534,16 @@ server.post('/process-edit', urlencodedParser, (request, response) => {
 			response.end();
         });
     }
+
+    else if (name && info && propic) {
+        db.query(`UPDATE USERS SET NAME = '${name}', CAPTION = '${info}', PROFILE_PIC = '${buf}' WHERE USERS.UID = ${request.session.uid}`, function(error, results, fields) {
+            if (error) throw error;
+			request.session.username = name;
+            response.redirect('/profile');
+
+			response.end();
+        });
+    } 
     else {
         
         response.redirect('/profile');
@@ -636,6 +685,7 @@ SELECT LOGIN_NAME, CREDIT_BAL FROM USERS ORDER BY CREDIT_BAL DESC LIMIT 10;
 
 All test case:
 
+
 CREATE DATABASE project;
 USE project;
 
@@ -649,7 +699,7 @@ CREATE TABLE USERS(
     CREDIT_BAL INT DEFAULT 10, 
     CREDIT_GAIN INT DEFAULT 0, 
     LEVEL INT DEFAULT 0,
-    IS_AUTH BOOLEAN DEFAULT FALSE,
+    IS_AUTH VARCHAR(5),
     PROFILE_PIC LONGBLOB,
     CAPTION TEXT
 );
@@ -699,13 +749,13 @@ CREATE TABLE LIKED(
 );
 
 
-INSERT INTO USERS VALUES( 1155000000, TRUE, 'admin', 'admin', 'admin', 'admin@gmail.com', DEFAULT, DEFAULT, DEFAULT, TRUE, NULL, "Hi there, I am admin");
-INSERT INTO USERS VALUES( 1155000001, TRUE, 'mons', 'admin', 'mons', 'mons@gmail.com', 15, DEFAULT, DEFAULT, TRUE, NULL, NULL);
-INSERT INTO USERS VALUES( 1155000002, TRUE, 'paul', 'admin', 'paul', 'paul@gmail.com', 14, DEFAULT, DEFAULT, DEFAULT, NULL, NULL);
-INSERT INTO USERS VALUES( 1155000003, TRUE, 'kim', 'admin', 'kim', 'kim@gmail.com', 13, DEFAULT, DEFAULT, TRUE, NULL, NULL);
-INSERT INTO USERS VALUES( 1155000004, TRUE, 'lee', 'admin', 'lee', 'lee@gmail.com', 12, DEFAULT, DEFAULT, DEFAULT, NULL, NULL);
-INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gmail.com', 19, DEFAULT, DEFAULT, TRUE, NULL, NULL);
-INSERT INTO USERS VALUES( 1255000001, False, 'Prof. X', 'admin', 'Prof. X', 'profX@gmail.com', 19, DEFAULT, DEFAULT, TRUE, NULL, NULL);
+INSERT INTO USERS VALUES( 1155000000, TRUE, 'admin', 'admin', 'admin', 'admin@gmail.com', DEFAULT, DEFAULT, DEFAULT, NULL, NULL, "Hi there, I am admin");
+INSERT INTO USERS VALUES( 1155000001, TRUE, 'mons', 'admin', 'mons', 'mons@gmail.com', 15, DEFAULT, DEFAULT, NULL, NULL, NULL);
+INSERT INTO USERS VALUES( 1155000002, TRUE, 'paul', 'admin', 'paul', 'paul@gmail.com', 14, DEFAULT, DEFAULT, NULL, NULL, NULL);
+INSERT INTO USERS VALUES( 1155000003, TRUE, 'kim', 'admin', 'kim', 'kim@gmail.com', 13, DEFAULT, DEFAULT, NULL, NULL, NULL);
+INSERT INTO USERS VALUES( 1155000004, TRUE, 'lee', 'admin', 'lee', 'lee@gmail.com', 12, DEFAULT, DEFAULT, NULL, NULL, NULL);
+INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gmail.com', 19, DEFAULT, DEFAULT, NULL, NULL, NULL);
+INSERT INTO USERS VALUES( 1255000001, False, 'Prof. X', 'admin', 'Prof. X', 'profX@gmail.com', 19, DEFAULT, DEFAULT, NULL, NULL, NULL);
 
 
 INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT, DEFAULT);
