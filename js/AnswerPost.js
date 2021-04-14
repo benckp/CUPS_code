@@ -80,7 +80,7 @@ function createtask() {
 		/*suggestedanswer not sure put where in sql*/
 	var d5 = document.querySelector("#suggestedanswer").value;
     if (d5 == "")
-        alert("Please don't leave the Credit Box blank");
+        alert("Please don't leave the Answer Box blank");
 	else{
 /*execute the connect prep, not clear for config*/	
 	let mysql  = require('mysql');
