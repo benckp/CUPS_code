@@ -243,16 +243,6 @@ server.get('/profile', urlencodedParser, (request, response) => {
     }
 });
 
-server.get('/task', urlencodedParser, (request, response) => {
-    if (request.session.loggedin) {
-        response.render(path.join(__dirname , "../html/CreatePost_homepage2"));
-    }
-    else {
-        response.redirect('/');
-    }
-    
-});
-
 server.get('/newtask', urlencodedParser, (request, response) => {
     
     if (request.session.loggedin) {
@@ -267,6 +257,52 @@ server.get('/newthread', urlencodedParser, (request, response) => {
    
     if (request.session.loggedin) {
         response.render(path.join(__dirname , "../html/CreatePost_newthread"));
+    }
+    else {
+        response.redirect('/');
+    }
+});
+
+server.post('/process-newthread', urlencodedParser, (request, response) => {
+    var question = request.body.question;
+    var cl = request.body.class;
+    var content = request.body.content;
+    var credit = request.body.credit;
+    var pic; 
+    var buf;
+    var com = [];
+    if (request.files) {
+        pic =  request.files.graphics;
+        buf = pic.data.toString('base64');
+    }
+    if (request.session.loggedin) {
+        if (!request.files) {
+            console.log(content);
+            db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, TRUE, "${question}", "${cl}", 
+                "${question}", "${content}", ${credit}, DEFAULT, NULL, DEFAULT, DEFAULT);`, function(error, results, fields) {
+                if (error) throw error;
+                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
+                    if (error) throw error;
+                    que = results[0];
+                    db.query(`SELECT RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
+                    FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${que.PID};`, function(error, results, fields) {
+                        if (error) throw error;
+                            results.forEach(function(item){
+                            com.push(item);
+                            // console.log(item.NAME);
+                        });	
+                        var viewData = {
+                            results: que,
+                            com: com
+                        };
+                        request.session.last_url = `/profile?pid=${que.pid}` ;
+                        response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
+                        response.end();
+                    });
+                });
+            });
+        }
     }
     else {
         response.redirect('/');
