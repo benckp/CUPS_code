@@ -10,18 +10,21 @@ Thanks to our tutor, Mr SHEN, for the suggestions, we included CUHK feature in o
 At the login page, the user can login with their account and password, or register with a new account using cuhk email. We also provide assistent for users who forget their password.
 
 #### Home page (Forum)
-At the home page, list of forums are displayed. Users can sort the posts by clicking on the header of the table. Moreover, they can also search 
+At the home page, list of forums are displayed. Users can sort the posts by clicking on the header of the table. Moreover, they can also search on the class, title or content of posts. Once they found an interested post, they can access it by clicking the content words of the post. Users can also create a post, or access to their profile, or log out from the system.
 
+#### Create Post
+At the create post page, user can open a post with header, text content and image. Opening a post require author to select an amount of credit to be given to their selected answer later.
+
+#### Answer Post
+At the answer post page, we display the corresponding question and existing responds. Students can answer the post by text and/or image, while the author can select the answer they think appropriate.
 
 ### Backend
-It is developed in Nodejs and Express.
-The database has used MySQL. We will proceed to deploy our service to AWS s.t. our service will be more reliable and flexible.
+It is developed in Nodejs and Express. The database has used MySQL server. 
 
-### Android App
-It is developed using android studio. Note that it is a new feature which we didn't put in our initial design doc. Thanks to our tutor, Mr SHEN, for the suggestion to us. Since we are all new to app development, there is only a partially implemented forum search and display page in the apps. We will try to make it cool in the next phase.  
-Remark: there are two demo images on the partial completed parts (forum searching and displaying).
+### Android App (Incomplete)
+It is developed using android studio. However, there are only two demo images on the partial completed parts (forum searching and displaying) since we are not able to finish it in tight schedule. 
 
-## Initial Code Partial Function Demo Video
+## Complete Code Function Demo Video
 https://drive.google.com/file/d/1GC7leiVeOEgy4AK87-AI6CAqtzjOSuve/view?usp=sharing
 
 ## Ref
