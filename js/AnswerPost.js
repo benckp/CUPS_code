@@ -49,7 +49,13 @@ function createpost() {
 let config = require('./project1.js');
 let connection = mysql.createConnection(config);
 	/*insert the task to sql*/
-	var sql="INSERT INTO QUESTION VALUES( 0, uid, '$student', '$d2', class, '$d1', '$d3', '$d4', DEFAULT, NULL)";
+	var sql="INSERT INTO QUESTION VALUES( 0, uid, TRUE, '$d2', class, '$d1', '$d3', '$d4', DEFAULT, NULL, DEFAULT)";
+/*
+sample sql
+INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT);
+*/
+
+
 /*execute the insert statment*/
 connection.query(sql);
 
@@ -86,7 +92,11 @@ let config = require('./project1.js');
 let connection = mysql.createConnection(config);
 
 /*insert the task to sql, suggested answer not sure where to put*/
-	var sql="INSERT INTO QUESTION VALUES( 0, uid, '$teacher', '$d2', class, '$d1', '$d3', '$d4', DEFAULT, NULL)";
+	var sql="INSERT INTO QUESTION VALUES( 0, uid, FALSE, '$d2', class, '$d1', '$d3', '$d4', DEFAULT, '$d5', DEFAULT)";
+/*
+sample sql
+INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT);
+*/
 /*execute the insert statment*/
 connection.query(sql);
 
