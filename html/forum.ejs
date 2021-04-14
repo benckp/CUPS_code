@@ -16,22 +16,27 @@
              </head>
              <!-- <body onload="loadPosts()"> -->
              <body>
-             <div class="topnav">
-                 <!-- TODO: change Home text to CUPS icon -->
-                 <a href="#home">Home (CUPS icon)</a> <!-- link to the initial page (reset filter, searching, etc) -->
-                 <div class="search-container">
-                     <form>
-                         <input type="text" id="searchInput" placeholder="Search class, title or content...">
-                         <button type="button" onclick="search()"><i class="fa fa-search"></i></button>
-                     </form>
-                 </div>
-                 <a href="#createPost"><b>New Post </b><i class="fa fa-edit"></i> </a>
-                 <div class="topnav-right">
-                     <!-- TODO: change href to other pages accordingly -->
-                     <a href="/profile"><i class="fa fa-user"></i></a>
-                     <a href="/logout"><i class="fa fa-sign-out"></i></a>
-                 </div>
-             </div>
+             <!-- Partial: Top navigation with search bar -->
+        <!-- TODO: link the top buttons to relevent pages -->
+        <nav class="sticky-top">
+            <div class="topnav">
+                <a href="/forum">
+                    <img class="navicon" src="CUPSicon1.ico">
+                </a>
+                <div class="search-container">
+                    <form>
+                        <input type="text" id="searchInput" placeholder="Search title or content...">
+                        <button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+                <a href="#createPost" class="newpo"><b>New Post </b><i class="fa fa-edit"></i> </a>
+                <div class="topnav-right">
+                <!-- TODO: change href to other pages accordingly -->
+                <a href="#profile"><i class="fa fa-user"></i></a>
+                <a href="#logout"><i class="fa fa-sign-out"></i></a>
+            </div>
+            </div>
+        </nav>
              
              
              <!-- Partial: List of related post -->
