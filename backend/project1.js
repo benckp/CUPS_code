@@ -335,8 +335,8 @@ server.get('/forum', urlencodedParser, (request, response) => {
             FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${request.query.pid};`, function(error, results, fields) {
                 if (error) throw error;
                 que = results[0];
-                db.query(`SELECT RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
-                 FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${request.query.pid};`, function(error, results, fields) {
+                db.query(`SELECT RESPONDS.GRAPHIC,RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
+                FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${request.query.pid};`, function(error, results, fields) {
                     if (error) throw error;
                         results.forEach(function(item){
                         com.push(item);
@@ -370,14 +370,64 @@ server.post('/process-comment', urlencodedParser, (request, response) => {
         buf = pic.data.toString('base64');
     }
     if (request.session.loggedin) {
-        if (comment) {
+        if (comment && !request.files) {
             db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, '${comment}', NULL, DEFAULT);`, function(error, results, fields) {
                 if (error) throw error;
                 db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
                 FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${pid};`, function(error, results, fields) {
                     if (error) throw error;
                     que = results[0];
-                    db.query(`SELECT RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
+                    db.query(`SELECT RESPONDS.GRAPHIC,RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
+                    FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${pid};`, function(error, results, fields) {
+                        if (error) throw error;
+                            results.forEach(function(item){
+                            com.push(item);
+                            // console.log(item.NAME);
+                        });	
+                        var viewData = {
+                            results: que,
+                            com: com
+                        };
+                        request.session.last_url = `/profile?pid=${pid}` ;
+                        response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
+                        response.end();
+                    });
+                });
+            });
+        }
+        else if (!comment && request.files) {
+            db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, NULL, '${buf}', DEFAULT);`, function(error, results, fields) {
+                if (error) throw error;
+                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${pid};`, function(error, results, fields) {
+                    if (error) throw error;
+                    que = results[0];
+                    db.query(`SELECT RESPONDS.GRAPHIC,RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
+                    FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${pid};`, function(error, results, fields) {
+                        if (error) throw error;
+                            results.forEach(function(item){
+                            com.push(item);
+                            // console.log(item.NAME);
+                        });	
+                        var viewData = {
+                            results: que,
+                            com: com
+                        };
+                        request.session.last_url = `/profile?pid=${pid}` ;
+                        response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
+                        response.end();
+                    });
+                });
+            });
+        }
+        else if (comment && request.files) {
+            db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, '${comment}', '${buf}', DEFAULT);`, function(error, results, fields) {
+                if (error) throw error;
+                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${pid};`, function(error, results, fields) {
+                    if (error) throw error;
+                    que = results[0];
+                    db.query(`SELECT RESPONDS.GRAPHIC,RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
                     FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${pid};`, function(error, results, fields) {
                         if (error) throw error;
                             results.forEach(function(item){
@@ -623,7 +673,7 @@ CREATE TABLE RESPONDS(
     RID INT AUTO_INCREMENT PRIMARY KEY,
     UID INT NOT NULL,
     PID INT NOT NULL,
-    TEXT_CONTENT TEXT NOT NULL, 
+    TEXT_CONTENT TEXT, 
     GRAPHIC LONGBLOB,
     POST_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT F_USER_RESPOND FOREIGN KEY (UID) 
@@ -681,6 +731,8 @@ Confident that the worst he can hear is a tale of his lowly birth, Oedipus eager
 And so, despite his precautions, the prophecy that Oedipus dreaded has actually come true. Realizing that he has killed his father and married his mother, Oedipus is agonized by his fate.
 Rushing into the palace, Oedipus finds that the queen has killed herself. Tortured, frenzied, Oedipus takes the pins from her gown and rakes out his eyes, so that he can no longer look upon the misery he has caused. Now blinded and disgraced, Oedipus begs Creon to kill him, but as the play concludes, he quietly submits to Creon's leadership, and humbly awaits the oracle that will determine whether he will stay in Thebes or be cast out forever.", 5, DEFAULT, NULL, DEFAULT, DEFAULT);
 
+
+
 INSERT LIKED VALUES(1155000000, 3);
 INSERT LIKED VALUES(1155000000, 7);
 INSERT LIKED VALUES(1155000000, 2);
@@ -688,7 +740,8 @@ INSERT LIKED VALUES(1155000000, 5);
 INSERT LIKED VALUES(1155000000, 10);
 
 INSERT RESPONDS VALUES(0, 1155000000, 7, "Nice post!", NULL, DEFAULT);
-
+INSERT RESPONDS VALUES(0, 1155000000, 10, "Nice story!", NULL, DEFAULT);
+INSERT RESPONDS VALUES(0, 1155000000, 3, "Nice!", NULL, DEFAULT);
 
 */
 

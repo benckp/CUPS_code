@@ -61,13 +61,14 @@
                     <div id="c<%=com[i].RID%>" class="d-flex">
                             <h5><%=com[i].NAME%></h5>
                             <p><%=com[i].TEXT_CONTENT%></p>
+                            <%if (com[i].GRAPHIC){%> <img src="data:image/png;base64,<%= com[i].GRAPHIC %>" alt="" ><%}%>
                             <small><%=com[i].POST_AT%></small>
                         <button style="display:none" type="button" class="btnGive" onclick="selectAnswer(commenter_uid)">Select as answer</button>
                     </div>
                     <hr>
                     <%}%>
                 </div>
-                <form method="POST" action="/process-comment" class="formcontent" >
+                <form method="POST" action="/process-comment" class="formcontent" enctype="multipart/form-data">
                     <fieldset>
                         <legend>Add your comment:</legend>
                         <div class="mb-3">
