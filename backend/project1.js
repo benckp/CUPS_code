@@ -90,7 +90,7 @@ server.post('/process-login', urlencodedParser, (request, response) => {
     var pw = request.body.password;
 
     if (name && pw) {
-        db.query(`SELECT UID FROM USERS WHERE LOGIN_NAME = '${name}' AND PASSWORD = '${pw}'`, function(error, results, fields) {
+        db.query(`SELECT UID, NAME FROM USERS WHERE LOGIN_NAME = '${name}' AND PASSWORD = '${pw}'`, function(error, results, fields) {
             if (error) throw error;
 			if (results.length === 0) {   // There are no matches in the database
                 var viewData = {
@@ -99,7 +99,7 @@ server.post('/process-login', urlencodedParser, (request, response) => {
                 response.render(path.join(__dirname ,"../html/LandP_login"), viewData);
 			} else {    
                 request.session.loggedin = true;
-				request.session.username = name;
+				request.session.username = results[0].NAME;
                 request.session.uid = results[0].UID;
 				response.redirect('/login_success');
 			}			
@@ -289,19 +289,41 @@ server.get('/edit', urlencodedParser, (request, response) => {
     }
 });
 
-server.post('/process-login', urlencodedParser, (request, response) => {
+server.post('/process-edit', urlencodedParser, (request, response) => {
     var name = request.body.username;
     var info = request.body.info;
 
-    if (name && pw) {
+    if (name && info) {
+        console.log("111111111111111111111");
         db.query(`UPDATE USERS SET NAME = '${name}' AND CAPTION = '${info}'`, function(error, results, fields) {
+            if (error) throw error;
+			request.session.username = name;
+            response.redirect('/profile');
+
+			response.end();
+        });
+    } 
+    else if (!name && info) {
+        console.log("222222222222222222222");
+        db.query(`UPDATE USERS SET  CAPTION = '${info}'`, function(error, results, fields) {
             if (error) throw error;
 			
             response.redirect('/profile');
 
 			response.end();
         });
-    } else {
+    }
+    else if (name && !info) {
+        console.log("333333333333333333");
+        db.query(`UPDATE USERS SET NAME = '${name}'`, function(error, results, fields) {
+            if (error) throw error;
+			request.session.username = name;
+            response.redirect('/profile');
+
+			response.end();
+        });
+    }
+    else {
         
         response.redirect('/profile');
 		response.end();
