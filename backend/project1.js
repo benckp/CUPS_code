@@ -111,7 +111,8 @@ server.post('/process-login', urlencodedParser, (request, response) => {
 server.get('/verification', urlencodedParser, (request, response) => {
     var viewData = {
         wrong: false,
-        verify: true
+        verify: true,
+        passvc: false
     };
     request.session.last_url = '/verification' ;
     response.render(path.join(__dirname , "../html/LandP_login"), viewData);
