@@ -31,16 +31,19 @@ function createpost() {
     var d1 = document.querySelector("#qname").value;
     if (d1 == "")
         alert("Please don't leave the Question Box blank");
+	else{
 	var d2 = document.querySelector("#hashtag").value;
     if (d2 == "")
         alert("Please don't leave the Hashtag Box blank");
+	else{
 	var d3 = document.querySelector("#content").value;
     if (d3 == "")
         alert("Please don't leave the Content Box blank");
+	else{
 	var d4 = document.querySelector("#credit").value;
     if (d4 == "")
         alert("Please don't leave the Credit Box blank");
-	
+	else{
 	/*execute the connect prep, not clear for config*/	
 	let mysql  = require('mysql');
 let config = require('./project1.js');
@@ -51,7 +54,7 @@ let connection = mysql.createConnection(config);
 connection.query(sql);
 
 connection.end();
-
+	}}}}
 }
 
 function createtask() {
@@ -59,30 +62,37 @@ function createtask() {
     var d1 = document.querySelector("#qname").value;
     if (d1 == "")
         alert("Please don't leave the Question Box blank");
+	else{
 	var d2 = document.querySelector("#hashtag").value;
-    if (d2 == "")
+	if (d2 == "")
         alert("Please don't leave the Hashtag Box blank");
+	else{
 	var d3 = document.querySelector("#content").value;
     if (d3 == "")
         alert("Please don't leave the Content Box blank");
+	else{
 	var d4 = document.querySelector("#credit").value;
     if (d4 == "")
         alert("Please don't leave the Credit Box blank");
-	
-	
+	else{
+		/*suggestedanswer not sure put where in sql*/
+	var d5 = document.querySelector("#suggestedanswer").value;
+    if (d5 == "")
+        alert("Please don't leave the Credit Box blank");
+	else{
 /*execute the connect prep, not clear for config*/	
 	let mysql  = require('mysql');
 let config = require('./project1.js');
 let connection = mysql.createConnection(config);
 
-/*insert the task to sql*/
+/*insert the task to sql, suggested answer not sure where to put*/
 	var sql="INSERT INTO QUESTION VALUES( 0, uid, '$teacher', '$d2', class, '$d1', '$d3', '$d4', DEFAULT, NULL)";
 /*execute the insert statment*/
 connection.query(sql);
 
 connection.end();
-
-
+	}}}}}
+	
 }
 
 
