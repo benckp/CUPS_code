@@ -89,7 +89,7 @@ img.navpic{
 }
 
 .mainbody{
-  background-color: rgba(220, 136, 231, .2);
+  /* background-color: rgba(220, 136, 231, .2); */
   margin: 0;
   padding: 0;
   height: 100%;
@@ -97,20 +97,18 @@ img.navpic{
 }
 
 .container0{
-  width: 80%;
-  margin-left: 10%;
-  background-color: #fff;
+  width: 100%;
+  /* background-color: #fff; */
 }
 
 
 .head img{
-  width: 150px;
-  height: 150px;
+  width: 15%;
+  height: 15%;
   border-radius: 50%;
   display: inline-block;
-  margin-top: 5%;
+  margin-top: 3%;
   text-align: center;
-  line-height: 150px;
   margin-left: 5%;
 }
 .container1{
@@ -138,9 +136,10 @@ img.navpic{
 }
 .left{
   	height: 10%;
-  	width: 20%;
-  	margin-left: 6%;
+  	width: 100%;
+  	margin-left: 0;
   	font-family: 'Lora', serif;
+    display: flex;
 }
 .item{
   flex: 1;
@@ -176,3 +175,20 @@ img.navpic{
   background: rgb(72, 209, 204, 0.25);
 }
 
+.login-box{
+  margin-top: 2%;
+
+}
+input.btn{
+  border: 0;
+  width: 10%;
+  margin-top: 1%;
+  background-color: transparent;
+}
+input.btn:hover{
+  background-color: rgb(184, 182, 182);
+}
+.textbox{
+  margin-top: 1%;
+  border: 0;
+}

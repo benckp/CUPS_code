@@ -53,7 +53,7 @@
       </div>
       <div class="left">
         <div class="item" v-bind:class="currentChoice === 0 ? 'active' : ''" @click="handleClick(0)">My Post</div>
-        <div class="item" v-bind:class="currentChoice === 1 ? 'active' : ''" @click="handleClick(1)">Following</div>
+        <div class="item" v-bind:class="currentChoice === 1 ? 'active' : ''" @click="handleClick(1)">Liked Post</div>
         <div class="item" v-bind:class="currentChoice === 2 ? 'active' : ''" @click="handleClick(2)">My Comments</div>
         <div class="item" v-bind:class="currentChoice === 3 ? 'active' : ''" @click="handleClick(3)">My Credits</div>
         <div class="item" v-bind:class="currentChoice === 4 ? 'active' : ''" @click="handleClick(4)">Edit My Profile</div>
@@ -61,7 +61,10 @@
       
       <div class="main">
         <div v-if="currentChoice === 0">
-         My Post
+          <div style="text-align: center; font-size: 20px; margin: 1%;">
+            My Post
+          </div>
+         
          <table class = "table" id="forumList" >
            <tr class="header">
                <th style="text-align:center">Post ID</th>
@@ -90,7 +93,9 @@
        </table>
          </div>
         <div v-else-if="currentChoice === 1">
-         Following
+          <div style="text-align: center; font-size: 20px; margin: 1%;">
+            Liked Post
+          </div>
          <table class = "table" id="forumList" >
            <tr class="header">
                <th style="text-align:center">Post ID</th>
@@ -120,7 +125,9 @@
        </table>
         </div>
         <div v-else-if="currentChoice === 2">
-        Comments
+          <div style="text-align: center; font-size: 20px; margin: 1%;">
+            Comments
+          </div>
         <table class = "table" id="forumList" >
          <tr class="header">
              <th style="text-align:center">Post ID</th>
@@ -149,7 +156,7 @@
      </table>
         </div>
         <div v-if="currentChoice === 3">
-         <div class="credit">
+         <div class="credit"style="text-align: center; font-size: 25px; margin: 3%;">
            Current credit is <%=credit%>
          </div>
 
@@ -241,22 +248,22 @@
         </div>
         <div v-if="currentChoice === 4">
           <div class="edit">
-            <div class="login-box">
+            <div style="text-align: center;" class="login-box">
               <!-- <h1>Login</h1> -->
               
       
                   <form method="POST" action="/process-edit">
                       <div class="textbox">
                           <i class="fa fa-user" aria-hidden="true"></i>
-                          <input type="text" placeholder="Username" name="username" value="">
+                          <input style="font-size: 18px; border: 0; border-bottom: 1px gray solid; background-color: transparent;" type="text" placeholder="Username" name="username" value="">
                       </div>
               
                       <div class="textbox">
-                          <i class="fa fa-lock"></i>
-                          <input type="text" placeholder="YearX Major" name="info" value="">
+                          <i class="fa fa-info-circle" aria-hidden="true"></i>
+                          <input style="font-size: 18px; border: 0; border-bottom: 1px gray solid; background-color: transparent;" type="text" placeholder="YearX Major" name="info" value="">
                       </div>
                       
-                      <input class="btn" type="submit" name="" value="Submit">
+                      <input style="font-size: 18px; color: gray;" class="btn" type="submit" name="" value="Submit">
                       
                   </form>
               
