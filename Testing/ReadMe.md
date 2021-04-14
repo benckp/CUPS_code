@@ -3,3 +3,4 @@ This file contains all current testing documents. As not only the js functionali
 
 # Other links for testing videos
 Login & Profile Page: https://youtu.be/F_GjDtcu8kQ
+Regiter & Email verification: https://drive.google.com/file/d/1Ig1MejgbyU4ciLndPA7PXPQxgovgNuj7/view?usp=sharing
