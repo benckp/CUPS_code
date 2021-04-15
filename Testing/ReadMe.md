@@ -4,3 +4,5 @@ This file contains all current testing documents. As not only the js functionali
 # Other links for testing videos
 - Login & Profile Page: https://youtu.be/F_GjDtcu8kQ
 - Regiter & Email verification: https://drive.google.com/file/d/1Ig1MejgbyU4ciLndPA7PXPQxgovgNuj7/view?usp=sharing
+-create post and comment:
+https://mycuhk-my.sharepoint.com/:v:/g/personal/1155108929_link_cuhk_edu_hk/EZvZEIVM309AtI2mAaVZouABJLraty9u4TLABvoPAa7mKg?e=cfYPID
