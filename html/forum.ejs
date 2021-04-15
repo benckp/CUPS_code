@@ -29,8 +29,8 @@
         </div>
         <a href="/newthread" class="newpo"><b>New Post </b><i class="fa fa-edit"></i> </a>
         <% if(IS_TEACHER) {%>
-        <a href="/newtask" class="newpo"><b>New Task </b><i class="fa fa-edit"></i> </a>
-        <%}%>
+            <a href="/newtask" class="newpo"><b>New Task </b><i class="fa fa-edit"></i> </a>
+            <%}%>
         <div class="topnav-right">
             <a href="/profile"><i class="fa fa-user"></i></a>
             <a href="/logout"><i class="fa fa-sign-out"></i></a>
@@ -56,10 +56,10 @@
                     style="text-align:center">Type &#x21F3</th>
                 <th onMouseOver="this.style.color='blue'" onMouseOut="this.style.color='black'" onclick="sortTable(2)">
                     Headings &#x21F3</th>
-                <th style="text-align:center"> Latest Publish</th>
+                <th style="text-align:center"> </th>
             </b>
         </tr>
-        <% for(var i = 0; i < post.length; i++) { %>
+        <% for(var i = post.length - 1; i >= 0; i--) { %>
             <tr>
                 <b>
                     <td style="text-align:center">
@@ -87,7 +87,7 @@
                             </big></b>
                         <br>
                         <small>
-                            <%= post[i].TEXT_CONTENT.substring(0, 20) %>...
+                            <%= post[i].TEXT_CONTENT.substring(0, 80) %>...
                         </small>
                     </a>
                 </td>
