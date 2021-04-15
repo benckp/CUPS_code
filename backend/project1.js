@@ -338,8 +338,7 @@ server.post('/process-newthread', urlencodedParser, (request, response) => {
             db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, TRUE, "${question}", "${cl}", 
                 "${question}", "${content}", ${credit}, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);`, function(error, results, fields) {
                 if (error) throw error;
-                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
-                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
+                db.query(`SELECT QUESTION.PID FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
                     if (error) throw error;
                     request.session.last_url = `/forum?pid=${results[0].PID}` ;
                     response.redirect(request.session.last_url);
@@ -351,8 +350,7 @@ server.post('/process-newthread', urlencodedParser, (request, response) => {
             db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, TRUE, "${question}", "${cl}", 
                 "${question}", "${content}", ${credit}, DEFAULT, NULL, DEFAULT, DEFAULT, '${buf}');`, function(error, results, fields) {
                 if (error) throw error;
-                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
-                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
+                db.query(`SELECT QUESTION.PID FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
                     if (error) throw error;
                     request.session.last_url = `/forum?pid=${results[0].PID}` ;
                     response.redirect(request.session.last_url);
@@ -389,8 +387,7 @@ server.post('/process-newtask', urlencodedParser, (request, response) => {
             db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, FALSE, "${question}", "${cl}", 
                 "${question}", "${content}", ${credit}, DEFAULT, "${suggested_ans}", DEFAULT, DEFAULT, DEFAULT);`, function(error, results, fields) {
                 if (error) throw error;
-                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
-                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
+                db.query(`SELECT QUESTION.PID FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
                     if (error) throw error;
                     request.session.last_url = `/forum?pid=${results[0].PID}` ;
                     response.redirect(request.session.last_url);
@@ -402,8 +399,7 @@ server.post('/process-newtask', urlencodedParser, (request, response) => {
             db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, FALSE, "${question}", "${cl}", 
                 "${question}", "${content}", ${credit}, DEFAULT, "${suggested_ans}", DEFAULT, DEFAULT,'${buf}');`, function(error, results, fields) {
                 if (error) throw error;
-                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
-                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
+                db.query(`SELECT QUESTION.PID FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
                     if (error) throw error;
                     request.session.last_url = `/forum?pid=${results[0].PID}` ;
                     response.redirect(request.session.last_url);
@@ -635,8 +631,8 @@ CREATE TABLE USERS(
     CREDIT_BAL INT DEFAULT 10, 
     CREDIT_GAIN INT DEFAULT 0, 
     LEVEL INT DEFAULT 0,
-    IS_AUTH BOOLEAN DEFAULT FALSE,
-    PROFILE_PIC BLOB,
+    IS_AUTH VARCHAR(5),
+    PROFILE_PIC LONGBLOB,
     CAPTION TEXT
 );
 CREATE TABLE QUESTION(
@@ -652,7 +648,7 @@ CREATE TABLE QUESTION(
     SUGGEST_ANS TEXT,
     POST_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     SOLVED BOOLEAN DEFAULT FALSE,
-    SUGGESTED_ANS TEXT DEFAULT NULL,
+    GRAPHIC LONGBLOB DEFAULT NULL,
     CONSTRAINT F_USER_QUESTION FOREIGN KEY (UID) 
     REFERENCES USERS(UID)
 );
@@ -660,8 +656,9 @@ CREATE TABLE RESPONDS(
     RID INT AUTO_INCREMENT PRIMARY KEY,
     UID INT NOT NULL,
     PID INT NOT NULL,
-    TEXT_CONTENT TEXT NOT NULL, 
+    TEXT_CONTENT TEXT, 
     GRAPHIC LONGBLOB,
+    POST_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT F_USER_RESPOND FOREIGN KEY (UID) 
     REFERENCES USERS(UID),
     CONSTRAINT F_QUESTION_RESPOND FOREIGN KEY (PID) 
