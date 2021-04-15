@@ -129,7 +129,7 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
     // Ref: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
     function makeid(length) {
         var result           = [];
-        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789,./;\'[]!@#$%^&*()+=';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789,./;[]!@#$%^&*()+=';
         var charactersLength = characters.length;
         for ( var i = 0; i < length; i++ ) {
           result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
@@ -159,7 +159,8 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
         console.log('Email sent: ' + info.response);
         }
     });
-
+    request.session.uid = uid;
+    request.session.username = username;
     request.session.last_url = '/process-registration' ;
     response.redirect('/verification');
 
@@ -421,7 +422,7 @@ server.post('/check_verification', urlencodedParser, (request, response) => {
         db.query(`SELECT IS_AUTH FROM USERS WHERE UID = '${request.session.uid}'`, function(error, results, fields) {
             if (error) throw error;
             if (results.length>0) {
-                if (vc == results[0].IS_AUTH) {
+                if (vc === results[0].IS_AUTH) {
                     db.query(`UPDATE USERS SET IS_AUTH = NULL WHERE UID = '${request.session.uid}'`, function(error, results, fields) {
                         request.session.is_auth = null;
                         response.redirect('/forum');
@@ -441,6 +442,7 @@ server.post('/check_verification', urlencodedParser, (request, response) => {
 server.post('/process-comment', urlencodedParser, (request, response) => {
     var pid = request.session.last_url.split('=')[1];
     var comment = request.body.comment;
+    console.log(comment);
     var pic; 
     var buf;
     var que; 
@@ -462,7 +464,7 @@ server.post('/process-comment', urlencodedParser, (request, response) => {
                         if (error) throw error;
                             results.forEach(function(item){
                             com.push(item);
-                            // console.log(item.NAME);
+                            console.log(item.TEXT_CONTENT);
                         });	
                         var viewData = {
                             results: que,

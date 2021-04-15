@@ -60,7 +60,7 @@
                     <% for(var i = 0; i<com.length; i++) { %>
                     <div id="c<%=com[i].RID%>" class="d-flex">
                             <h5><%=com[i].NAME%></h5>
-                            <p><%=com[i].TEXT_CONTENT%></p>
+                            <p style="white-space: pre-wrap"><%=com[i].TEXT_CONTENT%></p>
                             <%if (com[i].GRAPHIC){%> <img src="data:image/png;base64,<%= com[i].GRAPHIC %>" alt="" ><%}%>
                             <small><%=com[i].POST_AT%></small>
                         <button style="display:none" type="button" class="btnGive" onclick="selectAnswer(commenter_uid)">Select as answer</button>
@@ -68,7 +68,7 @@
                     <hr>
                     <%}%>
                 </div>
-                <form method="POST" action="/process-comment" class="formcontent" enctype="multipart/form-data">
+                <form method="POST" action="/process-comment" class="formcontent" enctype="multipart/form-data" onsubmit="return checkComment()">
                     <fieldset>
                         <legend>Add your comment:</legend>
                         <div class="mb-3">
@@ -78,7 +78,7 @@
                             <input type="file" id="graphics" name="graphics" accept="image/*">
                         </div>
                         <br>
-                        <input class="btn" type="submit" name="" value="Add comment">
+                        <input class="btn" type="submit" name="" value="Add comment" >
                     </fieldset>  
                 </form>
             </div>
