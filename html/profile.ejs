@@ -30,6 +30,9 @@
                     </form>
                 </div> -->
                 <a href="/newthread" class="newpo"><b>New Post </b><i class="fa fa-edit"></i> </a>
+                <% if(IS_TEACHER) {%>
+                  <a href="/newtask" class="newpo"><b>New Task </b><i class="fa fa-edit"></i> </a>
+                  <%}%>
                 <div class="topnav-right">
                 <!-- TODO: change href to other pages accordingly -->
                 <a href="/profile"><i class="fa fa-user"></i></a>

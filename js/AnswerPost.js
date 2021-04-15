@@ -56,8 +56,9 @@ function showGiving() {
 function checkComment() {
     /*check if user input sth in the comment box, otherwise show alert*/
     var c = document.querySelector("#new-comment").value;
-    if (c == "") {
-        alert("Please don't leave the Comment Box blank");
+    var c1 = document.querySelector("#graphics").value;
+    if (c == "" && c1 == "") {
+        alert("Please don't leave the Comment Box / Graphic blank");
         return false;
     }
     return true;
@@ -87,7 +88,7 @@ function checkPost() {
     
     var d2 = document.querySelector("#hashtag").value;
     if (d2 == "") {
-        alert("Please don't leave the Hashtag Box blank");
+        alert("Please don't leave the Class Box blank");
         return false;
     }
     var d3 = document.querySelector("#content").value;
@@ -124,48 +125,36 @@ function checkPost() {
     
 }
 
-function createtask() {
+function checkTask() {
     /*check if user input sth in the comment box, otherwise show alert*/
     var d1 = document.querySelector("#qname").value;
-    if (d1 == "")
+    if (d1 == "") {
         alert("Please don't leave the Question Box blank");
-    else {
-        var d2 = document.querySelector("#hashtag").value;
-        if (d2 == "")
-            alert("Please don't leave the Hashtag Box blank");
-        else {
-            var d3 = document.querySelector("#content").value;
-            if (d3 == "")
-                alert("Please don't leave the Content Box blank");
-            else {
-                var d4 = document.querySelector("#credit").value;
-                if (d4 == "")
-                    alert("Please don't leave the Credit Box blank");
-                else {
-                    /*suggestedanswer not sure put where in sql*/
-                    var d5 = document.querySelector("#suggestedanswer").value;
-                    if (d5 == "")
-                        alert("Please don't leave the Answer Box blank");
-                    else {
-                        /*execute the connect prep, not clear for config*/
-                        let mysql = require('mysql');
-                        let config = require('./project1.js');
-                        let connection = mysql.createConnection(config);
-
-                        /*insert the task to sql, suggested answer not sure where to put*/
-                        var sql = "INSERT INTO QUESTION VALUES( 0, uid, FALSE, '$d2', class, '$d1', '$d3', '$d4', DEFAULT, '$d5', DEFAULT)";
-                        /*
-                        sample sql
-                        INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT);
-                        */
-                        /*execute the insert statment*/
-                        connection.query(sql);
-
-                        connection.end();
-                    }
-                }
-            }
-        }
+        return false;
     }
 
+    var d2 = document.querySelector("#hashtag").value;
+    if (d2 == "") {
+        alert("Please don't leave the Class Box blank");
+        return false;
+    }
+
+    var d3 = document.querySelector("#content").value;
+    if (d3 == "") {
+        alert("Please don't leave the Content Box blank");
+        return false;
+    }
+
+    var d4 = document.querySelector("#credit").value;
+    if (d4 == "") {
+        alert("Please don't leave the Credit Box blank");
+        return false;
+    }
+
+    var d5 = document.querySelector("#suggestedanswer").value;
+    if (d5 == "") {
+        alert("Please don't leave the Answer Box blank");
+        return false;
+    }
+    return true;
 }

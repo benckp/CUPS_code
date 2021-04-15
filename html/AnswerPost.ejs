@@ -25,6 +25,9 @@
                 </a>
                 
                 <a href="newthread" class="newpo"><b>New Post </b><i class="fa fa-edit"></i> </a>
+                <% if(IS_TEACHER) {%>
+                    <a href="/newtask" class="newpo"><b>New Task </b><i class="fa fa-edit"></i> </a>
+                    <%}%>
                 <div class="topnav-right">
                 <!-- TODO: change href to other pages accordingly -->
                 <a href="/profile"><i class="fa fa-user"></i></a>
@@ -44,7 +47,8 @@
                         <%}else {%> <%=results.TIME %> minutes<%}%>
                         ago</p>
                     <p class="info"><%=results.NAME%> &nbsp; <%=results.CLASS%> &nbsp; <%if (results.TYPE==1) {%>Question<%}else{%>Task<%}%> </p>
-                    <p class="postcontent"><%=results.TEXT_CONTENT%></p>
+                    <p class="postcontent" style="white-space: pre-wrap"><%=results.TEXT_CONTENT%></p>
+                    <%if (results.GRAPHIC){%> <img src="data:image/png;base64,<%= results.GRAPHIC %>" alt="" ><%}%>
                 </fieldset>
                 </form>
             <div class="top-bar">

@@ -49,6 +49,7 @@ server.use(session({
     is_auth: "",
     username: "",
     last_url: "",
+    is_teacher: false,
     resave: true,
     saveUninitialized: true
 }));
@@ -82,11 +83,12 @@ server.post('/process-login', urlencodedParser, (request, response) => {
     var pw = request.body.password;
 
     if (name && pw) {
-        db.query(`SELECT UID, NAME, IS_AUTH FROM USERS WHERE LOGIN_NAME = '${name}' AND PASSWORD = '${pw}'`, function(error, results, fields) {
+        db.query(`SELECT UID, NAME, IS_AUTH, TYPE FROM USERS WHERE LOGIN_NAME = '${name}' AND PASSWORD = '${pw}'`, function(error, results, fields) {
             if (error) throw error;
 			if (results.length === 0) {   // There are no matches in the database
                 var viewData = {
-                    wrong: true
+                    wrong: true,
+                    passvc: true
                 };
                 response.render(path.join(__dirname ,"../html/LandP_login"), viewData);
 			} else {    
@@ -94,6 +96,7 @@ server.post('/process-login', urlencodedParser, (request, response) => {
 				request.session.username = results[0].NAME;
                 request.session.uid = results[0].UID;
                 request.session.is_auth = results[0].IS_AUTH;
+                request.session.is_teacher = !results[0].TYPE;
 				response.redirect('/login_success');
 			}			
 			response.end();
@@ -261,7 +264,8 @@ server.get('/profile', urlencodedParser, (request, response) => {
                                 credit: credit,
                                 caption: caption,
                                 utype: utype,
-                                propic: propic
+                                propic: propic,
+                                IS_TEACHER: request.session.is_teacher
                             };
                             request.session.last_url = '/profile' ;
                             response.render(path.join(__dirname , "../html/profile"), viewData);
@@ -283,7 +287,10 @@ server.get('/profile', urlencodedParser, (request, response) => {
 server.get('/newtask', urlencodedParser, (request, response) => {
     if (!request.session.is_auth) {
     if (request.session.loggedin) {
-        response.render(path.join(__dirname , "../html/CreatePost_newtask"));
+        var viewData = {
+            IS_TEACHER: request.session.is_teacher
+        };
+        response.render(path.join(__dirname , "../html/CreatePost_newtask"), viewData);
     }
     else {
         response.redirect('/');
@@ -298,7 +305,10 @@ else {
 server.get('/newthread', urlencodedParser, (request, response) => {
     if (!request.session.is_auth) {
     if (request.session.loggedin) {
-        response.render(path.join(__dirname , "../html/CreatePost_newthread"));
+        var viewData = {
+            IS_TEACHER: request.session.is_teacher
+        };
+        response.render(path.join(__dirname , "../html/CreatePost_newthread"), viewData);
     }
     else {
         response.redirect('/');
@@ -325,29 +335,79 @@ server.post('/process-newthread', urlencodedParser, (request, response) => {
     if (!request.session.is_auth) {
     if (request.session.loggedin) {
         if (!request.files) {
-            console.log(content);
             db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, TRUE, "${question}", "${cl}", 
-                "${question}", "${content}", ${credit}, DEFAULT, NULL, DEFAULT, DEFAULT);`, function(error, results, fields) {
+                "${question}", "${content}", ${credit}, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);`, function(error, results, fields) {
                 if (error) throw error;
                 db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
                 FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
                     if (error) throw error;
-                    que = results[0];
-                    db.query(`SELECT RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
-                    FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${que.PID};`, function(error, results, fields) {
-                        if (error) throw error;
-                            results.forEach(function(item){
-                            com.push(item);
-                            // console.log(item.NAME);
-                        });	
-                        var viewData = {
-                            results: que,
-                            com: com
-                        };
-                        request.session.last_url = `/profile?pid=${que.pid}` ;
-                        response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
-                        response.end();
-                    });
+                    request.session.last_url = `/forum?pid=${results[0].PID}` ;
+                    response.redirect(request.session.last_url);
+                    response.end();
+                });
+            });
+        }
+        else {
+            db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, TRUE, "${question}", "${cl}", 
+                "${question}", "${content}", ${credit}, DEFAULT, NULL, DEFAULT, DEFAULT, '${buf}');`, function(error, results, fields) {
+                if (error) throw error;
+                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
+                    if (error) throw error;
+                    request.session.last_url = `/forum?pid=${results[0].PID}` ;
+                    response.redirect(request.session.last_url);
+                    response.end();
+                });
+            });
+        }
+    }
+    else {
+        response.redirect('/');
+    }
+} else {
+    response.redirect('/');
+    response.end();
+}
+});
+
+server.post('/process-newtask', urlencodedParser, (request, response) => {
+    var question = request.body.question;
+    var cl = request.body.class;
+    var content = request.body.content;
+    var credit = request.body.credit;
+    var suggested_ans = request.body.suggestedanswer;
+    var pic; 
+    var buf;
+    var com = [];
+    if (request.files) {
+        pic =  request.files.graphics;
+        buf = pic.data.toString('base64');
+    }
+    if (!request.session.is_auth) {
+    if (request.session.loggedin) {
+        if (!request.files) {
+            db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, FALSE, "${question}", "${cl}", 
+                "${question}", "${content}", ${credit}, DEFAULT, "${suggested_ans}", DEFAULT, DEFAULT, DEFAULT);`, function(error, results, fields) {
+                if (error) throw error;
+                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
+                    if (error) throw error;
+                    request.session.last_url = `/forum?pid=${results[0].PID}` ;
+                    response.redirect(request.session.last_url);
+                    response.end();
+                });
+            });
+        }
+        else {
+            db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, FALSE, "${question}", "${cl}", 
+                "${question}", "${content}", ${credit}, DEFAULT, "${suggested_ans}", DEFAULT, DEFAULT,'${buf}');`, function(error, results, fields) {
+                if (error) throw error;
+                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
+                    if (error) throw error;
+                    request.session.last_url = `/forum?pid=${results[0].PID}` ;
+                    response.redirect(request.session.last_url);
+                    response.end();
                 });
             });
         }
@@ -377,6 +437,7 @@ server.get('/forum', urlencodedParser, (request, response) => {
                 });	
                 var viewData = {
                     post: post,
+                    IS_TEACHER: request.session.is_teacher
                 };
                 request.session.last_url = '/forum' ;
                 response.render(path.join(__dirname , "../html/forum"), viewData);
@@ -384,7 +445,7 @@ server.get('/forum', urlencodedParser, (request, response) => {
             });
         }
         else {
-            db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+            db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, QUESTION.GRAPHIC, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
             FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${request.query.pid};`, function(error, results, fields) {
                 if (error) throw error;
                 que = results[0];
@@ -397,9 +458,10 @@ server.get('/forum', urlencodedParser, (request, response) => {
                     });	
                     var viewData = {
                         results: que,
-                        com: com
+                        com: com,
+                        IS_TEACHER: request.session.is_teacher
                     };
-                    request.session.last_url = `/profile?pid=${request.query.pid}` ;
+                    request.session.last_url = `/forum?pid=${request.query.pid}` ;
                     response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
                     response.end();
                 });
@@ -447,6 +509,7 @@ server.post('/process-comment', urlencodedParser, (request, response) => {
     var buf;
     var que; 
     var com = [];
+    var type = true;
     if (request.files) {
         pic =  request.files.graphics;
         buf = pic.data.toString('base64');
@@ -455,76 +518,25 @@ server.post('/process-comment', urlencodedParser, (request, response) => {
         if (comment && !request.files) {
             db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, '${comment}', NULL, DEFAULT);`, function(error, results, fields) {
                 if (error) throw error;
-                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
-                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${pid};`, function(error, results, fields) {
-                    if (error) throw error;
-                    que = results[0];
-                    db.query(`SELECT RESPONDS.GRAPHIC,RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
-                    FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${pid};`, function(error, results, fields) {
-                        if (error) throw error;
-                            results.forEach(function(item){
-                            com.push(item);
-                            console.log(item.TEXT_CONTENT);
-                        });	
-                        var viewData = {
-                            results: que,
-                            com: com
-                        };
-                        request.session.last_url = `/profile?pid=${pid}` ;
-                        response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
-                        response.end();
-                    });
-                });
+                request.session.last_url = `/forum?pid=${pid}` ;
+                response.redirect(request.session.last_url);
+                response.end();
             });
         }
         else if (!comment && request.files) {
             db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, NULL, '${buf}', DEFAULT);`, function(error, results, fields) {
                 if (error) throw error;
-                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
-                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${pid};`, function(error, results, fields) {
-                    if (error) throw error;
-                    que = results[0];
-                    db.query(`SELECT RESPONDS.GRAPHIC,RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
-                    FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${pid};`, function(error, results, fields) {
-                        if (error) throw error;
-                            results.forEach(function(item){
-                            com.push(item);
-                            // console.log(item.NAME);
-                        });	
-                        var viewData = {
-                            results: que,
-                            com: com
-                        };
-                        request.session.last_url = `/profile?pid=${pid}` ;
-                        response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
-                        response.end();
-                    });
-                });
+                request.session.last_url = `/forum?pid=${pid}` ;
+                response.redirect(request.session.last_url);
+                response.end();
             });
         }
         else if (comment && request.files) {
             db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, '${comment}', '${buf}', DEFAULT);`, function(error, results, fields) {
                 if (error) throw error;
-                db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
-                FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${pid};`, function(error, results, fields) {
-                    if (error) throw error;
-                    que = results[0];
-                    db.query(`SELECT RESPONDS.GRAPHIC,RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
-                    FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${pid};`, function(error, results, fields) {
-                        if (error) throw error;
-                            results.forEach(function(item){
-                            com.push(item);
-                            // console.log(item.NAME);
-                        });	
-                        var viewData = {
-                            results: que,
-                            com: com
-                        };
-                        request.session.last_url = `/profile?pid=${pid}` ;
-                        response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
-                        response.end();
-                    });
-                });
+                request.session.last_url = `/forum?pid=${pid}` ;
+                response.redirect(request.session.last_url);
+                response.end();
             });
         }
     }
@@ -583,7 +595,6 @@ server.post('/process-edit', urlencodedParser, (request, response) => {
             if (error) throw error;
 			request.session.username = name;
             response.redirect('/profile');
-
 			response.end();
         });
     } 
@@ -641,6 +652,7 @@ CREATE TABLE QUESTION(
     SUGGEST_ANS TEXT,
     POST_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     SOLVED BOOLEAN DEFAULT FALSE,
+    SUGGESTED_ANS TEXT DEFAULT NULL,
     CONSTRAINT F_USER_QUESTION FOREIGN KEY (UID) 
     REFERENCES USERS(UID)
 );
@@ -759,6 +771,7 @@ CREATE TABLE QUESTION(
     SUGGEST_ANS TEXT,
     POST_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     SOLVED BOOLEAN DEFAULT FALSE,
+    GRAPHIC LONGBLOB DEFAULT NULL,
     CONSTRAINT F_USER_QUESTION FOREIGN KEY (UID) 
     REFERENCES USERS(UID)
 );
@@ -792,24 +805,24 @@ CREATE TABLE LIKED(
 );
 
 
-INSERT INTO USERS VALUES( 1155000000, TRUE, 'admin', 'admin', 'admin', 'admin@gmail.com', DEFAULT, DEFAULT, DEFAULT, NULL, NULL, "Hi there, I am admin");
+INSERT INTO USERS VALUES( 1155000000, FALSE, 'admin', 'admin', 'admin', 'admin@gmail.com', DEFAULT, DEFAULT, DEFAULT, NULL, NULL, "Hi there, I am admin");
 INSERT INTO USERS VALUES( 1155000001, TRUE, 'mons', 'admin', 'mons', 'mons@gmail.com', 15, DEFAULT, DEFAULT, NULL, NULL, NULL);
 INSERT INTO USERS VALUES( 1155000002, TRUE, 'paul', 'admin', 'paul', 'paul@gmail.com', 14, DEFAULT, DEFAULT, NULL, NULL, NULL);
 INSERT INTO USERS VALUES( 1155000003, TRUE, 'kim', 'admin', 'kim', 'kim@gmail.com', 13, DEFAULT, DEFAULT, NULL, NULL, NULL);
 INSERT INTO USERS VALUES( 1155000004, TRUE, 'lee', 'admin', 'lee', 'lee@gmail.com', 12, DEFAULT, DEFAULT, NULL, NULL, NULL);
 INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gmail.com', 19, DEFAULT, DEFAULT, NULL, NULL, NULL);
-INSERT INTO USERS VALUES( 1255000001, False, 'Prof. X', 'admin', 'Prof. X', 'profX@gmail.com', 19, DEFAULT, DEFAULT, NULL, NULL, NULL);
+INSERT INTO USERS VALUES( 1255000001, FALSE, 'Prof. X', 'admin', 'Prof. X', 'profX@gmail.com', 19, DEFAULT, DEFAULT, NULL, NULL, NULL);
 
 
-INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Help", "ENGG0000", "Hey guys!", "Can someone help...", 1, DEFAULT, NULL, DEFAULT, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000004, TRUE, "Science fiction", "PSYC0000", "X-Men", "Mutation, it is the key to our evolution...", 3, DEFAULT, NULL, DEFAULT, TRUE);
-INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "About initial code", "completeness...", 5, DEFAULT, NULL, DEFAULT, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "Regarding initial code", "robustness...", 4, DEFAULT, NULL, DEFAULT, TRUE);
-INSERT INTO QUESTION VALUES( 0, 1155000002, TRUE, "Programming", "CSCI3100", "Talking on initial code", "user-friendliness...", 3, DEFAULT, NULL, DEFAULT, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000003, TRUE, "Programming", "CSCI3100", "Discussing initial code", "documentation...", 2, DEFAULT, NULL, DEFAULT, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000003, TRUE, "Programming", "CSCI3100", "For initial code", "other aspects...", 2, DEFAULT, NULL, DEFAULT, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000000, TRUE, "Testing", "TEST0000", "Testing", "Working...", 1, DEFAULT, NULL, DEFAULT, TRUE);
+INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Help", "ENGG0000", "Hey guys!", "Can someone help...", 1, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000004, TRUE, "Science fiction", "PSYC0000", "X-Men", "Mutation, it is the key to our evolution...", 3, DEFAULT, NULL, DEFAULT, TRUE, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "About initial code", "completeness...", 5, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "Regarding initial code", "robustness...", 4, DEFAULT, NULL, DEFAULT, TRUE, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000002, TRUE, "Programming", "CSCI3100", "Talking on initial code", "user-friendliness...", 3, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000003, TRUE, "Programming", "CSCI3100", "Discussing initial code", "documentation...", 2, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000003, TRUE, "Programming", "CSCI3100", "For initial code", "other aspects...", 2, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000000, TRUE, "Testing", "TEST0000", "Testing", "Working...", 1, DEFAULT, NULL, DEFAULT, TRUE, DEFAULT);
 INSERT INTO QUESTION VALUES( 0, 1255000001, FALSE, "Story", "UGFH1000", "Oedipus the King", "Oedipus the King unfolds as a murder mystery, a political thriller, and a psychological whodunit. Throughout this mythic story of patricide and incest, Sophocles emphasizes the irony of a man determined to track down, expose, and punish an assassin, who turns out to be himself.
 As the play opens, the citizens of Thebes beg their king, Oedipus, to lift the plague that threatens to destroy the city. Oedipus has already sent his brother-in-law, Creon, to the oracle to learn what to do.
 On his return, Creon announces that the oracle instructs them to find the murderer of Laius, the king who ruled Thebes before Oedipus. The discovery and punishment of the murderer will end the plague. At once, Oedipus sets about to solve the murder.
@@ -822,7 +835,7 @@ Overhearing, the messenger offers what he believes will be cheering news. Polybu
 Oedipus becomes determined to track down the shepherd and learn the truth of his birth. Suddenly terrified, Jocasta begs him to stop, and then runs off to the palace, wild with grief.
 Confident that the worst he can hear is a tale of his lowly birth, Oedipus eagerly awaits the shepherd. At first the shepherd refuses to speak, but under threat of death he tells what he knows — Oedipus is actually the son of Laius and Jocasta.
 And so, despite his precautions, the prophecy that Oedipus dreaded has actually come true. Realizing that he has killed his father and married his mother, Oedipus is agonized by his fate.
-Rushing into the palace, Oedipus finds that the queen has killed herself. Tortured, frenzied, Oedipus takes the pins from her gown and rakes out his eyes, so that he can no longer look upon the misery he has caused. Now blinded and disgraced, Oedipus begs Creon to kill him, but as the play concludes, he quietly submits to Creon's leadership, and humbly awaits the oracle that will determine whether he will stay in Thebes or be cast out forever.", 5, DEFAULT, NULL, DEFAULT, DEFAULT);
+Rushing into the palace, Oedipus finds that the queen has killed herself. Tortured, frenzied, Oedipus takes the pins from her gown and rakes out his eyes, so that he can no longer look upon the misery he has caused. Now blinded and disgraced, Oedipus begs Creon to kill him, but as the play concludes, he quietly submits to Creon's leadership, and humbly awaits the oracle that will determine whether he will stay in Thebes or be cast out forever.", 5, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
 
 
 
@@ -835,6 +848,8 @@ INSERT LIKED VALUES(1155000000, 10);
 INSERT RESPONDS VALUES(0, 1155000000, 7, "Nice post!", NULL, DEFAULT);
 INSERT RESPONDS VALUES(0, 1155000000, 10, "Nice story!", NULL, DEFAULT);
 INSERT RESPONDS VALUES(0, 1155000000, 3, "Nice!", NULL, DEFAULT);
+
+
 
 */
 
