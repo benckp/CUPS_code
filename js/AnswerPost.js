@@ -86,7 +86,7 @@ function checkPost() {
         return false;
     }
     
-    var d2 = document.querySelector("#hashtag").value;
+    var d2 = document.querySelector("#class").value;
     if (d2 == "") {
         alert("Please don't leave the Class Box blank");
         return false;
@@ -133,7 +133,7 @@ function checkTask() {
         return false;
     }
 
-    var d2 = document.querySelector("#hashtag").value;
+    var d2 = document.querySelector("#class").value;
     if (d2 == "") {
         alert("Please don't leave the Class Box blank");
         return false;
