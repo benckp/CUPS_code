@@ -48,7 +48,7 @@
                         ago</p>
                     <p class="info"><%=results.NAME%> &nbsp; <%=results.CLASS%> &nbsp; <%if (results.TYPE==1) {%>Question<%}else{%>Task<%}%> </p>
                     <p class="postcontent" style="white-space: pre-wrap"><%=results.TEXT_CONTENT%></p>
-                    <%if (results.GRAPHIC){%> <img src="data:image/png;base64,<%= results.GRAPHIC %>" alt="" ><%}%>
+                    <%if (results.GRAPHIC){%> <img class="img-full" src="data:image/png;base64,<%= results.GRAPHIC %>"  alt="" ><%}%>
                 </fieldset>
                 </form>
             <div class="top-bar">
@@ -60,7 +60,8 @@
                     <div id="c<%=com[i].RID%>" class="d-flex">
                             <h5><%=com[i].NAME%></h5>
                             <p style="white-space: pre-wrap"><%=com[i].TEXT_CONTENT%></p>
-                            <%if (com[i].GRAPHIC){%> <img src="data:image/png;base64,<%= com[i].GRAPHIC %>" alt="" ><%}%>
+                            <%if (com[i].GRAPHIC){%> <img class="img-full" src="data:image/png;base64,<%= com[i].GRAPHIC %>" alt="" ><%}%>
+							<br>
                             <small><%=com[i].POST_AT%></small>
                         <button style="display:none" type="button" class="btnGive" onclick="selectAnswer(commenter_uid)">Select as answer</button>
                     </div>

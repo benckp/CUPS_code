@@ -4,6 +4,8 @@ body{
  	background-attachment: fixed;
 }
 
+.img-full {  max-width: 90%;  height: auto; } 
+
 img.navicon{
 	padding: 5px 10px;
 	height: 40px;
@@ -168,3 +170,5 @@ a.newpo:active {
     font-size: 20px;
 	font-family: 'Lora', serif;
 }
+
+
