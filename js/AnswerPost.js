@@ -35,6 +35,24 @@ function selectAnswer(commenter_uid){
     // Mark the selected answer (maybe put on top)
     // give credit from author to the selected commenter
     // change the post status to Solved
+    
+    // const button = document.getElementById('selectBtn');
+    // button.addEventListener('click', function(e) {
+    //     console.log('button was clicked');
+    // });
+
+    fetch('/selected?pid=', {method: 'POST'})
+    .then(function(response) {
+      if(response.ok) {
+        // console.log('Click was recorded');
+        return;
+      }
+      throw new Error('Request failed.');
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+
 }
 
 // Show hidden give answer

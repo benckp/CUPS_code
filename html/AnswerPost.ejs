@@ -57,13 +57,17 @@
             <div class="webform">
                 <div id="comments"> 
                     <% for(var i = 0; i<com.length; i++) { %>
-                    <div id="c<%=com[i].RID%>" class="d-flex">
+                        
+                    <div id="c<%=com[i].RID%>" class="d-flex" <% if (com[i].IS_SOL){%>style="border:rgba(211, 94, 94, 0.7) 5px solid;"<%}%>>
+                            <% if (com[i].IS_SOL){%>Best Answer<%}%>
                             <h5><%=com[i].NAME%></h5>
                             <p style="white-space: pre-wrap"><%=com[i].TEXT_CONTENT%></p>
                             <%if (com[i].GRAPHIC){%> <img class="img-full" src="data:image/png;base64,<%= com[i].GRAPHIC %>" alt="" ><%}%>
-							<br>
+                            <br>
                             <small><%=com[i].POST_AT%></small>
-                        <button style="display:none" type="button" class="btnGive" onclick="selectAnswer(commenter_uid)">Select as answer</button>
+                            <%if (YR_POST && !results.SOLVED){%>
+                                <button  type="button" class="btnGive" id="selectBtn" onclick="selectAnswer(commenter_uid)"><a href="/selected?pid=<%=results.PID%>&rid=<%=com[i].RID%>">Select as answer</a></button>
+                            <%}%>
                     </div>
                     <hr>
                     <%}%>

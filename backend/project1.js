@@ -441,21 +441,23 @@ server.get('/forum', urlencodedParser, (request, response) => {
             });
         }
         else {
-            db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, QUESTION.GRAPHIC, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
+            db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, QUESTION.SOLVED, QUESTION.GRAPHIC, QUESTION.UID, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
             FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${request.query.pid};`, function(error, results, fields) {
                 if (error) throw error;
                 que = results[0];
-                db.query(`SELECT RESPONDS.GRAPHIC,RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID
+                db.query(`SELECT RESPONDS.GRAPHIC,RESPONDS.TEXT_CONTENT, USERS.NAME, RESPONDS.POST_AT, RESPONDS.RID, RESPONDS.IS_SOL
                 FROM USERS, RESPONDS WHERE RESPONDS.UID = USERS.UID AND RESPONDS.PID = ${request.query.pid};`, function(error, results, fields) {
                     if (error) throw error;
                         results.forEach(function(item){
                         com.push(item);
                         // console.log(item.NAME);
                     });	
+                    var yrPost = (que.UID == request.session.uid)?1:0;
                     var viewData = {
                         results: que,
                         com: com,
-                        IS_TEACHER: request.session.is_teacher
+                        IS_TEACHER: request.session.is_teacher,
+                        YR_POST: yrPost,
                     };
                     request.session.last_url = `/forum?pid=${request.query.pid}` ;
                     response.render(path.join(__dirname , "../html/AnswerPost"), viewData);
@@ -472,6 +474,20 @@ else {
     response.redirect('/');
     response.end();
 }
+});
+
+server.get('/selected', urlencodedParser, (request, response) => {
+    if (request.session.loggedin) {
+        db.query(`UPDATE QUESTION SET SOLVED = TRUE WHERE PID = '${request.query.pid}'`, function(error, results, fields) {
+            db.query(`UPDATE RESPONDS SET IS_SOL = TRUE WHERE RID = '${request.query.rid}'`, function(error, results, fields) {
+                response.redirect(`/forum?pid=${request.query.pid}`);
+                response.end();
+            });
+        });
+    }
+    else {
+        response.redirect('/');
+    }
 });
 
 server.post('/check_verification', urlencodedParser, (request, response) => {
@@ -512,7 +528,7 @@ server.post('/process-comment', urlencodedParser, (request, response) => {
     }
     if (request.session.loggedin) {
         if (comment && !request.files) {
-            db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, '${comment}', NULL, DEFAULT);`, function(error, results, fields) {
+            db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, '${comment}', NULL, DEFAULT, DEFAULT);`, function(error, results, fields) {
                 if (error) throw error;
                 request.session.last_url = `/forum?pid=${pid}` ;
                 response.redirect(request.session.last_url);
@@ -520,7 +536,7 @@ server.post('/process-comment', urlencodedParser, (request, response) => {
             });
         }
         else if (!comment && request.files) {
-            db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, NULL, '${buf}', DEFAULT);`, function(error, results, fields) {
+            db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, NULL, '${buf}', DEFAULT, DEFAULT);`, function(error, results, fields) {
                 if (error) throw error;
                 request.session.last_url = `/forum?pid=${pid}` ;
                 response.redirect(request.session.last_url);
@@ -528,7 +544,7 @@ server.post('/process-comment', urlencodedParser, (request, response) => {
             });
         }
         else if (comment && request.files) {
-            db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, '${comment}', '${buf}', DEFAULT);`, function(error, results, fields) {
+            db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, '${comment}', '${buf}', DEFAULT, DEFAULT);`, function(error, results, fields) {
                 if (error) throw error;
                 request.session.last_url = `/forum?pid=${pid}` ;
                 response.redirect(request.session.last_url);
@@ -779,6 +795,7 @@ CREATE TABLE RESPONDS(
     TEXT_CONTENT TEXT, 
     GRAPHIC LONGBLOB,
     POST_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    IS_SOL BOOLEAN DEFAULT FALSE,
     CONSTRAINT F_USER_RESPOND FOREIGN KEY (UID) 
     REFERENCES USERS(UID),
     CONSTRAINT F_QUESTION_RESPOND FOREIGN KEY (PID) 
@@ -814,9 +831,16 @@ INSERT INTO USERS VALUES( 1255000001, FALSE, 'Prof. X', 'admin', 'Prof. X', 'pro
 INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
 INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Help", "ENGG0000", "Hey guys!", "Can someone help...", 1, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
 INSERT INTO QUESTION VALUES( 0, 1155000004, TRUE, "Science fiction", "PSYC0000", "X-Men", "Mutation, it is the key to our evolution...", 3, DEFAULT, NULL, DEFAULT, TRUE, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "About initial code", "completeness...", 5, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "Regarding initial code", "robustness...", 4, DEFAULT, NULL, DEFAULT, TRUE, DEFAULT);
-INSERT INTO QUESTION VALUES( 0, 1155000002, TRUE, "Programming", "CSCI3100", "Talking on initial code", "user-friendliness...", 3, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "About initial code", "A program is written to provide functions specified in its functional requirements specifications. 
+Often, there are other requirements-such as performance and scalability that do not pertain to the functions of the system. 
+We call these kinds of requirements nonfunctional requirements. 
+A program is functionally correct if it behaves according to its stated functional specifications.", 5, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000005, TRUE, "Programming", "CSCI3100", "Regarding initial code", "robustness
+A program is robust if it behaves reasonably, even in unspecified circumstances
+Hard to define completely", 4, DEFAULT, NULL, DEFAULT, TRUE, DEFAULT);
+INSERT INTO QUESTION VALUES( 0, 1155000002, TRUE, "Programming", "CSCI3100", "Talking on initial code", "user-friendliness
+A software system is user friendly if its human users find it easy to use. Its subjective depends on many things (experience and type of users), e.g, a novice user may appreciate verbose messages, while an experienced user grows to hate and ignore them. 
+Similarly, a non-programmer may appreciate the use of menus, while a programmer may be more comfortable with typing a command.  ", 3, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
 INSERT INTO QUESTION VALUES( 0, 1155000003, TRUE, "Programming", "CSCI3100", "Discussing initial code", "documentation...", 2, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
 INSERT INTO QUESTION VALUES( 0, 1155000003, TRUE, "Programming", "CSCI3100", "For initial code", "other aspects...", 2, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
 INSERT INTO QUESTION VALUES( 0, 1155000000, TRUE, "Testing", "TEST0000", "Testing", "Working...", 1, DEFAULT, NULL, DEFAULT, TRUE, DEFAULT);
@@ -842,9 +866,9 @@ INSERT LIKED VALUES(1155000000, 2);
 INSERT LIKED VALUES(1155000000, 5);
 INSERT LIKED VALUES(1155000000, 10);
 
-INSERT RESPONDS VALUES(0, 1155000000, 7, "Nice post!", NULL, DEFAULT);
-INSERT RESPONDS VALUES(0, 1155000000, 10, "Nice story!", NULL, DEFAULT);
-INSERT RESPONDS VALUES(0, 1155000000, 3, "Nice!", NULL, DEFAULT);
+INSERT RESPONDS VALUES(0, 1155000000, 7, "Nice post!", NULL, DEFAULT, DEFAULT);
+INSERT RESPONDS VALUES(0, 1155000000, 10, "Nice story!", NULL, DEFAULT, DEFAULT);
+INSERT RESPONDS VALUES(0, 1155000000, 3, "Nice!", NULL, DEFAULT, DEFAULT);
 
 
 
