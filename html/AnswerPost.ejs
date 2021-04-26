@@ -47,7 +47,7 @@
                         <%}else {%> <%=results.TIME %> minutes<%}%>
                         ago</p>
                     <p class="info"><%=results.NAME%> &nbsp; <%=results.CLASS%> &nbsp; <%if (results.TYPE==1) {%>Question<%}else{%>Task<%}%> </p>
-                    <p class="postcontent" style="white-space: pre-wrap"><%=results.TEXT_CONTENT%></p>
+                    <p class="postcontent" style="white-space: pre-wrap"><b><%=results.HEADING%></b><br><%=results.TEXT_CONTENT%></p>
                     <%if (results.GRAPHIC){%> <img class="img-full" src="data:image/png;base64,<%= results.GRAPHIC %>"  alt="" ><%}%>
                 </fieldset>
                 </form>
