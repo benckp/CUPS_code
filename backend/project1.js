@@ -322,7 +322,7 @@ else {
 
 server.post('/process-newthread', urlencodedParser, (request, response) => {
     var question = request.body.question;
-    var cl = request.body.class;
+    var cl = request.body.cl;
     var content = request.body.content;
     var credit = request.body.credit;
     var pic; 
@@ -335,26 +335,36 @@ server.post('/process-newthread', urlencodedParser, (request, response) => {
     if (!request.session.is_auth) {
     if (request.session.loggedin) {
         if (!request.files) {
-            db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, TRUE, "${question}", "${cl}", 
-                "${question}", "${content}", ${credit}, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);`, function(error, results, fields) {
-                if (error) throw error;
-                db.query(`SELECT QUESTION.PID FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
-                    if (error) throw error;
-                    request.session.last_url = `/forum?pid=${results[0].PID}` ;
-                    response.redirect(request.session.last_url);
-                    response.end();
+            db.query(`SELECT CREDIT_BAL FROM USERS WHERE UID = ${request.session.uid}`, function(error, results, fields) {
+                var credit_bal = results[0].CREDIT_BAL;
+                db.query(`UPDATE USERS SET CREDIT_BAL = ${credit_bal - credit} WHERE UID = ${request.session.uid}`, function(error, results, fields) {
+                    db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, TRUE, "${question}", "${cl}", 
+                        "${question}", "${content}", ${credit}, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);`, function(error, results, fields) {
+                        if (error) throw error;
+                        db.query(`SELECT QUESTION.PID FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
+                            if (error) throw error;
+                            request.session.last_url = `/forum?pid=${results[0].PID}` ;
+                            response.redirect(request.session.last_url);
+                            response.end();
+                        });
+                    });
                 });
             });
         }
         else {
-            db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, TRUE, "${question}", "${cl}", 
-                "${question}", "${content}", ${credit}, DEFAULT, NULL, DEFAULT, DEFAULT, '${buf}');`, function(error, results, fields) {
-                if (error) throw error;
-                db.query(`SELECT QUESTION.PID FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
-                    if (error) throw error;
-                    request.session.last_url = `/forum?pid=${results[0].PID}` ;
-                    response.redirect(request.session.last_url);
-                    response.end();
+            db.query(`SELECT CREDIT_BAL FROM USERS WHERE UID = ${request.session.uid}`, function(error, results, fields) {
+                var credit_bal = results[0].CREDIT_BAL;
+                db.query(`UPDATE USERS SET CREDIT_BAL = ${credit_bal - credit} WHERE UID = ${request.session.uid}`, function(error, results, fields) {
+                    db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, TRUE, "${question}", "${cl}", 
+                        "${question}", "${content}", ${credit}, DEFAULT, NULL, DEFAULT, DEFAULT, '${buf}');`, function(error, results, fields) {
+                        if (error) throw error;
+                        db.query(`SELECT QUESTION.PID FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
+                            if (error) throw error;
+                            request.session.last_url = `/forum?pid=${results[0].PID}` ;
+                            response.redirect(request.session.last_url);
+                            response.end();
+                        });
+                    });
                 });
             });
         }
@@ -384,26 +394,36 @@ server.post('/process-newtask', urlencodedParser, (request, response) => {
     if (!request.session.is_auth) {
     if (request.session.loggedin) {
         if (!request.files) {
-            db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, FALSE, "${question}", "${cl}", 
-                "${question}", "${content}", ${credit}, DEFAULT, "${suggested_ans}", DEFAULT, DEFAULT, DEFAULT);`, function(error, results, fields) {
-                if (error) throw error;
-                db.query(`SELECT QUESTION.PID FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
-                    if (error) throw error;
-                    request.session.last_url = `/forum?pid=${results[0].PID}` ;
-                    response.redirect(request.session.last_url);
-                    response.end();
+            db.query(`SELECT CREDIT_BAL FROM USERS WHERE UID = ${request.session.uid}`, function(error, results, fields) {
+                var credit_bal = results[0].CREDIT_BAL;
+                db.query(`UPDATE USERS SET CREDIT_BAL = ${credit_bal - credit} WHERE UID = ${request.session.uid}`, function(error, results, fields) {
+                    db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, FALSE, "${question}", "${cl}", 
+                        "${question}", "${content}", ${credit}, DEFAULT, "${suggested_ans}", DEFAULT, DEFAULT, DEFAULT);`, function(error, results, fields) {
+                        if (error) throw error;
+                        db.query(`SELECT QUESTION.PID FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
+                            if (error) throw error;
+                            request.session.last_url = `/forum?pid=${results[0].PID}` ;
+                            response.redirect(request.session.last_url);
+                            response.end();
+                        });
+                    });
                 });
             });
         }
         else {
-            db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, FALSE, "${question}", "${cl}", 
-                "${question}", "${content}", ${credit}, DEFAULT, "${suggested_ans}", DEFAULT, DEFAULT,'${buf}');`, function(error, results, fields) {
-                if (error) throw error;
-                db.query(`SELECT QUESTION.PID FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
-                    if (error) throw error;
-                    request.session.last_url = `/forum?pid=${results[0].PID}` ;
-                    response.redirect(request.session.last_url);
-                    response.end();
+            db.query(`SELECT CREDIT_BAL FROM USERS WHERE UID = ${request.session.uid}`, function(error, results, fields) {
+                var credit_bal = results[0].CREDIT_BAL;
+                db.query(`UPDATE USERS SET CREDIT_BAL = ${credit_bal - credit} WHERE UID = ${request.session.uid}`, function(error, results, fields) {
+                    db.query(`INSERT INTO QUESTION VALUES( 0, ${request.session.uid}, FALSE, "${question}", "${cl}", 
+                        "${question}", "${content}", ${credit}, DEFAULT, "${suggested_ans}", DEFAULT, DEFAULT,'${buf}');`, function(error, results, fields) {
+                        if (error) throw error;
+                        db.query(`SELECT QUESTION.PID FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.UID = ${request.session.uid} AND QUESTION.HEADING = '${question}';`, function(error, results, fields) {
+                            if (error) throw error;
+                            request.session.last_url = `/forum?pid=${results[0].PID}` ;
+                            response.redirect(request.session.last_url);
+                            response.end();
+                        });
+                    });
                 });
             });
         }
@@ -477,11 +497,21 @@ else {
 });
 
 server.get('/selected', urlencodedParser, (request, response) => {
+    var credit;
+    var uid;
     if (request.session.loggedin) {
         db.query(`UPDATE QUESTION SET SOLVED = TRUE WHERE PID = '${request.query.pid}'`, function(error, results, fields) {
             db.query(`UPDATE RESPONDS SET IS_SOL = TRUE WHERE RID = '${request.query.rid}'`, function(error, results, fields) {
-                response.redirect(`/forum?pid=${request.query.pid}`);
-                response.end();
+                db.query(`SELECT CREDIT FROM QUESTION WHERE PID =  '${request.query.pid}'`, function(error, results, fields) {
+                    credit = results[0].CREDIT;
+                    db.query(`SELECT UID FROM RESPONDS WHERE RID = '${request.query.rid}'`, function(error, results, fields) {
+                        uid = results[0].UID;
+                        db.query(`UPDATE USERS SET CREDIT_BAL = CREDIT_BAL+${credit}, CREDIT_GAIN = CREDIT_GAIN+${credit} WHERE UID = '${uid}'`, function(error, results, fields) {
+                            response.redirect(`/forum?pid=${request.query.pid}`);
+                            response.end();
+                        });
+                    });
+                });
             });
         });
     }
