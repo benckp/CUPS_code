@@ -380,7 +380,7 @@ server.post('/process-newthread', urlencodedParser, (request, response) => {
 
 server.post('/process-newtask', urlencodedParser, (request, response) => {
     var question = request.body.question;
-    var cl = request.body.class;
+    var cl = request.body.cl;
     var content = request.body.content;
     var credit = request.body.credit;
     var suggested_ans = request.body.suggestedanswer;
