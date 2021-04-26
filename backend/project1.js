@@ -516,7 +516,7 @@ server.post('/check_verification', urlencodedParser, (request, response) => {
 server.post('/process-comment', urlencodedParser, (request, response) => {
     var pid = request.session.last_url.split('=')[1];
     var comment = request.body.comment;
-    console.log(comment);
+    // console.log(comment);
     var pic; 
     var buf;
     var que; 
