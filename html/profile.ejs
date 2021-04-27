@@ -1,3 +1,7 @@
+<!-- 
+  Author: LI Hangji
+  Since: 2021.4.27
+ -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,25 +20,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@1,700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- This is a page for profile -->
     <!-- Partial: Top navigation with search bar -->
-        <!-- TODO: link the top buttons to relevent pages -->
         <nav class="sticky-top">
             <div class="topnav">
                 <a href="/forum">
                     <img class="navicon" src="CUPSicon1.ico">
                 </a>
-                <!-- <div class="search-container">
-                    <form>
-                        <input type="text" id="searchInput" placeholder="Search title or content...">
-                        <button type="button" onclick="search()" ><i class="fa fa-search"></i></button>
-                    </form>
-                </div> -->
+                
                 <a href="/newthread" class="newpo"><b>New Post </b><i class="fa fa-edit"></i> </a>
                 <% if(IS_TEACHER) {%>
                   <a href="/newtask" class="newpo"><b>New Task </b><i class="fa fa-edit"></i> </a>
                   <%}%>
                 <div class="topnav-right">
-                <!-- TODO: change href to other pages accordingly -->
+                <!-- change href to other pages accordingly -->
                 <a href="/profile"><i class="fa fa-user"></i></a>
                 <a href="/logout"><i class="fa fa-sign-out"></i></a>
             </div>
@@ -64,7 +63,7 @@
           <div style="margin-top: 0;" id="info"><%=caption%></div>
         </div>
         <br>
-        <!-- <input style="font-size: 15px; width: 5%; margin-left: 10%; color: gray; border: none;" class="btn" type="button" name="" value="Edit"> -->
+
       </div>
       <div class="left">
         <div class="item" v-bind:class="currentChoice === 0 ? 'active' : ''" @click="handleClick(0)">My Post</div>
@@ -75,6 +74,7 @@
       </div>
       
       <div class="main">
+        <!-- By default, profile will display 'My Post' -->
         <div v-if="currentChoice === 0">
           <div style="text-align: center; font-size: 20px; margin: 1%;">
             My Post
@@ -107,6 +107,7 @@
              <% } %>
        </table>
          </div>
+         <!-- By clicking 'Liked Post', profile will display Liked post -->
         <div v-else-if="currentChoice === 1">
           <div style="text-align: center; font-size: 20px; margin: 1%;">
             Liked Post
@@ -139,6 +140,7 @@
           
        </table>
         </div>
+         <!-- By clicking 'Comments', profile will display comments -->
         <div v-else-if="currentChoice === 2">
           <div style="text-align: center; font-size: 20px; margin: 1%;">
             Comments
@@ -170,16 +172,17 @@
            <% } %>
      </table>
         </div>
+         <!-- By clicking 'My credit', profile will display my credit -->
         <div v-if="currentChoice === 3">
          <div class="credit"style="text-align: center; font-size: 25px; margin: 3%;">
            Current credit is <%=credit%>
          </div>
 
         </div>
+         <!-- By clicking 'edit', profile will display a area for editing profile -->
         <div v-if="currentChoice === 4">
           <div class="edit">
-            <div style="text-align: center;" class="login-box">
-              <!-- <h1>Login</h1> -->      
+            <div style="text-align: center;" class="login-box">   
       
                   <form method="POST" action="/process-edit" enctype="multipart/form-data">
                       <div class="textbox">
