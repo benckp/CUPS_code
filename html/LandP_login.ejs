@@ -1,7 +1,6 @@
-<!-- 
-  Author: LI Hangji
-  Since: 2021.4.27
- -->
+<!-- Topic:  CSCI3100 Final Code - html for login page -->
+<!-- Group:  F6 -->
+<!-- Intro:  This page focus on the login and sign up interface. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +23,7 @@
         <script>alert("Email has already sent to your email address. Please check.")</script>
     <% } %>
 </head>
+
 <body>
     <div id="app">
         <%if (passvc) {%>
@@ -35,7 +35,7 @@
             <button type="button" class="toggle-btn" 
             v-bind:class="currentChoice === 1 ? 'active' : ''" @click="handleClick(1)">Register</button>
         </div>
-        
+        <!-- Show the login interface -->
         <div v-if="currentStatus === 0">
             <form method="POST" action="/process-login">
                 <div class="textbox">
@@ -55,6 +55,7 @@
             </form>
         </div>
         
+        <!-- Show the sign up interface -->
         <div v-else-if="currentStatus === 1">
             <form method="POST" action="/process-registration">
                 <div class="textbox">

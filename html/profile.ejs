@@ -1,7 +1,6 @@
-<!-- 
-  Author: LI Hangji
-  Since: 2021.4.27
- -->
+<!-- Topic:  CSCI3100 Final Code - html for profile page -->
+<!-- Group:  F6 -->
+<!-- Intro:  This page shows users information. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,6 +64,7 @@
         <br>
 
       </div>
+      <!-- Here is a bar with buttons linked to different sessions of profile page -->
       <div class="left">
         <div class="item" v-bind:class="currentChoice === 0 ? 'active' : ''" @click="handleClick(0)">My Post</div>
         <div class="item" v-bind:class="currentChoice === 1 ? 'active' : ''" @click="handleClick(1)">Liked Post</div>
@@ -79,7 +79,7 @@
           <div style="text-align: center; font-size: 20px; margin: 1%;">
             My Post
           </div>
-         
+         <!-- Display my posts -->
          <table class = "table" id="forumList" >
            <tr class="header">
                <th style="text-align:center">Post ID</th>
@@ -112,6 +112,7 @@
           <div style="text-align: center; font-size: 20px; margin: 1%;">
             Liked Post
           </div>
+          <!-- Display liked posts -->
          <table class = "table" id="forumList" >
            <tr class="header">
                <th style="text-align:center">Post ID</th>
@@ -145,6 +146,7 @@
           <div style="text-align: center; font-size: 20px; margin: 1%;">
             Comments
           </div>
+          <!-- Display my comments -->
         <table class = "table" id="forumList" >
          <tr class="header">
              <th style="text-align:center">Post ID</th>
