@@ -35,7 +35,9 @@
             </div>
             </div>
         </nav>
+	<!-- Adding the icon with a link to the home page at the top-left hand corner -->
         <img class="navpic" src="navpic.jpg">
+	<!-- Showing the content of the post selected by the user he/she would like to reply -->
 		<div class="content">
 			<div class="top-bar">
                 <h1><%=results.TITLE%></h1>
@@ -54,6 +56,7 @@
             <div class="top-bar">
                 <h1>Reply</h1>
             </div>
+	    <-- Input box for user to input reply and uploading documents (e.g. photos) for replying under the post, thus showing the content that the user submitted -->
             <div class="webform">
                 <div id="comments"> 
                     <% for(var i = 0; i<com.length; i++) { %>
