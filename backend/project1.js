@@ -822,16 +822,8 @@ FROM QUESTION, RESPONDS, USERS WHERE RESPONDS.PID = QUESTION.PID AND RESPONDS.UI
 // Leaderboard  (Only top ten would be shown)
 SELECT LOGIN_NAME, CREDIT_BAL FROM USERS ORDER BY CREDIT_BAL DESC LIMIT 10;
 
-
-
-
-
-
-
-
-
+---------------------------------------------------------------------------------------------------------------------
 All test case:
-
 
 CREATE DATABASE project;
 USE project;
@@ -948,8 +940,6 @@ INSERT LIKED VALUES(1155000000, 10);
 INSERT RESPONDS VALUES(0, 1155000000, 7, "Nice post!", NULL, DEFAULT, DEFAULT);
 INSERT RESPONDS VALUES(0, 1155000000, 10, "Nice story!", NULL, DEFAULT, DEFAULT);
 INSERT RESPONDS VALUES(0, 1155000000, 3, "Nice!", NULL, DEFAULT, DEFAULT);
-
-
 
 */
 
