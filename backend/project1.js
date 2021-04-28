@@ -42,6 +42,7 @@ server.use(express.static(path.join(__dirname , "../js")));
 server.use(express.static(path.join(__dirname , "../img")));
 server.use(upload());
 server.set('view engine', 'ejs');
+// Initialize the needed data in seesion
 server.use(session({
     secret: 'secret-key',
     loggedin: false,
@@ -54,6 +55,7 @@ server.use(session({
     saveUninitialized: true
 }));
 
+// For the login page
 server.get(['/', '/login'], (request, response) => {
     request.session.last_url = '/login' ;
     var viewData = {
@@ -62,11 +64,14 @@ server.get(['/', '/login'], (request, response) => {
     response.render(path.join(__dirname , "../html/LandP_login"), viewData);
 });
 
+// For the login success, If login success, then arrive this page
 server.get('/login_success', (request, response) => {
     request.session.last_url = '/login_success' ;
     if (!request.session.is_auth)
+        // If the account is verified, redirect the url to forum homepage
         response.redirect("/forum");
     else {
+        // If the account is not verified, request user to enter the verifying code
         var viewData = {
             passvc: false
         }
@@ -78,6 +83,9 @@ server.get('/login_success', (request, response) => {
 var jsonParser = bodyParser.json()
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
+
+// Post method for the login name and password passing back to backend
+// For processing the login data
 server.post('/process-login', urlencodedParser, (request, response) => {
     var name = request.body.username;
     var pw = request.body.password;
@@ -92,6 +100,8 @@ server.post('/process-login', urlencodedParser, (request, response) => {
                 };
                 response.render(path.join(__dirname ,"../html/LandP_login"), viewData);
 			} else {    
+                // If successfully login into the account
+                // Record all the needed data into session
                 request.session.loggedin = true;
 				request.session.username = results[0].NAME;
                 request.session.uid = results[0].UID;
@@ -102,6 +112,7 @@ server.post('/process-login', urlencodedParser, (request, response) => {
 			response.end();
         });
     } else {
+        // If users do not fill in the username and password, return the same page
         var viewData = {
             wrong: true,
             passvc: true
@@ -112,6 +123,7 @@ server.post('/process-login', urlencodedParser, (request, response) => {
     }
 });
 
+// Render the page of asking to input the verify code
 server.get('/verification', urlencodedParser, (request, response) => {
     var viewData = {
         wrong: false,
@@ -122,7 +134,9 @@ server.get('/verification', urlencodedParser, (request, response) => {
     response.render(path.join(__dirname , "../html/LandP_login"), viewData);
 });
 
+// To process registration
 server.post('/process-registration', urlencodedParser, (request, response) => {
+    // Getting data by post method 
     var username = request.body.name;
     var pw = request.body.password;
     var name = username;
@@ -139,6 +153,9 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
        }
        return result.join('');
     }
+    // Using the function to generate a 5 characters verifying code, and store it in to the database
+    // After users have verified, replace the code by null
+    // Thus, if the row of verifying code is null, the user is verified.
     var vc = makeid(5);
        // Save to the database
        db.query(`INSERT INTO USERS VALUES( '${uid}', TRUE, '${username}', '${pw}', '${name}', '${email}', DEFAULT, DEFAULT, DEFAULT, '${vc}', null, null)`, function(error, results, fields) {
@@ -150,8 +167,7 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
         from: 'csci3100f6project@gmail.com',
         to: `${email}`,
         subject: 'Sending Verificatoin Email by using Node.js',
-        // The email should contain a hash-coded link to verify the account
-        // TODO
+        // The email should contain a verifying code to verify the account
         text: `Herre is your verification code: ${vc}. Please don\'t reply this email`
     }
 
@@ -169,10 +185,12 @@ server.post('/process-registration', urlencodedParser, (request, response) => {
 
 });
 
+// To process forget password
 server.post('/process-forgetpw', urlencodedParser, (request, response) => {
     var email = request.body.email;
     var mail_title = "";
     var mail_content = "";
+    // After finding the email in the database, get the password and send the password to that email
     db.query(`SELECT PASSWORD FROM USERS WHERE EMAIL = '${email}'`, function(error, results, fields) {
         if (error) throw error;
         if(results.length>0) {
@@ -181,6 +199,7 @@ server.post('/process-forgetpw', urlencodedParser, (request, response) => {
             mail_content = `Your password is "${pw}". If you do not press forget password, just ignore this email.`;
         }
         else {
+            // If there is no avaliable result, the user is not registered yet
             mail_title = "CUPD: You have not registered yet";
             mail_content = `Come and join us by registering an account!`;
         }
@@ -219,6 +238,7 @@ server.get('/question', urlencodedParser, (request, response) => {
     }
 });
 
+// The profile page
 server.get('/profile', urlencodedParser, (request, response) => {
     var liked_post = [];
     var own_post = [];
@@ -229,6 +249,7 @@ server.get('/profile', urlencodedParser, (request, response) => {
     var propic;
     if (!request.session.is_auth) {
         if (request.session.loggedin) {
+            // Using the session uid to find all the data in the database, including what post did he/she post, answer
             db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
             FROM QUESTION, LIKED, USERS WHERE LIKED.PID = QUESTION.PID AND LIKED.UID = ${request.session.uid} AND QUESTION.UID = USERS.UID;`, function(error, results, fields) {
                 if (error) throw error;
@@ -284,10 +305,12 @@ server.get('/profile', urlencodedParser, (request, response) => {
     }
 });
 
+// To add a new task into the forum
 server.get('/newtask', urlencodedParser, (request, response) => {
     if (!request.session.is_auth) {
     if (request.session.loggedin) {
         var viewData = {
+            // Posting a new task is only allowed for teachers' account
             IS_TEACHER: request.session.is_teacher
         };
         response.render(path.join(__dirname , "../html/CreatePost_newtask"), viewData);
@@ -302,6 +325,7 @@ else {
 }
 });
 
+// To add a new thread into the forum
 server.get('/newthread', urlencodedParser, (request, response) => {
     if (!request.session.is_auth) {
     if (request.session.loggedin) {
@@ -320,6 +344,7 @@ else {
 }
 });
 
+// To process the data of the new thread
 server.post('/process-newthread', urlencodedParser, (request, response) => {
     var question = request.body.question;
     var cl = request.body.cl;
@@ -328,6 +353,7 @@ server.post('/process-newthread', urlencodedParser, (request, response) => {
     var pic; 
     var buf;
     var com = [];
+    // If there is photo included
     if (request.files) {
         pic =  request.files.graphics;
         buf = pic.data.toString('base64');
@@ -335,6 +361,7 @@ server.post('/process-newthread', urlencodedParser, (request, response) => {
     if (!request.session.is_auth) {
     if (request.session.loggedin) {
         if (!request.files) {
+            // If there is no photo included
             db.query(`SELECT CREDIT_BAL FROM USERS WHERE UID = ${request.session.uid}`, function(error, results, fields) {
                 var credit_bal = results[0].CREDIT_BAL;
                 db.query(`UPDATE USERS SET CREDIT_BAL = ${credit_bal - credit} WHERE UID = ${request.session.uid}`, function(error, results, fields) {
@@ -352,6 +379,7 @@ server.post('/process-newthread', urlencodedParser, (request, response) => {
             });
         }
         else {
+            // If there is photo included
             db.query(`SELECT CREDIT_BAL FROM USERS WHERE UID = ${request.session.uid}`, function(error, results, fields) {
                 var credit_bal = results[0].CREDIT_BAL;
                 db.query(`UPDATE USERS SET CREDIT_BAL = ${credit_bal - credit} WHERE UID = ${request.session.uid}`, function(error, results, fields) {
@@ -378,9 +406,11 @@ server.post('/process-newthread', urlencodedParser, (request, response) => {
 }
 });
 
+// To process the data of the new task
+// Almost the same as processing new thread
 server.post('/process-newtask', urlencodedParser, (request, response) => {
     var question = request.body.question;
-    var cl = request.body.class;
+    var cl = request.body.cl;
     var content = request.body.content;
     var credit = request.body.credit;
     var suggested_ans = request.body.suggestedanswer;
@@ -437,11 +467,20 @@ server.post('/process-newtask', urlencodedParser, (request, response) => {
 }
 });
 
+// When without the query pid
+// The homepage of the forum
+// Having all the topic of the post and some details of them in this page
+// With the query pid
+// It will show the question page with the query pid
 server.get('/forum', urlencodedParser, (request, response) => {
     var post = [];
     var com = [];
     var que;
+    // Check the user is verifyed or not, if not, redirect the user to login page
     if (!request.session.is_auth) {
+    // In case some users does not login and typing /forum to bypass the login system
+    // The session has stored whether the user is logged in or not
+    // If not, it will redirect to the login page
     if (request.session.loggedin) {
         if (!request.query.pid) {
             db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
@@ -461,6 +500,8 @@ server.get('/forum', urlencodedParser, (request, response) => {
             });
         }
         else {
+            // With the query pid, We can get all the data about the post, including post's heading, time, class...
+            // And also all details of comments
             db.query(`SELECT QUESTION.PID, QUESTION.HEADING, QUESTION.TEXT_CONTENT, QUESTION.CLASS, QUESTION.TYPE, QUESTION.CREDIT, QUESTION.SOLVED, QUESTION.SOLVED, QUESTION.GRAPHIC, QUESTION.UID, USERS.NAME, TIMESTAMPDIFF(MINUTE, QUESTION.POST_AT, CURRENT_TIMESTAMP) AS TIME
             FROM QUESTION, USERS WHERE QUESTION.UID = USERS.UID AND QUESTION.PID = ${request.query.pid};`, function(error, results, fields) {
                 if (error) throw error;
@@ -496,6 +537,8 @@ else {
 }
 });
 
+// Allowing the user who post the task or thread to select the best solution
+// If the one's answer is selected, one's account would gain the credit, and it updates the database automatically
 server.get('/selected', urlencodedParser, (request, response) => {
     var credit;
     var uid;
@@ -520,6 +563,9 @@ server.get('/selected', urlencodedParser, (request, response) => {
     }
 });
 
+// To check the verifying code is same as database or not
+// If yes, change the code to null, and redirect to the homepage
+// Else, redirect to the login page
 server.post('/check_verification', urlencodedParser, (request, response) => {
     var vc = request.body.vcode;
     if (vc) {
@@ -543,6 +589,7 @@ server.post('/check_verification', urlencodedParser, (request, response) => {
     } 
 });
 
+// To process the addign comment function
 server.post('/process-comment', urlencodedParser, (request, response) => {
     var pid = request.session.last_url.split('=')[1];
     var comment = request.body.comment;
@@ -557,6 +604,7 @@ server.post('/process-comment', urlencodedParser, (request, response) => {
         buf = pic.data.toString('base64');
     }
     if (request.session.loggedin) {
+        // To handle three different combinations with only comment, only photo and both
         if (comment && !request.files) {
             db.query(`INSERT RESPONDS VALUES(0, ${request.session.uid}, ${pid}, '${comment}', NULL, DEFAULT, DEFAULT);`, function(error, results, fields) {
                 if (error) throw error;
@@ -587,13 +635,14 @@ server.post('/process-comment', urlencodedParser, (request, response) => {
     }
 });
 
+// To process the user edit their own profile
+// They can change their caption or their profile pic or the username, but not the login name
 server.post('/process-edit', urlencodedParser, (request, response) => {
     var name = request.body.username;
     var info = request.body.info;
     var propic;var buf;
     if (request.files) {
         propic = request.files.propic;
-    // console.log(typeof(propic));
         buf = propic.data.toString('base64');
     }
     if (propic && !name && !info) {
