@@ -35,7 +35,9 @@
             </div>
             </div>
         </nav>
+	<!-- Adding the icon with a link to the home page at the top-left hand corner -->
         <img class="navpic" src="navpic.jpg">
+	<!-- Showing the content of the post selected by the user he/she would like to reply -->
 		<div class="content">
 			<div class="top-bar">
                 <h1><%=results.TITLE%></h1>
@@ -47,13 +49,14 @@
                         <%}else {%> <%=results.TIME %> minutes<%}%>
                         ago</p>
                     <p class="info"><%=results.NAME%> &nbsp; <%=results.CLASS%> &nbsp; <%if (results.TYPE==1) {%>Question<%}else{%>Task<%}%> </p>
-                    <p class="postcontent" style="white-space: pre-wrap"><%=results.TEXT_CONTENT%></p>
+                    <p class="postcontent" style="white-space: pre-wrap"><b><%=results.HEADING%></b><br><%=results.TEXT_CONTENT%></p>
                     <%if (results.GRAPHIC){%> <img class="img-full" src="data:image/png;base64,<%= results.GRAPHIC %>"  alt="" ><%}%>
                 </fieldset>
                 </form>
             <div class="top-bar">
                 <h1>Reply</h1>
             </div>
+	    <!-- Showing the content that the user submitted / uploaded in the webform -->
             <div class="webform">
                 <div id="comments"> 
                     <% for(var i = 0; i<com.length; i++) { %>
@@ -72,6 +75,7 @@
                     <hr>
                     <%}%>
                 </div>
+		<!-- An input box for user to input reply and uploading documents (e.g. photos) for replying under the post -->
                 <form method="POST" action="/process-comment" class="formcontent" enctype="multipart/form-data" onsubmit="return checkComment()">
                     <fieldset>
                         <legend>Add your comment:</legend>

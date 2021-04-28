@@ -54,8 +54,8 @@ for student/teacher to ask a question
                         <label for="qname">Question:</label>
                         <input type="text" id="qname" name="question"><br><br>
 
-                        <label for="hashtag">Class:</label>
-                        <input type="text" id="class" name="cl"><br><br>
+                        <label for="classnum">Class:</label>
+                        <input type="text" id="classnum" name="cl"><br><br>
                         <label for="textcontent">Content:</label>
                         <textarea name="content" id="content"  cols="50" rows="10"></textarea>
                         <br><br>
@@ -66,12 +66,13 @@ for student/teacher to ask a question
 
                         <label for="credit">Credit offer (1-10):</label>
                         <input type="number" min="1" max="10" id="credit" name="credit"><br><br>
+			<!-- By clicking submit the form will be checked if any box is empty. If ok then the thread will be published -->
                         <input class="btn" type="submit" name="" value="Submit">
                     </fieldset>
                 </form>
             </div>
         </div>
-
+<!-- Footer -->
         <div class="footer">
             This website was built on <time>2021-04-14</time>. <b>© CSCI3100 Group F6</b>
         </div>

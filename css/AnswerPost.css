@@ -1,21 +1,26 @@
+/* Background image */
 body{
   	background-image: url('bg1.jpg');
  	background-size: cover;
  	background-attachment: fixed;
 }
 
+/* Images in the Posts */
 .img-full {  max-width: 90%;  height: auto; } 
 
+/* Icon */
 img.navicon{
 	padding: 5px 10px;
 	height: 40px;
 	float: left;
 }
 
+/* Picture right under the navigation bar */
 img.navpic{
 	width: 100%;
 }
 
+/* Navigation Bar */
 .topnav{
 	background-color: rgb(72, 209, 204, 0.5);
 	overflow: hidden;
@@ -24,11 +29,13 @@ img.navpic{
     width: 100%;
 }
 
+/* Right hand side of the navigation bar */
 .topnav-right {
     float: right;
     font-family: 'Noto Serif', serif;
 }
 
+/* Action of the buttons on the navigation bar */
 .topnav-right a{
 	float: left;
     display: block;
@@ -49,11 +56,13 @@ img.navpic{
     color: white;
 }
 
+/* The search bar on the navigation bar */
 .topnav .search-container {
 	padding: 5px 5px;
     float: left;
 }
 
+/* Input inside the search bar */
 .topnav input[type=text] {
     padding: 6px;
     margin-top: 5px;
@@ -61,6 +70,7 @@ img.navpic{
     border: none;
 }
 
+/* Search button of the search bar */
 .topnav .search-container button {
     padding: 6px 10px;
     margin-top: 5px;
@@ -71,10 +81,12 @@ img.navpic{
     cursor: pointer;
 }
 
+/* Change of color when the button of the search bar hovered by the mouse */
 .topbnav .search-container button:hover {
     background: #ccc;
 }
 
+/* Footer */
 .footer {
     background: rgb(119, 136, 153);
     text-align: right;
@@ -85,11 +97,13 @@ img.navpic{
   	color: white;
 }
 
+/* Setting Margin of the content */
 .content{
 	margin-left: 200px;
 	margin-right: 200px;
 }
 
+/* New post button in the navigation bar */
 a.newpo{
     float: left;
     display: block;
@@ -100,6 +114,7 @@ a.newpo{
     font-size: 17px;
 }
 
+/* Color change of the button */
 a.newpo:hover{
     background-color: #ddd;
     color: black;
@@ -110,6 +125,7 @@ a.newpo:active {
     color: white;
 }
 
+/* Title bar of the page */
 .top-bar {
     margin: 0;
     overflow: hidden;
@@ -118,11 +134,13 @@ a.newpo:active {
     font-family: 'Oswald', sans-serif;
 }
 
+/* Text area for commenting */
 .form-control {
     width: 100%;
     height: 80px;
 }
 
+/* Button for adding comment */
 .btn{
     overflow: hidden;
     padding: 6px 10px;
@@ -133,24 +151,29 @@ a.newpo:active {
     font-size: 15px
 }
 
+/* Whole comment box area */
 .formcontent {
     background-color: #F6F6EF;
     overflow: hidden;
     font-size: 15px
 }
 
+/* User Input for commenting */
 .mb-3{
     font-size: 20px;
 }
 
+/* Background of the output of comments */
 #comments{
     background-color: white;
 }
 
+/* Label of Comment box and image uplaod */
 .form-label{
     font-size: 15px
 }
 
+/* User input and information */
 .yourinput{
     background-color: white;
 }
@@ -166,6 +189,7 @@ a.newpo:active {
     float:right;
 }
 
+/* Output of comment input */
 .postcontent{
     font-size: 20px;
 	font-family: 'Lora', serif;

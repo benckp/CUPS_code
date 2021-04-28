@@ -1,3 +1,4 @@
+/* Background image */
 body{
     background: rgb(94, 94, 94);
     color: white;
@@ -110,6 +111,7 @@ li:first-child{
     margin-left:0px; 
 }
 
+/* Footer */
 footer{
     padding: 20px;
 }

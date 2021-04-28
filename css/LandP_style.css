@@ -1,16 +1,19 @@
 @import "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+/* Background image */
 body{
   	background-image: url('bg1.jpg');
  	background-size: cover;
  	background-attachment: fixed;
 }
 
+/* Icon */
 img.navicon{
 	padding: 5px 10px;
 	height: 40px;
 	float: left;
 }
 
+/* Footer */
 .footer {
     background: rgb(119, 136, 153);
     text-align: right;
@@ -21,11 +24,13 @@ img.navicon{
   	color: white;
 }
 
+/* Setting Margin of the content */
 .content{
 	margin-left: 200px;
 	margin-right: 200px;
 }
 
+/* Login box for user to input user information to login */
 .login-box{
     width: 340px;
     height: 480px;
@@ -42,6 +47,7 @@ img.navicon{
     border-width: 5px;
 }
 
+/* Button for login */
 .btn-box{
     width: 240px;
     margin: 35px auto;
@@ -49,6 +55,7 @@ img.navicon{
     box-shadow: 0 0 20px 9px rgb(72, 209, 204, 0.5);
     border-radius: 30px;
 }
+
 .toggle-btn{
     padding: 10px 30px;
     cursor: pointer;
@@ -60,6 +67,7 @@ img.navicon{
     font-family: 'Noto Serif', serif;
 }
 
+/* Text inside the login box */
 .login-box h1{
     float: left;
     font-size: 40px;
@@ -67,6 +75,8 @@ img.navicon{
     margin-bottom: 15px;
     padding: 13px 0;
 }
+
+/* Input box in the login box */
 .textbox{
     width: 100%;
     overflow: hidden;
@@ -76,11 +86,13 @@ img.navicon{
     border-bottom: 1px solid;
 }
 
+/* Textbox */ 
 .textbox i{
     width: 26px;
     float: left;
     text-align: center;
 }
+/* Input in the textbox */
 .textbox input{
     border: none;
     outline: none;
@@ -90,6 +102,8 @@ img.navicon{
     float: left;
     margin: 0 10px;
 }
+
+/* Button for submitting form */
 .btn{
     width: 100%;
     background: none;
@@ -101,10 +115,12 @@ img.navicon{
     font-family: 'Noto Serif', serif;
 }
 
+/* Change in color when the button is clicked */
 .active{
     color:blue;
 }
 
+/* Logo */
 img.logo{
 	height: 500px;
 	float: right;

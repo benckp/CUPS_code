@@ -1,3 +1,6 @@
+<!-- Topic:  CSCI3100 Final Code - html for login page -->
+<!-- Group:  F6 -->
+<!-- Intro:  This page focus on the login and sign up interface. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,19 +23,19 @@
         <script>alert("Email has already sent to your email address. Please check.")</script>
     <% } %>
 </head>
+
 <body>
     <div id="app">
         <%if (passvc) {%>
         <!-- A container for login -->
     <div class="login-box">
-        <!-- <h1>Login</h1> -->
         <div class="btn-box" >
             <button type="button" class="toggle-btn" 
             v-bind:class="currentChoice === 0 ? 'active' : ''" @click="handleClick(0)">Log in</button>
             <button type="button" class="toggle-btn" 
             v-bind:class="currentChoice === 1 ? 'active' : ''" @click="handleClick(1)">Register</button>
         </div>
-        
+        <!-- Show the login interface -->
         <div v-if="currentStatus === 0">
             <form method="POST" action="/process-login">
                 <div class="textbox">
@@ -52,6 +55,7 @@
             </form>
         </div>
         
+        <!-- Show the sign up interface -->
         <div v-else-if="currentStatus === 1">
             <form method="POST" action="/process-registration">
                 <div class="textbox">
@@ -80,14 +84,7 @@
                     <i class="fa fa-user" aria-hidden="true"></i>
                     <input type="text" placeholder="CUHK Email" name="email" value="">
                 </div>
-                <!-- <div class="textbox">
-                    <i class="fa fa-lock"></i>
-                    <input type="password" placeholder="New Password" name="password" value="">
-                </div>
-                <div class="textbox">
-                    <i class="fa fa-lock"></i>
-                    <input type="password" placeholder="New Password Again" name="dpassword" value="">
-                </div> -->
+                
                 <input class="btn" type="submit" name="" value="Submit">
             </form>
         </div>
@@ -100,14 +97,7 @@
                 <i class="fa fa-user" aria-hidden="true"></i>
                 <input type="text" placeholder="Verification Code" name="vcode" value="">
             </div>
-            <!-- <div class="textbox">
-                <i class="fa fa-lock"></i>
-                <input type="password" placeholder="New Password" name="password" value="">
-            </div>
-            <div class="textbox">
-                <i class="fa fa-lock"></i>
-                <input type="password" placeholder="New Password Again" name="dpassword" value="">
-            </div> -->
+            
             <input class="btn" type="submit" name="" value="Submit">
         </form>
     </div>
@@ -121,14 +111,7 @@
             data: {
                 currentStatus: 0,
             },
-            // methods: {
-            //    handleClickBtn1:function(){
-            //        this.currentStatus = true;                  
-            //    },
-            //    handleClickBtn2:function(){
-            //         this.currentStatus = false;
-            //    },
-            // }
+            
             methods: {
                 handleClick(e){
                 this.currentStatus = e;
