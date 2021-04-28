@@ -102,8 +102,8 @@ function checkPost() {
         alert("Please don't leave the Credit Box blank");
         return false;
     }
-
-    return true;	//success to create a post
+/*if all boxes checked to be ok then return true (to create a post)*/
+    return true;	
         
     
 }
@@ -139,5 +139,6 @@ function checkTask() {
         alert("Please don't leave the Answer Box blank");
         return false;
     }
-    return true; //success to create a task
+    /*if all boxes checked to be ok, then return true (success to create a task)*/
+    return true; 
 }
