@@ -8,6 +8,7 @@ body{
 /* Images in the Posts */
 .img-full {  max-width: 90%;  height: auto; } 
 
+/* Icon */
 img.navicon{
 	padding: 5px 10px;
 	height: 40px;
