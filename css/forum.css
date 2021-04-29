@@ -152,9 +152,64 @@ a.newpo:active {
   background: rgb(72, 209, 204, 0.6);
 }
 
-
 /* Styling of the page footer */
 footer {
   background: rgb(119, 136, 153, 0.4);
   text-align: right;
+}
+/* Leaderboard*/
+.leaderBoard {
+  background-color : rgb(72, 209, 204);
+  color: rgb(0, 0, 0);
+  padding: 10px 20px;
+  border-radius: 4px;
+  border-color: rgb(72, 209, 204);
+}
+
+#LBbutton {
+  position: fixed;
+  bottom: 10px;
+  right: 15px;
+}
+
+/*Ref: https://codepen.io/kaicheng928/details/ExZPrxw*/
+.leaderboard .body {
+  color: snow;
+  font-size: 16px;
+  position: fixed;
+  bottom: 33px;
+  right: 15px;
+}
+.leaderboard ol {
+  counter-reset: number; 
+}
+.leaderboard li {
+  padding: 20px;
+  display: flex;
+}
+.leaderboard li mark {
+  flex-grow: 100;
+  color: snow;
+  margin-right: 15px;
+  background-color: transparent;
+}
+.leaderboard li:before {
+  counter-increment: number; 
+  content: counter(number) "."; 
+  margin-right: 15px;
+}
+.leaderboard li:nth-child(1) {
+  background:  rgb(82, 235, 230);
+}
+.leaderboard li:nth-child(2) {
+  background:  rgb(76, 221, 211);
+}
+.leaderboard li:nth-child(3) {
+  background:  rgb(71, 207, 203);
+}
+.leaderboard li:nth-child(4) {
+  background:  rgb(62, 182, 178);
+}
+.leaderboard li:nth-child(5) {
+  background: rgb(59, 170, 166);
 }

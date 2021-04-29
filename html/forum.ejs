@@ -107,7 +107,29 @@
             </tr>
         <% } %>
     </table>
+    <!-- Show the Leaderboard -->
+    <div class="container" id="lb" style="display:  none">
+        <div class="leaderboard">
+          <div class="head">
+            <i class="fas fa-crown"></i>
+          </div>
+          <div class="body">
+            <ol>
+              <% for(var i = 0; i < LB.length ; i++) { %>
+                <li>
+                  <mark><%=LB[i].NAME%></mark>
+                  <%=LB[i].CREDIT_BAL%>
+                </li>
+              <%}%>
+            </ol>
+          </div>
+        </div>
+      </div>
 </div>
+<div id="LBbutton">
+<button class="leaderBoard" onclick="showLB()">Leaderboard</button>
+</div>
+
 
 <!-- Footer for website info -->
 <div class="footer">
