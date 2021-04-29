@@ -52,6 +52,65 @@ function showGiving() {
     }
 }
 
+function checkLogin() {
+    /*check if user input sth in the username & pw box, otherwise show alert*/
+    var un = document.querySelector("#username").value;
+    var pw = document.querySelector("#pw").value;
+    if (un == "") {
+        alert("Please don't leave the username blank");
+        return false;
+    }
+    if (pw == "") {
+        alert("Please don't leave the password blank");
+        return false;
+    }
+    return true;
+}
+
+function checkReg() {
+    /*check if user input sth in the all boxes, otherwise show alert*/
+    var un = document.querySelector("#usernameReg").value;
+    var pw = document.querySelector("#pwReg").value;
+    var uid = document.querySelector("#uidReg").value;
+    var email = document.querySelector("#emailReg").value;
+    if (un == "") {
+        alert("Please don't leave the username blank");
+        return false;
+    }
+    if (pw == "") {
+        alert("Please don't leave the password blank");
+        return false;
+    }
+    if (uid == "") {
+        alert("Please don't leave the student id blank");
+        return false;
+    }
+    if (email == "") {
+        alert("Please don't leave the email blank");
+        return false;
+    }
+    var cuMail = email.split("@")[1];
+    if (cuMail != "link.cuhk.edu.hk") {
+        alert("Please enter a CUHK email");
+        return false;
+    }
+    return true;  
+}
+
+function checkForgetPW() {
+    /*check if user input sth in the mail box, otherwise show alert*/
+    var email = document.querySelector("#emailForget").value;
+    if (email == "") {
+        alert("Please don't leave the email blank");
+        return false;
+    }
+    var cuMail = email.split("@")[1];
+    if (cuMail != "link.cuhk.edu.hk") {
+        alert("Please enter a CUHK email");
+        return false;
+    }
+    return true;  
+}
 
 function checkComment() {
     /*check if user input sth in the comment box, otherwise show alert*/

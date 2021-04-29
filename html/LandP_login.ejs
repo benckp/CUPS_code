@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="AnswerPost.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="CUPSicon1.ico" type="image/x-icon/">
     <title>Login</title>
@@ -37,15 +38,15 @@
         </div>
         <!-- Show the login interface -->
         <div v-if="currentStatus === 0">
-            <form method="POST" action="/process-login">
+            <form method="POST" action="/process-login" onsubmit="return checkLogin()">
                 <div class="textbox">
                     <i class="fa fa-user" aria-hidden="true"></i>
-                    <input type="text" placeholder="Login-name" name="username" value="">
+                    <input type="text" placeholder="Login-name" id="username" name="username" value="">
                 </div>
         
                 <div class="textbox">
                     <i class="fa fa-lock"></i>
-                    <input type="password" placeholder="Password" name="password" value="">
+                    <input type="password" placeholder="Password" id="pw" name="password" value="">
                 </div>
                 
                 
@@ -57,32 +58,32 @@
         
         <!-- Show the sign up interface -->
         <div v-else-if="currentStatus === 1">
-            <form method="POST" action="/process-registration">
+            <form method="POST" action="/process-registration" onsubmit="return checkReg()">
                 <div class="textbox">
                     <i class="fa fa-user" aria-hidden="true"></i>
-                    <input type="text" placeholder="Login-name" name="name" value="">
+                    <input type="text" placeholder="Login-name" id="usernameReg" name="name" value="">
                 </div>
         
                 <div class="textbox">
                     <i class="fa fa-lock"></i>
-                    <input type="password" placeholder="Password" name="password" value="">
+                    <input type="password" placeholder="Password" id="pwReg" name="password" value="">
                 </div>
                 <div class="textbox">
                     <i class="fa fa-lock"></i>
-                    <input type="text" placeholder="SID" name="uid" value="">
+                    <input type="text" placeholder="SID" id="uidReg" name="uid" value="">
                 </div>
                 <div class="textbox">
                     <i class="fa fa-lock"></i>
-                    <input type="text" placeholder="CUHK email" name="email" value="">
+                    <input type="text" placeholder="CUHK email" id="emailReg" name="email" value="">
                 </div>
                 <input class="btn" type="submit" name="" value="Register">
             </form>
         </div>
         <div v-else-if="currentStatus === 2">
-            <form method="POST" action="/process-forgetpw">
+            <form method="POST" action="/process-forgetpw" onsubmit="return checkForgetPW()">
                 <div class="textbox">
                     <i class="fa fa-user" aria-hidden="true"></i>
-                    <input type="text" placeholder="CUHK Email" name="email" value="">
+                    <input type="text" placeholder="CUHK Email" id="emailForget" name="email" value="">
                 </div>
                 
                 <input class="btn" type="submit" name="" value="Submit">
