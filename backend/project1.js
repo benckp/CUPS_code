@@ -476,6 +476,7 @@ server.get('/forum', urlencodedParser, (request, response) => {
     var post = [];
     var com = [];
     var que;
+    var lb = [];
     // Check the user is verifyed or not, if not, redirect the user to login page
     if (!request.session.is_auth) {
     // In case some users does not login and typing /forum to bypass the login system
@@ -490,13 +491,21 @@ server.get('/forum', urlencodedParser, (request, response) => {
                     post.push(item);
                     // console.log(item.HEADING);
                 });	
-                var viewData = {
-                    post: post,
-                    IS_TEACHER: request.session.is_teacher
-                };
-                request.session.last_url = '/forum' ;
-                response.render(path.join(__dirname , "../html/forum"), viewData);
-                response.end();
+                db.query(`SELECT NAME, CREDIT_BAL FROM USERS ORDER BY CREDIT_BAL DESC LIMIT 5;`, function(error, results, fields) {
+                    if (error) throw error;
+                    results.forEach(function(item){
+                        lb.push(item);
+                        // console.log(item.NAME);
+                    });	
+                    var viewData = {
+                        post: post,
+                        IS_TEACHER: request.session.is_teacher,
+                        LB: lb
+                    };
+                    request.session.last_url = '/forum' ;
+                    response.render(path.join(__dirname , "../html/forum"), viewData);
+                    response.end();
+                });
             });
         }
         else {
@@ -702,8 +711,6 @@ server.get('/logout', urlencodedParser, (request, response) => {
     response.redirect('/');
 });
 
-
-
 // ( port, ip)  127.0.0.1 == localhost
 server.listen(3000, "127.0.0.1", () =>{
     console.log(`Server is running at http://127.0.0.1:3000`);
@@ -819,7 +826,7 @@ FROM QUESTION, RESPONDS, USERS WHERE RESPONDS.PID = QUESTION.PID AND RESPONDS.UI
 // Display profile
 'SELECT * FROM USERS WHERE LOGIN_NAME = ?', name
 
-// Leaderboard  (Only top ten would be shown)
+// Leaderboard  (Only top five would be shown)
 SELECT LOGIN_NAME, CREDIT_BAL FROM USERS ORDER BY CREDIT_BAL DESC LIMIT 10;
 
 ---------------------------------------------------------------------------------------------------------------------
@@ -898,7 +905,6 @@ INSERT INTO USERS VALUES( 1155000004, TRUE, 'lee', 'admin', 'lee', 'lee@gmail.co
 INSERT INTO USERS VALUES( 1155000005, TRUE, 'royal', 'admin', 'royal', 'royal@gmail.com', 19, DEFAULT, DEFAULT, NULL, NULL, NULL);
 INSERT INTO USERS VALUES( 1255000001, FALSE, 'Prof. X', 'admin', 'Prof. X', 'profX@gmail.com', 19, DEFAULT, DEFAULT, NULL, NULL, NULL);
 
-
 INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Programming", "CSCI0000", "Hello World!", "Quick question: do you...", 1, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
 INSERT INTO QUESTION VALUES( 0, 1155000001, TRUE, "Help", "ENGG0000", "Hey guys!", "Can someone help...", 1, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
 INSERT INTO QUESTION VALUES( 0, 1155000004, TRUE, "Science fiction", "PSYC0000", "X-Men", "Mutation, it is the key to our evolution...", 3, DEFAULT, NULL, DEFAULT, TRUE, DEFAULT);
@@ -929,8 +935,6 @@ Confident that the worst he can hear is a tale of his lowly birth, Oedipus eager
 And so, despite his precautions, the prophecy that Oedipus dreaded has actually come true. Realizing that he has killed his father and married his mother, Oedipus is agonized by his fate.
 Rushing into the palace, Oedipus finds that the queen has killed herself. Tortured, frenzied, Oedipus takes the pins from her gown and rakes out his eyes, so that he can no longer look upon the misery he has caused. Now blinded and disgraced, Oedipus begs Creon to kill him, but as the play concludes, he quietly submits to Creon's leadership, and humbly awaits the oracle that will determine whether he will stay in Thebes or be cast out forever.", 5, DEFAULT, NULL, DEFAULT, DEFAULT, DEFAULT);
 
-
-
 INSERT LIKED VALUES(1155000000, 3);
 INSERT LIKED VALUES(1155000000, 7);
 INSERT LIKED VALUES(1155000000, 2);
@@ -942,7 +946,3 @@ INSERT RESPONDS VALUES(0, 1155000000, 10, "Nice story!", NULL, DEFAULT, DEFAULT)
 INSERT RESPONDS VALUES(0, 1155000000, 3, "Nice!", NULL, DEFAULT, DEFAULT);
 
 */
-
-
-
-
