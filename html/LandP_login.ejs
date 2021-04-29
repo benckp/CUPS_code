@@ -15,13 +15,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com"> 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap" rel="stylesheet">
     <% if(locals.wrong) { %>
-        <script src="test_warning.js"></script>
+        <script>alert("Incorrect username or password was entered.")</script>
     <% } %>
     <% if(locals.wrong2) { %>
         <script>alert("The new password and the verication one are not the same.")</script>
     <% } %>
     <% if(locals.verify) { %>
-        <script>alert("Email has already sent to your email address. Please check.")</script>
+        <script>alert("Email has already been sent to your email address. Please check.")</script>
     <% } %>
 </head>
 
