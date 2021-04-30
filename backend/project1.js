@@ -689,7 +689,15 @@ server.post('/process-edit', urlencodedParser, (request, response) => {
 			response.end();
         });
     }
+    else if (!name && info && propic) {
+        db.query(`UPDATE USERS SET CAPTION = '${info}', PROFILE_PIC = '${buf}' WHERE USERS.UID = ${request.session.uid}`, function(error, results, fields) {
+            if (error) throw error;
+			request.session.username = name;
+            response.redirect('/profile');
 
+			response.end();
+        });
+    }
     else if (name && info && propic) {
         db.query(`UPDATE USERS SET NAME = '${name}', CAPTION = '${info}', PROFILE_PIC = '${buf}' WHERE USERS.UID = ${request.session.uid}`, function(error, results, fields) {
             if (error) throw error;
